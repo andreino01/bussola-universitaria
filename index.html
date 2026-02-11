@@ -905,7 +905,7 @@
             "Lingue & Comunicazione": { "ENG": 0.60, "ITA": 0.30, "LIT": 0.05, "ART": 0.05 },
             "Economia & Finanza": { "MATH": 0.50, "ENG": 0.30, "LIT": 0.20 },
             "Design & Architettura": { "ART": 0.60, "MATH": 0.20, "LIT": 0.20 },
-            "Moda": {"ART": 0.50, "ENG": 0.20, "MATH": 0.15, "LIT": 0.15},
+            "Moda": { "ART": 0.50, "ENG": 0.20, "MATH": 0.15, "LIT": 0.15 }
         };
 
         const IDEAL_PROFILES = {
@@ -916,7 +916,7 @@
             "Design & Architettura": [7, 6, 5, 5], "Lingue & Comunicazione": [5, 6, 10, 6],
             "Scienze Politiche & Sociali": [5, 5, 8, 7], "Agraria & Veterinaria": [7, 4, 4, 3],
             "Scienze Motorie": [6, 5, 8, 2],
-            "Moda & Luxury": [8, 7, 8, 5]
+            "Moda": [8, 7, 8, 5]
         };
 
         const MILANO_DB = {
@@ -929,8 +929,8 @@
             "Accademia di Brera": { "lat": 45.472, "lon": 9.188 }, "Marangoni": { "lat": 45.465, "lon": 9.195 },
             "San Raffaele": { "lat": 45.505, "lon": 9.263 }, "Humanitas": { "lat": 45.393, "lon": 9.148 },
             "UniBg": { "lat": 45.655, "lon": 9.633 }, "UniPv": { "lat": 45.186, "lon": 9.156 }, "Insubria": { "lat": 45.816, "lon": 8.834 },
-            "Domus Academy": {"lat": 45.445, "lon": 9.167}, "Secoli": {"lat": 45.495, "lon": 9.213},
-            "Cattolica (Fashion Mng)": {"lat": 45.463, "lon": 9.175}
+            "Domus Academy": { "lat": 45.445, "lon": 9.167 }, "Secoli": { "lat": 45.495, "lon": 9.213 },
+            "Cattolica (Fashion Mng)": { "lat": 45.463, "lon": 9.175 }
         };
 
         // --- FUNZIONI DI INTERFACCIA ---
@@ -1254,7 +1254,7 @@
 
                 const av = LOGIC_ART[getRadio("q_art")];
                 if (av === "ARCHITETTURA") { add2(["Design & Architettura"], 60); add2(["Ingegneria"], 30); }
-                else if (av === "PRODUCT") {add2(["Design & Architettura"], 50); add2(["Ingegneria"], 20)}
+                else if (av === "PRODUCT") { add2(["Design & Architettura"], 50); add2(["Ingegneria"], 20) }
                 else if (av === "FASHION") { add2(["Moda"], 70); add2(["Design & Architettura"], 30); }
                 else if (av === "LANGUAGES") { add2(["Lingue & Comunicazione"], 60); add2(["Scienze Politiche & Sociali"], 30); }
                 else if (av === "UMANISTICA") { add2(["Studi Umanistici"], 60); add2(["Scienze Politiche & Sociali"], 20); }
@@ -1282,14 +1282,14 @@
 
                 if (brV === "TECNICA") add4(["Ingegneria", "Matematica, Fisica & Informatica"], 50);
                 else if (brV === "MERCATO") add4(["Economia & Finanza"], 50);
-                else if (brV === "ESTETICA") add4(["Design & Architettura"], 50);
+                else if (brV === "ESTETICA") { add4(["Moda"], 50); add4(["Design & Architettura"], 30); }
                 else if (brV === "PRAGMATISMO") add4(["Economia & Finanza", "Ingegneria"], 20);
                 else if (brV === "NARRAZIONE") add4(["Studi Umanistici", "Psicologia & Sociale"], 50);
 
                 const futV = getRadio("q_future");
                 if (futV === "Azienda") { add4(["Economia & Finanza", "Ingegneria"], 50); add4(["Matematica, Fisica & Informatica"], 40); add4(["Lingue & Comunicazione"], 10); }
                 else if (futV === "Camice") { add4(["Medicina & Sanità", "Chimica, Biologia & Farmacia"], 50); add4(["Agraria & Veterinaria"], 30); add4(["Psicologia & Sociale"], 10); }
-                else if (futV === "Creativo") { add4(["Design & Architettura"], 50); add4(["Studi Umanistici", "Lingue & Comunicazione"], 40); add4(["Ingegneria"], 10); }
+                else if (futV === "Creativo") { add4(["Moda"], 50); add4(["Design & Architettura"], 50); add4(["Studi Umanistici", "Lingue & Comunicazione"], 30); }
                 else if (futV === "Istituzioni") { add4(["Giurisprudenza", "Scienze Politiche & Sociali"], 50); add4(["Economia & Finanza"], 20); }
                 else if (futV === "Persone") { add4(["Psicologia & Sociale", "Studi Umanistici"], 50); add4(["Lingue & Comunicazione"], 40); add4(["Medicina & Sanità", "Scienze Motorie"], 30); }
                 else if (futV === "Movimento") { add4(["Agraria & Veterinaria", "Scienze Motorie"], 50); add4(["Design & Architettura"], 20); add4(["Chimica, Biologia & Farmacia", "Ingegneria"], 10); }
