@@ -51,6 +51,8 @@
         * {
             scrollbar-width: thin;
             scrollbar-color: rgba(99, 102, 241, 0.3) transparent;
+            box-sizing: border-box;
+            /* Prevent padding from adding to width */
         }
 
         body {
@@ -436,17 +438,25 @@
 
         /* Risultati */
         .winner-box {
-            background: linear-gradient(135deg, #dcfce7 0%, #d1fae5 100%);
-            border: 2px solid #22c55e;
+            /* Blu Vincitore */
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border: 2px solid #3b82f6;
             padding: 35px;
             text-align: center;
             border-radius: 20px;
             margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(34, 197, 94, 0.15);
+            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.25);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .winner-box:hover {
+            transform: scale(1.02);
         }
 
         .winner-name {
-            color: #14532d;
+            color: #1e3a8a;
+            /* Dark Blue */
             font-size: 2rem;
             margin: 12px 0;
             font-weight: 800;
@@ -455,17 +465,84 @@
 
         .runners-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(2, 1fr);
+            /* Default 2 columns */
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* Layout specific overrides */
+        .runners-grid.layout-1 {
+            grid-template-columns: 1fr;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .runners-grid.layout-3 .runner-card:last-child {
+            /* 3 items: 2 top, 1 bottom center */
+            grid-column: 1 / -1;
+            width: 50%;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 600px) {
+            .runners-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .runners-grid.layout-3 .runner-card:last-child {
+                width: 100%;
+                /* Reset width on mobile */
+            }
         }
 
         .runner-card {
-            background: #fff;
-            border-left: 4px solid #f59e0b;
-            padding: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            border-radius: 8px;
+            /* Azzurro Alternative */
+            background: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%);
+            border: 1px solid #bfdbfe;
+            padding: 16px 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            cursor: pointer;
+        }
+
+        .runner-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.3);
+            /* Rimossa background:white su richiesta utente */
+        }
+
+        .runner-name {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .runner-score {
+            /* Background matches card (Azure) */
+            background: #eff6ff;
+            color: #1e3a8a;
+            /* Dark Blue Text */
+            padding: 6px 14px;
+            border-radius: 20px;
             font-size: 0.9rem;
+            font-weight: 800;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+            min-width: 60px;
+            text-align: center;
         }
 
         #map {
@@ -672,20 +749,30 @@
 
             /* Risultati più compatti */
             .winner-box {
-                padding: 25px 15px;
+                padding: 20px 15px;
+                width: 100%;
+                box-sizing: border-box;
+                margin-left: 0;
+                margin-right: 0;
             }
 
             .winner-name {
                 font-size: 1.5rem;
+                word-wrap: break-word;
+                /* Prevent long words from overflowing */
             }
 
             .runner-grid {
                 grid-template-columns: 1fr;
                 gap: 10px;
+                width: 100%;
+                box-sizing: border-box;
             }
 
             .runner-card {
                 padding: 12px;
+                width: 100%;
+                box-sizing: border-box;
             }
 
             /* Mappa più piccola su mobile */
@@ -717,6 +804,102 @@
             .btn-group {
                 gap: 12px;
             }
+        }
+
+        #map {
+            height: 400px;
+            width: 100%;
+            border-radius: 12px;
+            margin-top: 20px;
+            z-index: 1;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #64748b;
+            background: none;
+            border: none;
+            padding: 5px;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .stat-box {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .source-note {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 15px;
+            font-style: italic;
         }
     </style>
 </head>
@@ -750,26 +933,53 @@
         </div>
 
         <div id="step-2" class="step">
-            <h2>🛤️ Cosa ti attira di più?</h2>
+            <h2>🛤️ Tu cosa faresti?</h2>
 
             <div class="card">
-                <h5>🚀 Devi costruire un razzo...</h5>
+                <h5>🪐 Missione su Marte</h5>
+                <span class="caption">Siamo nel 2050, la base spaziale ha un problema. Tu quale ruolo ricopri nel
+                    team?</span>
                 <div id="q_tech_c"></div>
             </div>
 
             <div class="card">
-                <h5>💼 Nell'ambito business e legale...</h5>
+                <h5>🏙️ Il Grattacielo</h5>
+                <span class="caption">Sei all'ultimo piano di una multinazionale a New York. Di cosa si occupa il tuo
+                    ufficio?</span>
                 <div id="q_biz_c"></div>
             </div>
 
             <div class="card">
-                <h5>🧬 Scienza & Salute</h5>
+                <h5>🔬 Il Laboratorio di ricerca</h5>
+                <span class="caption">Hai la possibilità di migliorare la vita sulla Terra. A quale grande progetto ti
+                    dedichi?</span>
                 <div id="q_sci_c"></div>
             </div>
 
             <div class="card">
-                <h5>🎨 Creatività</h5>
+                <h5>🎨 L'Atelier Creativo</h5>
+                <span class="caption">Il mondo è troppo grigio. Come decidi di usare il tuo talento per
+                    cambiarlo?</span>
                 <div id="q_art_c"></div>
+            </div>
+
+            <!-- NUOVE DOMANDE INDIRETTE -->
+            <div class="card">
+                <h5>📺 Il Feed di YouTube</h5>
+                <span class="caption">Apri YouTube e ti escono questi 5 video. Su quale clicchi?</span>
+                <div id="q_youtube_c"></div>
+            </div>
+
+            <div class="card">
+                <h5>🎬 Il Ruolo nella Serie TV</h5>
+                <span class="caption">Se fossi il protagonista di una serie TV, chi saresti?</span>
+                <div id="q_netflix_c"></div>
+            </div>
+
+            <div class="card">
+                <h5>🚀 La Startup</h5>
+                <span class="caption">Tu e i tuoi amici fondate una Startup. Tu di cosa ti occupi?</span>
+                <div id="q_startup_c"></div>
             </div>
 
             <div class="btn-group"><button class="btn-prev" onclick="nextStep(1)">⬅️ Indietro</button><button
@@ -1045,33 +1255,57 @@
             "Civica Luchino Visconti (Cinema)": { "lat": 45.508, "lon": 9.202, "type": "Pubblica", "url": "https://cinema.fondazionemilano.eu/" }
         };
 
+        // --- DATI ALMALAUREA 2024 (STIME) ---
+        const FACULTY_DETAILS = {
+            "Ingegneria": { color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)", border: "#3b82f6", duration: "3 + 2 o 5 Anni", employment: "96,5%", salary: "1.950 €" },
+            "Matematica, Fisica & Informatica": { color: "linear-gradient(135deg, #e0e7ff 0%, #eef2ff 100%)", border: "#6366f1", duration: "3 + 2 Anni", employment: "94,2%", salary: "1.850 €" },
+            "Economia & Finanza": { color: "linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%)", border: "#10b981", duration: "3 + 2 Anni", employment: "93,8%", salary: "1.780 €" },
+            "Medicina & Sanità": { color: "linear-gradient(135deg, #fef2f2 0%, #fff1f2 100%)", border: "#ef4444", duration: "6 Anni", employment: "95,0%", salary: "1.910 € (Spec.)" }, // Stipendio specializzando netto variabile
+            "Chimica, Biologia & Farmacia": { color: "linear-gradient(135deg, #f0fdfa 0%, #ecfeff 100%)", border: "#06b6d4", duration: "3 + 2 o 5 Anni", employment: "89,5%", salary: "1.650 €" },
+            "Giurisprudenza": { color: "linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)", border: "#f59e0b", duration: "5 Anni (Ciclo Unico)", employment: "82,5%", salary: "1.580 €" },
+            "Design & Architettura": { color: "linear-gradient(135deg, #fff1f2 0%, #fff0f5 100%)", border: "#ec4899", duration: "3 + 2 o 5 Anni", employment: "88,0%", salary: "1.620 €" },
+            "Studi Umanistici": { color: "linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%)", border: "#d946ef", duration: "3 + 2 Anni", employment: "79,5%", salary: "1.450 €" },
+            "Lingue & Comunicazione": { color: "linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)", border: "#8b5cf6", duration: "3 + 2 Anni", employment: "84,0%", salary: "1.480 €" },
+            "Psicologia & Sociale": { color: "linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)", border: "#f97316", duration: "3 + 2 Anni", employment: "86,5%", salary: "1.420 €" },
+            "Scienze Politiche & Sociali": { color: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)", border: "#64748b", duration: "3 + 2 Anni", employment: "85,0%", salary: "1.550 €" },
+            "Agraria & Veterinaria": { color: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)", border: "#22c55e", duration: "5 Anni / 3+2", employment: "89,0%", salary: "1.600 €" },
+            "Scienze Motorie": { color: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)", border: "#3b82f6", duration: "3 + 2 Anni", employment: "83,0%", salary: "1.400 €" },
+            "Moda": { color: "linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%)", border: "#db2777", duration: "3 Anni (+ Master)", employment: "87,5%", salary: "1.520 €" }
+        };
+
         const FUORI_MILANO_KEYS = ["UniBg", "UniPv", "LIUC", "Insubria", "Lodi"];
 
         // --- FUNZIONI DI INTERFACCIA ---
         function init() {
-            const s = document.getElementById('school-select');
-            const dropdownOptions = document.getElementById('dropdown-options');
+            try {
+                const s = document.getElementById('school-select');
+                const dropdownOptions = document.getElementById('dropdown-options');
 
-            Object.keys(SCHOOL_DATA).forEach((k, index) => {
-                // Popola select nascosto
-                let o = document.createElement('option'); o.value = k; o.innerText = k; s.appendChild(o);
+                Object.keys(SCHOOL_DATA).forEach((k, index) => {
+                    // Popola select nascosto
+                    let o = document.createElement('option'); o.value = k; o.innerText = k; s.appendChild(o);
 
-                // Popola custom dropdown
-                const opt = document.createElement('div');
-                opt.className = 'dropdown-option' + (index === 0 ? ' selected' : '');
-                opt.innerText = k;
-                opt.onclick = () => selectSchool(k);
-                dropdownOptions.appendChild(opt);
-            });
+                    // Popola custom dropdown
+                    const opt = document.createElement('div');
+                    opt.className = 'dropdown-option' + (index === 0 ? ' selected' : '');
+                    opt.innerText = k;
+                    opt.onclick = () => selectSchool(k);
+                    dropdownOptions.appendChild(opt);
+                });
 
-            // Chiudi dropdown quando si clicca fuori
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.custom-dropdown')) {
-                    closeDropdown();
-                }
-            });
+                // Chiudi dropdown quando si clicca fuori
+                document.addEventListener('click', (e) => {
+                    if (!e.target.closest('.custom-dropdown')) {
+                        closeDropdown();
+                    }
+                });
 
-            renderSubjects(); renderRadios(); renderChecks();
+                renderSubjects(); renderRadios(); renderChecks();
+                updateMap();
+            } catch (e) {
+                alert("Errore di inizializzazione: " + e.message);
+                console.error(e);
+            }
         }
 
         function toggleDropdown() {
@@ -1133,43 +1367,69 @@
 
         function renderRadios() {
             const mkRadio = (id, opts, dest) => {
-                opts.forEach(o => document.getElementById(dest).innerHTML += `<label class="radio-option"><input type="radio" name="${id}" value="${o.v}" ${o.v === 'None' || o.v === 'Apro' || o.v === 'Azienda' ? 'checked' : ''}> ${o.t}</label>`);
+                opts.forEach(o => document.getElementById(dest).innerHTML += `<label class="radio-option"><input type="radio" name="${id}" value="${o.v}" ${['None', 'Apro', 'Azienda', 'ROCKET', 'HACKER', 'CEO'].includes(o.v) ? 'checked' : ''}> ${o.t}</label>`);
             };
 
-            // NOTA: Qui mappiamo la frase LUNGA (t) sul valore BREVE (v) usato dal motore di calcolo
             mkRadio("q_tech", [
-                { v: "Motore", t: "Capire come è costruito il motore" },
-                { v: "Codice", t: "Scrivere il codice che guida il razzo" },
-                { v: "Budget", t: "Gestire il budget della missione" },
-                { v: "Eco", t: "Garantire che il lancio sia ecosostenibile" },
-                { v: "None", t: "Non mi interessa" }
+                { v: "Motore", t: "<b>L'Ingegnere</b>: Voglio capire come funziona il motore e aggiustarlo." },
+                { v: "Codice", t: "<b>Il Programmatore</b>: Voglio scrivere il codice che guida il razzo da remoto." },
+                { v: "Budget", t: "<b>Il Manager</b>: Voglio gestire il budget e organizzare la missione." },
+                { v: "Eco", t: "<b>L'Innovatore Green</b>: Voglio che la missione sia al 100% ecosostenibile." },
+                { v: "None", t: "<b>Nessuno di questi</b>: Mi licenzio." }
             ], "q_tech_c");
 
             mkRadio("q_biz", [
-                { v: "Finanza", t: "Analizzare i mercati finanziari" },
-                { v: "Pubblicità", t: "Creare strategie pubblicitarie" },
-                { v: "Tribunale", t: "Difendere un cliente in tribunale" },
-                { v: "Politica", t: "Mediare accordi tra stati o partiti" },
-                { v: "None", t: "Nessuno di questi" }
+                { v: "Finanza", t: "<b>The Wolf of Wall Street</b>: Analizzo i mercati e faccio soldi con i soldi." },
+                { v: "Pubblicità", t: "<b>Il Genio del Marketing</b>: Creo la pubblicità che ti convince a comprare qualsiasi cosa." },
+                { v: "Tribunale", t: "<b>L'Avvocato Difensore</b>: Difendo il mio cliente in tribunale fino all'ultimo." },
+                { v: "Politica", t: "<b>Il Diplomatico</b>: Cerco di trovare accordi tra nazioni in conflitto." },
+                { v: "None", t: "<b>Nessuno di questi</b>: Prendo l'ascensore e scappo dall'ufficio." }
             ], "q_biz_c");
 
             mkRadio("q_sci", [
-                { v: "Persone", t: "Curare le persone" },
-                { v: "Animali", t: "Curare animali o piante" },
-                { v: "Atleti", t: "Migliorare le prestazioni degli atleti" },
-                { v: "Ricerca", t: "Ricerca in laboratorio" },
-                { v: "Mente", t: "Capire la mente umana" }, // Nota: "Progettare robot medici" era nel python ma mappato su BIOTECH/MEDICINA, qui semplifico o uso robot -> BIOTECH se vuoi
-                { v: "None", t: "Non fa per me" }
+                { v: "Persone", t: "<b>Il Medico</b>: Voglio curare le persone e salvare vite." },
+                { v: "Animali", t: "<b>Il Veterinario/Biologo</b>: Preferisco curare animali o studiare le piante." },
+                { v: "Atleti", t: "<b>Il Coach Sportivo</b>: Voglio migliorare le performance degli atleti e farli vincere." },
+                { v: "Ricerca", t: "<b>Lo Scienziato Pazzo</b>: Voglio stare in laboratorio a scoprire cure o studiare virus." },
+                { v: "Mente", t: "<b>Lo Psicologo</b>: Voglio entrare nella testa delle persone e capire come ragionano." },
+                { v: "None", t: "<b>Nessuno di questi</b>: La scienza non fa per me." }
             ], "q_sci_c");
 
             mkRadio("q_art", [
-                { v: "Edifici", t: "Progettare edifici" },
-                { v: "Oggetti", t: "Disegnare/creare oggetti" },
-                { v: "Moda", t: "Moda e Design" },
-                { v: "Lingue", t: "Scoprire lingue e culture straniere" },
-                { v: "Scrivere", t: "Leggere e scrivere" },
-                { v: "None", t: "Non è il mio campo" }
+                { v: "Edifici", t: "<b>L'Architetto</b>: Voglio progettare grattacieli e case da sogno." },
+                { v: "Oggetti", t: "<b>Il Designer</b>: Voglio disegnare oggetti, app o vestiti che tutti useranno." },
+                { v: "Moda", t: "<b>Il Fashion Addict</b>: Vivo per la moda, i trend e lo stile." },
+                { v: "Lingue", t: "<b>L'Interprete</b>: Voglio viaggiare e parlare fluentemente 3 o 4 lingue." },
+                { v: "Scrivere", t: "<b>Lo Scrittore/Giornalista</b>: Voglio raccontare storie e scrivere articoli." },
+                { v: "None", t: "<b>Nessuno di questi</b>: La creatività non è il mio forte." }
             ], "q_art_c");
+
+            mkRadio("q_youtube", [
+                { v: "ROCKET", t: "<b>CENTRALI NUCLEARI</b>: Come funziona davvero un reattore nucleare e perché non esplode?" },
+                { v: "MONEY", t: "<b>I SOLDI INVISIBILI</b>: Come fanno le app gratis a guadagnare miliardi?" },
+                { v: "BODY", t: "<b>CORPO UMANO</b>: Cosa succede esattamente quando smetti di dormire?" },
+                { v: "LAW", t: "<b>SCANDALO LEGALE</b>: L'errore nel contratto che ha fregato l'azienda." },
+                { v: "ARCHI", t: "<b>ARCHITETTURA FOLLE</b>: Perché i grattacieli di Dubai non crollano?" },
+                { v: "None", t: "<b>Nessuno di questi</b>: Chiudo YouTube e vado a dormire." }
+            ], "q_youtube_c");
+
+            mkRadio("q_netflix", [
+                { v: "HACKER", t: "<b>L'Hacker geniale</b> che entra nel sistema della banca in 10 secondi." },
+                { v: "PROFILER", t: "<b>Il Profiler</b> che capisce chi è il colpevole solo guardandolo negli occhi." },
+                { v: "SURGEON", t: "<b>Il Chirurgo (o Atleta)</b> che mantiene il sangue freddo quando tutto va male." },
+                { v: "LAWYER", t: "<b>L'Avvocato</b> in giacca e cravatta che convince la giuria con un discorso epico." },
+                { v: "EXPLORER", t: "<b>L'Esploratore</b> che viaggia in posti sperduti e parla con la gente locale." },
+                { v: "None", t: "<b>Nessuno di questi</b>: Al massimo la comparsa." }
+            ], "q_netflix_c");
+
+            mkRadio("q_startup", [
+                { v: "CEO", t: "<b>CEO (Amministratore Delegato)</b>: Decido la strategia, parlo con gli investitori e gestisco i soldi." },
+                { v: "CTO", t: "<b>CTO (Capo Tecnico)</b>: Costruisco il prodotto, scrivo il codice e risolvo i bug." },
+                { v: "CREATIVE", t: "<b>Direttore Creativo</b>: Creo il logo, il design e la campagna virale su TikTok." },
+                { v: "HR", t: "<b>HR (Risorse Umane)</b>: Gestisco le persone e mi assicuro che tutti siano felici." },
+                { v: "VISION", t: "<b>Legale</b>: Scrivo i Contratti per proteggere l'azienda." },
+                { v: "None", t: "<b>Nessuno di questi</b>: Vendo le mie quote e vado in vacanza." }
+            ], "q_startup_c");
 
             mkRadio("q_broken", [
                 { v: "Apro", t: "Lo apro per vedere com'è fatto" },
@@ -1353,7 +1613,7 @@
 
                 const bv = LOGIC_BIZ[getRadio("q_biz")];
                 if (bv === "FINANZA") add2(["Economia & Finanza"], 60);
-                else if (bv === "MARKETING") { add2(["Lingue & Comunicazione"], 60); add2(["Economia & Finanza"], 40); add2(["Psicologia & Sociale"], 30); }
+                else if (bv === "MARKETING") { add2(["Lingue & Comunicazione"], 60); add2(["Economia & Finanza"], 40); add2(["Psicologia & Sociale"], 30); add2(["Moda"], 20); }
                 else if (bv === "AVVOCATURA") add2(["Giurisprudenza"], 60);
                 else if (bv === "POLITICA") { add2(["Scienze Politiche & Sociali"], 60); add2(["Giurisprudenza"], 30); add2(["Lingue & Comunicazione"], 20); }
                 else sub2(["Economia & Finanza", "Giurisprudenza"], 30);
@@ -1373,6 +1633,41 @@
                 else if (av === "LANGUAGES") { add2(["Lingue & Comunicazione"], 60); add2(["Scienze Politiche & Sociali"], 30); }
                 else if (av === "UMANISTICA") { add2(["Studi Umanistici"], 60); add2(["Scienze Politiche & Sociali"], 20); }
                 else sub2(["Design & Architettura", "Studi Umanistici"], 30);
+
+                // --- NUOVA LOGICA DOMANDE INDIRETTE (CUMULATIVA E BILANCIATA) ---
+
+                // 1. YOUTUBE
+                const yv = getRadio("q_youtube");
+                if (yv === "ROCKET") { add2(["Ingegneria"], 30); add2(["Matematica, Fisica & Informatica"], 15); }
+                else if (yv === "MONEY") { add2(["Economia & Finanza"], 30); }
+                else if (yv === "BODY") { add2(["Medicina & Sanità"], 30); add2(["Chimica, Biologia & Farmacia"], 25); add2(["Scienze Motorie"], 25); add2(["Agraria & Veterinaria"], 10); }
+                else if (yv === "LAW") { add2(["Giurisprudenza"], 30); add2(["Scienze Politiche & Sociali"], 15); }
+                else if (yv === "ARCHI") { add2(["Design & Architettura"], 30); add2(["Ingegneria"], 10); add2(["Moda"], 10); }
+                else if (yv === "None") {
+                    sub2(["Ingegneria", "Economia & Finanza", "Medicina & Sanità", "Chimica, Biologia & Farmacia", "Scienze Motorie", "Giurisprudenza", "Design & Architettura"], 10);
+                }
+
+                // 2. NETFLIX
+                const nv = getRadio("q_netflix");
+                if (nv === "HACKER") { add2(["Matematica, Fisica & Informatica"], 30); add2(["Ingegneria"], 15); }
+                else if (nv === "PROFILER") { add2(["Psicologia & Sociale"], 30); add2(["Studi Umanistici"], 20); }
+                else if (nv === "SURGEON") { add2(["Medicina & Sanità"], 25); add2(["Scienze Motorie"], 15); add2(["Chimica, Biologia & Farmacia"], 20); }
+                else if (nv === "LAWYER") { add2(["Giurisprudenza"], 30); add2(["Scienze Politiche & Sociali"], 15); }
+                else if (nv === "EXPLORER") { add2(["Lingue & Comunicazione"], 30); add2(["Studi Umanistici"], 20); add2(["Scienze Politiche & Sociali"], 10); add2(["Agraria & Veterinaria"], 30); }
+                else if (nv === "None") {
+                    sub2(["Matematica, Fisica & Informatica", "Psicologia & Sociale", "Medicina & Sanità", "Giurisprudenza", "Lingue & Comunicazione", "Agraria & Veterinaria"], 10);
+                }
+
+                // 3. STARTUP
+                const sv2 = getRadio("q_startup");
+                if (sv2 === "CEO") { add2(["Economia & Finanza"], 30); add2(["Scienze Politiche & Sociali"], 10); }
+                else if (sv2 === "CTO") { add2(["Ingegneria"], 25); add2(["Matematica, Fisica & Informatica"], 25); }
+                else if (sv2 === "CREATIVE") { add2(["Design & Architettura"], 25); add2(["Moda"], 30); add2(["Lingue & Comunicazione"], 10); }
+                else if (sv2 === "HR") { add2(["Psicologia & Sociale"], 30); add2(["Scienze Politiche & Sociali"], 15); }
+                else if (sv2 === "VISION") { add2(["Giurisprudenza"], 30); add2(["Studi Umanistici"], 20); }
+                else if (sv2 === "None") {
+                    sub2(["Economia & Finanza", "Ingegneria", "Matematica, Fisica & Informatica", "Design & Architettura", "Moda", "Psicologia & Sociale", "Giurisprudenza", "Studi Umanistici"], 10);
+                }
 
                 // --- SEZIONE 3: MENTE E STILE ---
                 let sec3 = {};
@@ -1439,20 +1734,51 @@
                 const winner = sorted[0];
 
                 document.getElementById('w_name').innerText = "🥇 " + winner[0];
-                document.getElementById('w_score').innerText = "Punteggio: " + Math.round(winner[1]);
+                document.getElementById('w_name').innerText = "🥇 " + winner[0];
+
+                // Uniform Score Graphics for Winner - Border matches card bg
+                // Background matches card (Blue #dbeafe), Text Dark Blue
+                document.getElementById('w_score').innerHTML = `
+                    <div style="display:inline-block; padding:8px 20px; background:#dbeafe; color:#1e3a8a; border-radius:30px; font-weight:800; box-shadow:0 4px 15px rgba(59, 130, 246, 0.2); border: 3px solid #bfdbfe;">
+                        Punteggio: ${Math.round(winner[1])}
+                    </div>`;
+
+                // Style Winner Box - Colore Standard CSS (Blu)
+                const wBox = document.querySelector('.winner-box');
+                // Clean up any inline styles from previous logic
+                wBox.style.background = '';
+                wBox.style.borderColor = '';
+                wBox.onclick = () => openModal(winner[0]);
 
                 const runDiv = document.getElementById('runners'); runDiv.innerHTML = "";
+                // Reset classes
+                runDiv.className = 'runners-grid';
                 const medals = ["🥈", "🥉", "4️⃣", "5️⃣"];
 
                 // Filtra facoltà con almeno 65% del punteggio del vincitore
                 const threshold = winner[1] * 0.65;
-                // Limit to Top 5 (User request: "mostrate solo diverse/le università consigliate", implying a cap)
+                // Limit to Top 5
                 let recommended = sorted.filter(r => r[1] >= threshold).slice(0, 5);
 
                 // Mostra alternative (escluso il vincitore)
                 recommended.slice(1).forEach((r, index) => {
-                    runDiv.innerHTML += `<div class="runner-card"><strong>${medals[index]} ${r[0]}</strong><br>Punti: ${Math.round(r[1])}</div>`;
+                    // Rimossi stili inline per background e border -> Usa CSS .runner-card (Azzurro)
+                    // Rimossi stili inline per score -> Usa CSS .runner-score (Purple Gradient Badge)
+                    // Added border to score matching card bg (#eff6ff approx)
+                    runDiv.innerHTML += `
+                    <div class="runner-card" onclick="openModal('${r[0]}')">
+                        <div class="runner-name">
+                            <span style="font-size:1.2em">${medals[index]}</span> ${r[0]}
+                        </div>
+                        <div class="runner-score" style="border: 3px solid #eff6ff;">${Math.round(r[1])}</div>
+                    </div>`;
                 });
+
+                // Apply dynamic layout class based on number of runners
+                const runnerCount = recommended.length - 1; // Exclude winner
+                if (runnerCount > 0) {
+                    runDiv.classList.add('layout-' + runnerCount);
+                }
 
                 // Safety check: se recommended è vuoto, usa il vincitore
                 if (recommended.length === 0) {
@@ -1599,6 +1925,7 @@
             document.getElementById('selected-faculty').innerText = faculty;
             document.getElementById('map-select').value = faculty;
 
+            // Aggiorna stili opzioni map dropdown
             document.querySelectorAll('#map-dropdown-options .dropdown-option').forEach(opt => {
                 opt.classList.toggle('selected', opt.innerText === faculty);
             });
@@ -1608,6 +1935,30 @@
             document.getElementById('map-dropdown-options').classList.remove('show');
 
             updateMap();
+        }
+
+        // --- MODAL FUNCTIONS ---
+        function openModal(facultyName) {
+            const data = FACULTY_DETAILS[facultyName];
+            if (!data) return;
+
+            document.getElementById('modal-title').innerText = facultyName;
+            document.getElementById('stat-duration').innerText = data.duration;
+            document.getElementById('stat-employment').innerText = data.employment;
+            document.getElementById('stat-salary').innerText = data.salary;
+
+            // Header color matching
+            document.getElementById('modal-title').style.color = data.border;
+            document.querySelectorAll('.stat-val').forEach(el => el.style.color = data.border);
+
+            const overlay = document.getElementById('modal-overlay');
+            overlay.classList.add('active');
+        }
+
+        function closeModal(e, force = false) {
+            if (force || e.target.classList.contains('modal-overlay')) {
+                document.getElementById('modal-overlay').classList.remove('active');
+            }
         }
 
         function renderUniList(unis) {
