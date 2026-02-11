@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bussola Universitaria</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧭</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --success: #10b981;
+            --bg: linear-gradient(135deg, #f0f4ff 0%, #faf5ff 50%, #fff1f2 100%);
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --radius: 16px;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Scrollbar personalizzata */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.3);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(99, 102, 241, 0.5);
+        }
+
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(99, 102, 241, 0.3) transparent;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            color: var(--text);
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        h1 {
+            color: #0f172a;
+            text-align: center;
+            margin-top: 0;
+            font-weight: 800;
+            font-size: 2rem;
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-size: 1.4em;
+            margin-bottom: 0.5em;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        h5 {
+            font-size: 1.05em;
+            margin: 15px 0 8px 0;
+            color: #334155;
+            font-weight: 600;
+        }
+
+        .caption {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+            display: block;
+            font-style: italic;
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+            animation: fadeIn 0.4s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            padding: 20px;
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        select {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 1rem;
+            font-family: inherit;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, 0.8);
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236366f1' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+        }
+
+        select:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        select:focus {
+            outline: none;
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+
+        select:focus:not(:focus-visible) {
+            border-color: rgba(226, 232, 240, 0.8);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        select option {
+            padding: 12px;
+            background: white;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Slider wrapper con valore sopra thumb */
+        .slider-wrapper {
+            position: relative;
+            padding-top: 25px;
+            margin: 10px 0;
+        }
+
+        .slider-wrapper input[type="range"] {
+            width: 100%;
+            accent-color: var(--primary);
+            margin: 0;
+        }
+
+        .slider-value {
+            position: absolute;
+            top: 0;
+            color: var(--primary);
+            font-size: 0.85em;
+            font-weight: 700;
+            transform: translateX(-50%);
+            pointer-events: none;
+            transition: left 0.1s ease;
+        }
+
+        .slider-range {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7em;
+            color: #94a3b8;
+            margin-top: 2px;
+            opacity: 0;
+            transition: opacity 0.3s ease 0.5s;
+        }
+
+        .slider-wrapper:hover .slider-range {
+            opacity: 1;
+            transition: opacity 0.2s ease;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--primary);
+            margin: 10px 0;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-next {
+            background: var(--primary);
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-next:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-prev {
+            background: #e2e8f0;
+            color: #333;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-prev:hover {
+            background: #cbd5e1;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .radio-option {
+            display: block;
+            padding: 14px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            background: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+        }
+
+        .radio-option:hover {
+            background: rgba(99, 102, 241, 0.08);
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: translateX(4px);
+        }
+
+        .radio-option:has(input:checked) {
+            background: rgba(99, 102, 241, 0.12);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+
+        .slider-numbers {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7em;
+            color: #94a3b8;
+            margin-top: -5px;
+            padding: 0 2px;
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+            margin-top: 8px;
+            line-height: 1.4;
+        }
+
+        .slider-labels span {
+            width: 48%;
+        }
+
+        .left-label {
+            color: #0288d1;
+        }
+
+        .right-label {
+            color: #2e7d32;
+            text-align: right;
+        }
+
+        /* Custom Dropdown */
+        .custom-dropdown {
+            position: relative;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .dropdown-selected {
+            padding: 14px 16px;
+            font-size: 1rem;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, 0.8);
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dropdown-selected:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .dropdown-selected.open {
+            border-color: var(--primary);
+            border-radius: var(--radius) var(--radius) 0 0;
+        }
+
+        .dropdown-arrow {
+            transition: transform 0.3s ease;
+            color: var(--primary);
+        }
+
+        .dropdown-selected.open .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-top: none;
+            border-radius: 0 0 var(--radius) var(--radius);
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+            display: none;
+            animation: dropdownFadeIn 0.2s ease;
+        }
+
+        @keyframes dropdownFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dropdown-options.show {
+            display: block;
+        }
+
+        .dropdown-option {
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+        }
+
+        .dropdown-option:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-option:hover {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            padding-left: 20px;
+        }
+
+        .dropdown-option.selected {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Risultati */
+        .winner-box {
+            background: linear-gradient(135deg, #dcfce7 0%, #d1fae5 100%);
+            border: 2px solid #22c55e;
+            padding: 35px;
+            text-align: center;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(34, 197, 94, 0.15);
+        }
+
+        .winner-name {
+            color: #14532d;
+            font-size: 2rem;
+            margin: 12px 0;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .runners-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+        }
+
+        .runner-card {
+            background: #fff;
+            border-left: 4px solid #f59e0b;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        #map {
+            height: 400px;
+            width: 100%;
+            border-radius: 12px;
+            margin-top: 20px;
+            z-index: 1;
+        }
+
+        /* ============================================= */
+        /* MOBILE OPTIMIZATION - Target: 480px e sotto  */
+        /* ============================================= */
+        @media (max-width: 480px) {
+
+            /* Body e container più compatti */
+            body {
+                padding: 12px 8px;
+            }
+
+            .container {
+                padding: 20px 16px;
+                border-radius: 16px;
+            }
+
+            /* Tipografia responsive */
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 15px;
+            }
+
+            h2 {
+                font-size: 1.15rem;
+                margin-top: 20px;
+            }
+
+            h5 {
+                font-size: 0.95rem;
+            }
+
+            .caption {
+                font-size: 0.85rem;
+            }
+
+            /* Cards più compatte */
+            .card {
+                padding: 14px;
+                margin-bottom: 12px;
+            }
+
+            /* Sliders touch-friendly */
+            .slider-wrapper {
+                padding-top: 28px;
+            }
+
+            input[type="range"] {
+                height: 24px;
+                margin: 8px 0;
+            }
+
+            .slider-value {
+                font-size: 0.9em;
+                font-weight: 800;
+            }
+
+            /* Radio/checkbox più grandi per touch */
+            .radio-option {
+                padding: 14px 16px;
+                font-size: 0.95rem;
+                margin-bottom: 8px;
+            }
+
+            /* Dropdown ottimizzato per touch */
+            .dropdown-selected {
+                padding: 16px;
+                font-size: 1rem;
+            }
+
+            .dropdown-option {
+                padding: 14px 16px;
+                font-size: 0.95rem;
+            }
+
+            /* Bottoni full-width e impilati */
+            .btn-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .btn-next,
+            .btn-prev {
+                width: 100%;
+                padding: 16px 20px;
+                font-size: 1rem;
+            }
+
+            /* Slider labels - mantieni affiancate su mobile */
+            .slider-labels {
+                gap: 8px;
+            }
+
+            .left-label,
+            .right-label {
+                text-align: center;
+                font-size: 0.8rem;
+                padding: 8px;
+                background: rgba(99, 102, 241, 0.05);
+                border-radius: 8px;
+            }
+
+            /* Risultati più compatti */
+            .winner-box {
+                padding: 25px 15px;
+            }
+
+            .winner-name {
+                font-size: 1.5rem;
+            }
+
+            .runner-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .runner-card {
+                padding: 12px;
+            }
+
+            /* Mappa più piccola su mobile */
+            #map {
+                height: 280px !important;
+                margin-top: 15px;
+            }
+
+            /* Progress bar indicator */
+            #step-indicator {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Tablet optimization (481px - 768px) */
+        @media (min-width: 481px) and (max-width: 768px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            .container {
+                padding: 30px 25px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .btn-group {
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>🧭 Bussola Universitaria</h1>
+        <div style="height:4px; background:#e2e8f0; margin-bottom:8px;">
+            <div id="progress" style="height:100%; width:0%; background:var(--primary); transition:0.3s;"></div>
+        </div>
+        <div id="step-indicator" style="text-align:center; font-size:0.9em; color:#64748b; margin-bottom:20px;">Step 1
+            di 5</div>
+
+        <div id="step-1" class="step active">
+            <h2>🏫 Che scuola frequenti?</h2>
+            <div class="custom-dropdown" id="school-dropdown">
+                <div class="dropdown-selected" onclick="toggleDropdown()">
+                    <span id="selected-school">Liceo Scientifico</span>
+                    <span class="dropdown-arrow">▼</span>
+                </div>
+                <div class="dropdown-options" id="dropdown-options"></div>
+            </div>
+            <select id="school-select" style="display:none;"></select>
+            <h2>📚 I tuoi voti</h2>
+            <span class="caption">Inserisci voto e fatica per le tue materie principali.</span>
+            <div id="subjects-container" class="grid-2"></div>
+            <div class="btn-group">
+                <div></div><button class="btn-next" onclick="nextStep(2)">Continua ➡️</button>
+            </div>
+        </div>
+
+        <div id="step-2" class="step">
+            <h2>🛤️ Cosa ti attira di più?</h2>
+
+            <div class="card">
+                <h5>🚀 Devi costruire un razzo...</h5>
+                <div id="q_tech_c"></div>
+            </div>
+
+            <div class="card">
+                <h5>💼 Nell'ambito business e legale...</h5>
+                <div id="q_biz_c"></div>
+            </div>
+
+            <div class="card">
+                <h5>🧬 Scienza & Salute</h5>
+                <div id="q_sci_c"></div>
+            </div>
+
+            <div class="card">
+                <h5>🎨 Creatività</h5>
+                <div id="q_art_c"></div>
+            </div>
+
+            <div class="btn-group"><button class="btn-prev" onclick="nextStep(1)">⬅️ Indietro</button><button
+                    class="btn-next" onclick="nextStep(3)">Continua ➡️</button></div>
+        </div>
+
+        <div id="step-3" class="step">
+            <h2>🧠 Come funziona la tua mente?</h2>
+            <p>Non rispondere come 'dovresti' essere, ma come ti senti più a tuo agio.</p>
+
+            <div class="card">
+                <h5>🔍 Quando devi svolgere un compito complesso:</h5>
+                <span class="caption">Esempio: Studiare un capitolo difficile.</span>
+                <div class="slider-wrapper">
+                    <span class="slider-value" id="sv_detail">5</span>
+                    <input type="range" id="s_detail" min="0" max="10" value="5"
+                        oninput="updateSliderValue(this, 'sv_detail')">
+                    <div class="slider-range"><span>0</span><span>10</span></div>
+                </div>
+                <div class="slider-labels">
+                    <span class="left-label">👈 <b>Visione d'insieme</b>: Mi annoiano i dettagli, preferisco capire il
+                        concetto generale e improvvisare il resto.</span>
+                    <span class="right-label">👉 <b>Ossessione</b>: Se c'è un errore o una virgola fuori posto
+                        impazzisco. Devo avere tutto sotto controllo.</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h5>🚀 Il tuo profilo di rischio:</h5>
+                <span class="caption">Cosa ti fa dormire meglio la notte?</span>
+                <div class="slider-wrapper">
+                    <span class="slider-value" id="sv_risk">5</span>
+                    <input type="range" id="s_risk" min="0" max="10" value="5"
+                        oninput="updateSliderValue(this, 'sv_risk')">
+                    <div class="slider-range"><span>0</span><span>10</span></div>
+                </div>
+                <div class="slider-labels">
+                    <span class="left-label">👈 <b>Stabilità</b>: Voglio un percorso chiaro, regole definite e uno
+                        stipendio garantito. Odio l'incertezza.</span>
+                    <span class="right-label">👉 <b>Scommessa</b>: La routine mi uccide. Voglio rischiare per ottenere
+                        grandi risultati, anche se posso fallire.</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h5>🗣️ Le tue batterie sociali:</h5>
+                <span class="caption">In quale situazione ti senti più a tuo agio...</span>
+                <div class="slider-wrapper">
+                    <span class="slider-value" id="sv_people">5</span>
+                    <input type="range" id="s_people" min="0" max="10" value="5"
+                        oninput="updateSliderValue(this, 'sv_people')">
+                    <div class="slider-range"><span>0</span><span>10</span></div>
+                </div>
+                <div class="slider-labels">
+                    <span class="left-label">👈 <b>Autonomia</b>: Preferisco lavorare da solo, concentrato, con le
+                        cuffie. La gente mi distrae.</span>
+                    <span class="right-label">👉 <b>Relazione</b>: Ho bisogno di parlare, confrontarmi e stare con le
+                        persone. Il silenzio mi pesa.</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h5>🛠️ Cosa ti dà più soddisfazione?</h5>
+                <span class="caption">Quando impari qualcosa di nuovo...</span>
+                <div class="slider-wrapper">
+                    <span class="slider-value" id="sv_abs">5</span>
+                    <input type="range" id="s_abs" min="0" max="10" value="5"
+                        oninput="updateSliderValue(this, 'sv_abs')">
+                    <div class="slider-range"><span>0</span><span>10</span></div>
+                </div>
+                <div class="slider-labels">
+                    <span class="left-label">👈 <b>Il Risultato</b>: Voglio vedere a cosa serve. Voglio costruire,
+                        curare, toccare con mano il risultato.</span>
+                    <span class="right-label">👉 <b>Il Concetto</b>: Mi piace capire il 'perché' profondo delle cose, la
+                        teoria, le idee astratte e i sistemi.</span>
+                </div>
+            </div>
+
+            <div class="btn-group"><button class="btn-prev" onclick="nextStep(2)">⬅️ Indietro</button><button
+                    class="btn-next" onclick="nextStep(4)">Continua ➡️</button></div>
+        </div>
+
+        <div id="step-4" class="step">
+            <h2>⚡ Scenari di vita reale</h2>
+
+            <div class="card">
+                <h5>📦 Trovi un vecchio oggetto che non funziona più</h5>
+                <div id="q_broken_c"></div>
+            </div>
+
+            <div class="card">
+                <h5>🔮 Dove ti vedi tra 10 anni?</h5>
+                <div id="q_future_c"></div>
+            </div>
+
+            <div class="btn-group"><button class="btn-prev" onclick="nextStep(3)">⬅️ Indietro</button><button
+                    class="btn-next" onclick="nextStep(5)">Continua ➡️</button></div>
+        </div>
+
+        <div id="step-5" class="step">
+            <h2>🌍 Ultime conferme</h2>
+            <span class="caption">Seleziona tutte le opzioni che pensi ti descrivano</span>
+            <div class="grid-2" id="chk_container"></div>
+            <div class="btn-group"><button class="btn-prev" onclick="nextStep(4)">⬅️ Indietro</button><button
+                    class="btn-next" style="background:var(--success)" onclick="calculateAndShow()">🔮 CALCOLA IL MIO
+                    FUTURO</button></div>
+        </div>
+
+        <div id="step-6" class="step">
+            <div class="winner-box">
+                <div style="color:#15803d; text-transform:uppercase; font-size:0.9em;">Consiglio</div>
+                <div class="winner-name" id="w_name">...</div>
+                <div id="w_score">Punteggio: 0</div>
+            </div>
+            <h3>💡 Alternative:</h3>
+            <div class="runners-grid" id="runners"></div>
+            <hr>
+            <h3>📊 Il tuo profilo universitario:</h3>
+            <div id="chart-container" style="padding: 20px 0; height: 300px; transition: height 0.3s ease;"><canvas
+                    id="radarChart"></canvas></div>
+            <button id="toggle-chart-btn" class="btn-prev" style="width:100%; margin-bottom:20px;"
+                onclick="toggleChartView()">Mostra tutte le facoltà</button>
+            <hr>
+            <h3>📍 Dove studiare?</h3>
+            <div class="custom-dropdown" id="map-dropdown">
+                <div class="dropdown-selected" onclick="toggleMapDropdown()">
+                    <span id="selected-faculty">Seleziona facoltà</span>
+                    <span class="dropdown-arrow">▼</span>
+                </div>
+                <div class="dropdown-options" id="map-dropdown-options"></div>
+            </div>
+            <select id="map-select" style="display:none;"></select>
+            <div id="map"></div>
+            <div class="btn-group"><button class="btn-prev" onclick="location.reload()">🔄 Ricomincia</button></div>
+        </div>
+    </div>
+
+    <script>
+        // --- DATI DI CONFIGURAZIONE ---
+        const UNI_MAPPING = {
+            "Ingegneria": ["Politecnico (Leonardo)", "Politecnico (Bovisa)", "UniBg", "UniPv", "LIUC", "Insubria"],
+            "Matematica, Fisica & Informatica": ["Statale (Città Studi)", "Bicocca", "Insubria", "UniPv", "Statale (Informatica)"],
+            "Chimica, Biologia & Farmacia": ["Statale (Città Studi)", "Bicocca", "Insubria", "UniPv", "Statale (Lodi)"],
+            "Economia & Finanza": ["Bocconi", "Cattolica", "Bicocca", "Statale", "LIUC", "UniBg", "UniPv"],
+            "Medicina & Sanità": ["Statale", "San Raffaele", "Humanitas", "Bicocca", "Insubria", "UniPv"],
+            "Psicologia & Sociale": ["Bicocca", "Cattolica", "UniPv", "UniBg", "San Raffaele"],
+            "Giurisprudenza": ["Statale", "Cattolica", "Bocconi", "Bicocca", "Insubria", "UniPv"],
+            "Design & Architettura": ["Politecnico (Leonardo)", "Politecnico (Bovisa)", "NABA", "IED", "Accademia di Brera", "Marangoni"],
+            "Studi Umanistici": ["Statale", "Cattolica", "IULM", "UniPv", "UniBg"],
+            "Scienze Politiche & Sociali": ["Statale", "Cattolica", "Bocconi", "Bicocca", "UniPv"],
+            "Lingue & Comunicazione": ["IULM", "Cattolica", "Statale", "UniBg", "Civica Altiero Spinelli", "Bicocca"],
+            "Agraria & Veterinaria": ["Statale (Città Studi)", "Statale (Lodi)"],
+            "Scienze Motorie": ["Statale", "Cattolica", "Insubria", "UniPv"],
+            "Moda": ["Politecnico (Bovisa)", "Marangoni", "IED", "NABA", "Domus Academy", "Secoli", "Cattolica (Fashion Mng)"],
+        };
+
+        const COMMON_SUBJECTS = [
+            { label: "Italiano", id: "italiano", cat: "I" }, { label: "Storia", id: "storia", cat: "L" },
+            { label: "Inglese", id: "inglese", cat: "E" }, { label: "Matematica", id: "matematica", cat: "M" },
+            { label: "Scienze Motorie", id: "motorie", cat: "A" }
+        ];
+
+        const SCHOOL_DATA = {
+            "Liceo Scientifico": [
+                { label: "Fisica", id: "fisica", cat: "M" }, { label: "Scienze Naturali", id: "scienze", cat: "S" },
+                { label: "Latino", id: "latino", cat: "I" }, { label: "Filosofia", id: "filosofia", cat: "L" },
+                { label: "Disegno e Storia dell'Arte", id: "arte", cat: "A" }
+            ],
+            "Liceo Classico": [
+                { label: "Latino", id: "latino", cat: "I" }, { label: "Greco", id: "greco", cat: "I" },
+                { label: "Filosofia", id: "filosofia", cat: "L" }, { label: "Storia dell'Arte", id: "arte", cat: "L" },
+                { label: "Fisica", id: "fisica", cat: "M" }, { label: "Scienze Naturali", id: "scienze", cat: "S" }
+            ],
+            "Liceo Linguistico": [
+                { label: "Seconda Lingua", id: "lingua2", cat: "E" }, { label: "Terza Lingua", id: "lingua3", cat: "E" },
+                { label: "Fisica", id: "fisica", cat: "M" }, { label: "Scienze Naturali", id: "scienze", cat: "S" },
+                { label: "Filosofia", id: "filosofia", cat: "L" }, { label: "Storia dell'Arte", id: "arte", cat: "A" }
+            ],
+            "Liceo delle Scienze Umane": [
+                { label: "Scienze Umane", id: "scienze_umane", cat: "S" }, { label: "Filosofia", id: "filosofia", cat: "L" },
+                { label: "Latino", id: "latino", cat: "I" }, { label: "Fisica", id: "fisica", cat: "M" }, { label: "Storia dell'Arte", id: "arte", cat: "A" }
+            ],
+            "Liceo Scientifico Sportivo": [
+                { label: "Discipline Sportive", id: "sport", cat: "A" }, { label: "Diritto ed Economia dello Sport", id: "diritto_sport", cat: "L" },
+                { label: "Fisica", id: "fisica", cat: "M" }, { label: "Scienze Naturali", id: "scienze", cat: "S" }
+            ],
+            "Liceo Artistico": [
+                { label: "Pittoriche/Plastiche", id: "lab_artistico", cat: "A" }, { label: "Progettazione/Architettura", id: "progettazione", cat: "M" },
+                { label: "Storia dell'Arte", id: "storia_arte", cat: "L" }, { label: "Filosofia", id: "filosofia", cat: "L" }, { label: "Fisica", id: "fisica", cat: "S" }
+            ],
+            "Istituto Tecnico (Informatica/Elettronica)": [
+                { label: "Informatica", id: "informatica", cat: "S" }, { label: "Sistemi e Reti", id: "sistemi", cat: "S" },
+                { label: "Telecom/Elettronica", id: "telecom", cat: "A" }, { label: "Gestione Progetto (GPOI)", id: "gpoi", cat: "M" }
+            ],
+            "Istituto Tecnico (Economico/Turistico)": [
+                { label: "Economia Aziendale", id: "economia_az", cat: "M" }, { label: "Diritto", id: "diritto", cat: "L" },
+                { label: "Economia Politica", id: "eco_pol", cat: "L" }, { label: "Seconda Lingua", id: "lingua2", cat: "E" }
+            ],
+            "Istituto Tecnico - Agrario": [
+                { label: "Produzioni Veg./Animali", id: "produzioni", cat: "S" }, { label: "Biotecnologie Agrarie", id: "biotech", cat: "S" },
+                { label: "Trasformazione dei prodotti", id: "trasformazione", cat: "S" }, { label: "Genio Rurale", id: "genio_rurale", cat: "A" },
+                { label: "Economia / Estimo", id: "estimo_agr", cat: "M" }
+            ],
+            "Istituto Tecnico - CAT": [
+                { label: "Costruzioni (PCI)", id: "progettazione", cat: "A" }, { label: "Topografia", id: "topografia", cat: "M" },
+                { label: "Estimo", id: "estimo_geo", cat: "M" }, { label: "Gestione Cantiere", id: "cantiere", cat: "A" }
+            ]
+        };
+
+        const LOGIC_TECH = { "Motore": "HARDWARE", "Codice": "SOFTWARE", "Budget": "BUSINESS", "Eco": "NATURE_TECH", "None": "NONE" };
+        const LOGIC_BIZ = { "Finanza": "FINANZA", "Pubblicità": "MARKETING", "Tribunale": "AVVOCATURA", "Politica": "POLITICA", "None": "NONE" };
+        const LOGIC_SCI = { "Persone": "MEDICINA", "Animali": "VETERINARIA", "Atleti": "SPORT", "Ricerca": "BIOTECH", "Mente": "PSICOLOGIA", "None": "NONE" };
+        const LOGIC_ART = { "Edifici": "ARCHITETTURA", "Oggetti": "PRODUCT", "Moda": "FASHION", "Lingue": "LANGUAGES", "Scrivere": "UMANISTICA", "None": "NONE" };
+        const LOGIC_BROKEN = { "Apro": "TECNICA", "Vendo": "MERCATO", "Pulisco": "ESTETICA", "Butto": "PRAGMATISMO", "Storia": "NARRAZIONE" };
+
+        const SUBJECT_WEIGHTS = {
+            "Ingegneria": { "MATH": 0.70, "SCI": 0.20, "ENG": 0.10 },
+            "Matematica, Fisica & Informatica": { "MATH": 0.80, "SCI": 0.10, "ENG": 0.10 },
+            "Chimica, Biologia & Farmacia": { "SCI": 0.70, "MATH": 0.20, "ENG": 0.10 },
+            "Medicina & Sanità": { "SCI": 0.60, "MATH": 0.20, "LIT": 0.10, "ENG": 0.10 },
+            "Agraria & Veterinaria": { "SCI": 0.60, "ART": 0.20, "MATH": 0.20 },
+            "Scienze Motorie": { "SCI": 0.50, "ART": 0.10, "LIT": 0.10, "MATH": 0.10, "ENG": 0.10, "ITA": 0.10 },
+            "Studi Umanistici": { "LIT": 0.50, "ITA": 0.40, "ART": 0.10 },
+            "Giurisprudenza": { "ITA": 0.40, "LIT": 0.40, "ENG": 0.10, "MATH": 0.10 },
+            "Psicologia & Sociale": { "LIT": 0.40, "SCI": 0.30, "ITA": 0.30 },
+            "Scienze Politiche & Sociali": { "LIT": 0.40, "ITA": 0.35, "ENG": 0.25 },
+            "Lingue & Comunicazione": { "ENG": 0.60, "ITA": 0.30, "LIT": 0.05, "ART": 0.05 },
+            "Economia & Finanza": { "MATH": 0.50, "ENG": 0.30, "LIT": 0.20 },
+            "Design & Architettura": { "ART": 0.60, "MATH": 0.20, "LIT": 0.20 },
+            "Moda": {"ART": 0.50, "ENG": 0.20, "MATH": 0.15, "LIT": 0.15},
+        };
+
+        const IDEAL_PROFILES = {
+            "Ingegneria": [8, 5, 4, 4], "Matematica, Fisica & Informatica": [8, 4, 2, 9],
+            "Economia & Finanza": [6, 8, 7, 5], "Medicina & Sanità": [9, 3, 9, 4],
+            "Chimica, Biologia & Farmacia": [9, 2, 4, 4], "Studi Umanistici": [4, 2, 6, 9],
+            "Giurisprudenza": [8, 2, 6, 7], "Psicologia & Sociale": [5, 4, 10, 7],
+            "Design & Architettura": [7, 6, 5, 5], "Lingue & Comunicazione": [5, 6, 10, 6],
+            "Scienze Politiche & Sociali": [5, 5, 8, 7], "Agraria & Veterinaria": [7, 4, 4, 3],
+            "Scienze Motorie": [6, 5, 8, 2],
+            "Moda & Luxury": [8, 7, 8, 5]
+        };
+
+        const MILANO_DB = {
+            "Politecnico (Leonardo)": { "lat": 45.478, "lon": 9.227 }, "Politecnico (Bovisa)": { "lat": 45.506, "lon": 9.168 },
+            "Bocconi": { "lat": 45.448, "lon": 9.190 }, "Cattolica": { "lat": 45.463, "lon": 9.175 },
+            "LIUC": { "lat": 45.611, "lon": 8.892 }, "Bicocca": { "lat": 45.513, "lon": 9.211 },
+            "Statale": { "lat": 45.460, "lon": 9.194 }, "Statale (Città Studi)": { "lat": 45.476, "lon": 9.224 },
+            "Statale (Lodi)": { "lat": 45.317, "lon": 9.494 }, "IULM": { "lat": 45.444, "lon": 9.162 },
+            "NABA": { "lat": 45.446, "lon": 9.169 }, "IED": { "lat": 45.460, "lon": 9.200 },
+            "Accademia di Brera": { "lat": 45.472, "lon": 9.188 }, "Marangoni": { "lat": 45.465, "lon": 9.195 },
+            "San Raffaele": { "lat": 45.505, "lon": 9.263 }, "Humanitas": { "lat": 45.393, "lon": 9.148 },
+            "UniBg": { "lat": 45.655, "lon": 9.633 }, "UniPv": { "lat": 45.186, "lon": 9.156 }, "Insubria": { "lat": 45.816, "lon": 8.834 },
+            "Domus Academy": {"lat": 45.445, "lon": 9.167}, "Secoli": {"lat": 45.495, "lon": 9.213},
+            "Cattolica (Fashion Mng)": {"lat": 45.463, "lon": 9.175}
+        };
+
+        // --- FUNZIONI DI INTERFACCIA ---
+        function init() {
+            const s = document.getElementById('school-select');
+            const dropdownOptions = document.getElementById('dropdown-options');
+
+            Object.keys(SCHOOL_DATA).forEach((k, index) => {
+                // Popola select nascosto
+                let o = document.createElement('option'); o.value = k; o.innerText = k; s.appendChild(o);
+
+                // Popola custom dropdown
+                const opt = document.createElement('div');
+                opt.className = 'dropdown-option' + (index === 0 ? ' selected' : '');
+                opt.innerText = k;
+                opt.onclick = () => selectSchool(k);
+                dropdownOptions.appendChild(opt);
+            });
+
+            // Chiudi dropdown quando si clicca fuori
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.custom-dropdown')) {
+                    closeDropdown();
+                }
+            });
+
+            renderSubjects(); renderRadios(); renderChecks();
+        }
+
+        function toggleDropdown() {
+            const selected = document.querySelector('.dropdown-selected');
+            const options = document.getElementById('dropdown-options');
+            selected.classList.toggle('open');
+            options.classList.toggle('show');
+        }
+
+        function closeDropdown() {
+            const selected = document.querySelector('.dropdown-selected');
+            const options = document.getElementById('dropdown-options');
+            selected.classList.remove('open');
+            options.classList.remove('show');
+        }
+
+        function selectSchool(school) {
+            // Aggiorna testo selezionato
+            document.getElementById('selected-school').innerText = school;
+
+            // Aggiorna select nascosto
+            document.getElementById('school-select').value = school;
+
+            // Aggiorna stili opzioni
+            document.querySelectorAll('.dropdown-option').forEach(opt => {
+                opt.classList.toggle('selected', opt.innerText === school);
+            });
+
+            // Chiudi dropdown e aggiorna materie
+            closeDropdown();
+            renderSubjects();
+        }
+
+        function renderSubjects() {
+            const sc = document.getElementById('school-select').value;
+            const cont = document.getElementById('subjects-container'); cont.innerHTML = "";
+            [...COMMON_SUBJECTS, ...SCHOOL_DATA[sc]].forEach(sub => {
+                cont.innerHTML += `
+        <div class="card">
+            <label style="font-weight: bold; font-size: 1.15em;">${sub.label}</label>
+            <div class="slider-wrapper">
+                <span class="slider-value" id="sv_${sub.id}">6</span>
+                <input type="range" min="1" max="10" value="6" oninput="updateSliderValue(this, 'sv_${sub.id}')" data-id="${sub.id}" data-type="vote" data-cat="${sub.cat}">
+                <div class="slider-range"><span>1</span><span>10</span></div>
+            </div>
+            <div style="font-size:0.75em; text-align:center; color:#94a3b8; margin-top:-18px; margin-bottom:6px;">Voto (Media)</div>
+            <div class="slider-wrapper" style="margin-top:15px;">
+                <span class="slider-value" id="se_${sub.id}">5</span>
+                <input type="range" min="1" max="10" value="5" oninput="updateSliderValue(this, 'se_${sub.id}')" data-id="${sub.id}" data-type="effort">
+                <div class="slider-range"><span>1</span><span>10</span></div>
+            </div>
+            <div style="font-size:0.75em; text-align:center; color:#94a3b8; margin-top:-18px;">Fatica (1=Poca, 10=Tanta)</div>
+            <hr style="border:0; border-top:1px solid #eee; margin-top:15px;">
+        </div>`;
+            });
+            // Initialize slider positions
+            document.querySelectorAll('.slider-wrapper input[type="range"]').forEach(initSliderValue);
+        }
+
+        function renderRadios() {
+            const mkRadio = (id, opts, dest) => {
+                opts.forEach(o => document.getElementById(dest).innerHTML += `<label class="radio-option"><input type="radio" name="${id}" value="${o.v}" ${o.v === 'None' || o.v === 'Apro' || o.v === 'Azienda' ? 'checked' : ''}> ${o.t}</label>`);
+            };
+
+            // NOTA: Qui mappiamo la frase LUNGA (t) sul valore BREVE (v) usato dal motore di calcolo
+            mkRadio("q_tech", [
+                { v: "Motore", t: "Capire come è costruito il motore" },
+                { v: "Codice", t: "Scrivere il codice che guida il razzo" },
+                { v: "Budget", t: "Gestire il budget della missione" },
+                { v: "Eco", t: "Garantire che il lancio sia ecosostenibile" },
+                { v: "None", t: "Non mi interessa" }
+            ], "q_tech_c");
+
+            mkRadio("q_biz", [
+                { v: "Finanza", t: "Analizzare i mercati finanziari" },
+                { v: "Pubblicità", t: "Creare strategie pubblicitarie" },
+                { v: "Tribunale", t: "Difendere un cliente in tribunale" },
+                { v: "Politica", t: "Mediare accordi tra stati o partiti" },
+                { v: "None", t: "Nessuno di questi" }
+            ], "q_biz_c");
+
+            mkRadio("q_sci", [
+                { v: "Persone", t: "Curare le persone" },
+                { v: "Animali", t: "Curare animali o piante" },
+                { v: "Atleti", t: "Migliorare le prestazioni degli atleti" },
+                { v: "Ricerca", t: "Ricerca in laboratorio" },
+                { v: "Mente", t: "Capire la mente umana" }, // Nota: "Progettare robot medici" era nel python ma mappato su BIOTECH/MEDICINA, qui semplifico o uso robot -> BIOTECH se vuoi
+                { v: "None", t: "Non fa per me" }
+            ], "q_sci_c");
+
+            mkRadio("q_art", [
+                { v: "Edifici", t: "Progettare edifici" },
+                { v: "Oggetti", t: "Disegnare/creare oggetti" },
+                { v: "Moda", t: "Moda e Design" },
+                { v: "Lingue", t: "Scoprire lingue e culture straniere" },
+                { v: "Scrivere", t: "Leggere e scrivere" },
+                { v: "None", t: "Non è il mio campo" }
+            ], "q_art_c");
+
+            mkRadio("q_broken", [
+                { v: "Apro", t: "Lo apro per vedere com'è fatto" },
+                { v: "Vendo", t: "Cerco quanto vale per venderlo" },
+                { v: "Pulisco", t: "Lo pulisco e lo uso per arredamento" },
+                { v: "Butto", t: "Lo butto, è spazzatura" },
+                { v: "Storia", t: "Immagino la sua storia" }
+            ], "q_broken_c");
+
+            mkRadio("q_future", [
+                { v: "Azienda", t: "In una grande Azienda o Tech Company (Ufficio/Grattacielo)" },
+                { v: "Camice", t: "In camice bianco (Laboratorio di Ricerca o Ospedale)" },
+                { v: "Creativo", t: "In uno spazio Creativo (Atelier, Redazione, Studio di Design)" },
+                { v: "Istituzioni", t: "In contesti Istituzionali (Tribunale, Politica, Diplomazia)" },
+                { v: "Persone", t: "A contatto diretto con le persone (Scuola, Psicologia, Sociale)" },
+                { v: "Movimento", t: "In movimento o nella Natura (Sport, Cantieri, Campi, Viaggi)" }
+            ], "q_future_c");
+        }
+
+        function renderChecks() {
+            const opts = [
+                { id: "chk_teach", t: "I compagni ti chiedono spesso aiuto per capire le lezioni" },
+                { id: "chk_nature", t: "Ti rilassa stare nella natura e ti preoccupi per l'ambiente" },
+                { id: "chk_money", t: "Ti incuriosisce capire come girano i soldi nel mondo" },
+                { id: "chk_care", t: "Ti senti realizzato quando aiuti o ascolti chi sta male" },
+                { id: "chk_sport", t: "Lo sport è una parte fondamentale della tua vita" },
+                { id: "chk_write", t: "Ami scrivere o imparare nuove lingue" },
+                { id: "chk_law", t: "Non sopporti le ingiustizie e difendi sempre le tue idee" },
+                { id: "chk_tech", t: "A casa sei quello che risolve i problemi con il PC o le cose elettroniche" },
+                { id: "chk_politics", t: "Segui con interesse la politica e l'attualità" },
+                { id: "chk_art", t: "Hai un forte senso estetico e noti anche i piccoli dettagli" }
+            ];
+            opts.forEach(o => document.getElementById("chk_container").innerHTML += `<label class="radio-option"><input type="checkbox" id="${o.id}"> ${o.t}</label>`);
+        }
+
+        function nextStep(n) {
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById(`step-${n}`).classList.add('active');
+
+            // Calcolo barra progresso: step 1 = 0%, step 2-5 = progressivo, step 6 = 100%
+            let progressPercent;
+            if (n === 1) {
+                progressPercent = 0;
+            } else if (n === 6) {
+                progressPercent = 100;
+            } else {
+                progressPercent = ((n - 1) / 5) * 100;
+            }
+            document.getElementById('progress').style.width = progressPercent + "%";
+
+            // Aggiorna indicatore testuale
+            const indicator = document.getElementById('step-indicator');
+            if (n === 6) {
+                indicator.innerText = "I tuoi risultati";
+            } else {
+                indicator.innerText = `Step ${n} di 5`;
+            }
+
+            window.scrollTo(0, 0);
+        }
+
+        function getVal(id) { return parseInt(document.getElementById(id).value); }
+        function getRadio(n) { return document.querySelector(`input[name="${n}"]:checked`).value; }
+        function getChk(id) { return document.getElementById(id).checked; }
+
+        // Funzioni per slider con valore sopra thumb
+        function updateSliderValue(slider, valueId) {
+            const valueSpan = document.getElementById(valueId);
+            valueSpan.textContent = slider.value;
+            positionSliderValue(slider, valueSpan);
+        }
+
+        function positionSliderValue(slider, valueSpan) {
+            const min = parseFloat(slider.min);
+            const max = parseFloat(slider.max);
+            const val = parseFloat(slider.value);
+            const percent = ((val - min) / (max - min)) * 100;
+            valueSpan.style.left = `calc(${percent}% + (${8 - percent * 0.16}px))`;
+        }
+
+        function initSliderValue(slider) {
+            const wrapper = slider.closest('.slider-wrapper');
+            if (!wrapper) return;
+            const valueSpan = wrapper.querySelector('.slider-value');
+            if (valueSpan) {
+                positionSliderValue(slider, valueSpan);
+            }
+        }
+
+        // =============================================================================
+        // MOTORE DI CALCOLO (VERSIONE PYTHON FEDELE)
+        // =============================================================================
+        function calculateAndShow() {
+            try {
+                // 1. INPUT RECOVERY
+                const school = document.getElementById('school-select').value;
+                const gradesInput = document.querySelectorAll('#subjects-container input[type="range"]');
+
+                // --- SEZIONE 0: BONUS SCUOLA (FEDELE AL PYTHON) ---
+                let sec0 = {}; Object.keys(UNI_MAPPING).forEach(k => sec0[k] = 0);
+                const add0 = (list, pts) => list.forEach(f => sec0[f] += pts);
+                const sub0 = (list, pts) => list.forEach(f => sec0[f] -= pts);
+
+                if (school === "Liceo Scientifico") {
+                    add0(["Ingegneria", "Matematica, Fisica & Informatica", "Medicina & Sanità", "Chimica, Biologia & Farmacia"], 15);
+                    add0(["Economia & Finanza", "Design & Architettura"], 10);
+                    sub0(["Scienze Motorie"], 15);
+                } else if (school === "Liceo Classico") {
+                    add0(["Studi Umanistici", "Giurisprudenza", "Scienze Politiche & Sociali", "Psicologia & Sociale"], 20);
+                    add0(["Medicina & Sanità"], 10);
+                    sub0(["Ingegneria", "Matematica, Fisica & Informatica", "Scienze Motorie"], 10);
+                } else if (school === "Liceo Linguistico") {
+                    add0(["Lingue & Comunicazione", "Scienze Politiche & Sociali"], 20);
+                    sub0(["Ingegneria", "Matematica, Fisica & Informatica", "Medicina & Sanità"], 10);
+                } else if (school === "Liceo Scientifico Sportivo") {
+                    add0(["Scienze Motorie"], 30);
+                    add0(["Medicina & Sanità", "Chimica, Biologia & Farmacia"], 15);
+                    add0(["Ingegneria"], 10);
+                } else if (school === "Liceo delle Scienze Umane") {
+                    add0(["Psicologia & Sociale", "Studi Umanistici"], 25);
+                    add0(["Scienze Motorie"], 10);
+                    sub0(["Ingegneria", "Matematica, Fisica & Informatica", "Economia & Finanza"], 5);
+                } else if (school === "Liceo Artistico") {
+                    add0(["Design & Architettura"], 30);
+                    add0(["Studi Umanistici"], 10);
+                    sub0(["Ingegneria", "Economia & Finanza", "Giurisprudenza"], 15);
+                } else if (school.includes("Informatica")) {
+                    add0(["Ingegneria", "Matematica, Fisica & Informatica"], 25);
+                    sub0(["Studi Umanistici", "Giurisprudenza", "Psicologia & Sociale"], 15);
+                } else if (school.includes("Economico")) {
+                    add0(["Economia & Finanza"], 25);
+                    add0(["Lingue & Comunicazione", "Giurisprudenza"], 10);
+                    sub0(["Medicina & Sanità", "Ingegneria", "Chimica, Biologia & Farmacia"], 15);
+                } else if (school.includes("Agrario") || school.includes("CAT")) {
+                    // La logica Python raggruppava "Agrario/Geometra", qui applichiamo a entrambi
+                    add0(["Agraria & Veterinaria", "Design & Architettura"], 25);
+                    sub0(["Studi Umanistici", "Lingue & Comunicazione", "Psicologia & Sociale"], 15);
+                }
+
+                // --- SEZIONE 1: VOTI (AGGREGATORE DINAMICO) ---
+                let macro = { M: [], S: [], L: [], I: [], E: [], A: [] };
+                // Raccogli voti dagli input
+                let tempGrades = {};
+                gradesInput.forEach(i => {
+                    if (!tempGrades[i.dataset.id]) tempGrades[i.dataset.id] = { cat: i.dataset.cat };
+                    if (i.dataset.type === 'vote') tempGrades[i.dataset.id].v = parseInt(i.value) || 6;
+                    if (i.dataset.type === 'effort') tempGrades[i.dataset.id].e = parseInt(i.value) || 5;
+                });
+
+                Object.values(tempGrades).forEach(g => {
+                    let raw = (g.v * 7) + ((10 - g.e) * 3);
+                    macro[g.cat].push(Math.min(100, raw));
+                });
+
+                let subj_scores = {};
+                const mapK = { M: "MATH", S: "SCI", L: "LIT", I: "ITA", E: "ENG", A: "ART" };
+                Object.keys(macro).forEach(k => {
+                    let arr = macro[k];
+                    subj_scores[mapK[k]] = arr.length ? arr.reduce((a, b) => a + b) / arr.length : 50.0;
+                });
+
+                let sec1 = {};
+                Object.keys(SUBJECT_WEIGHTS).forEach(fac => {
+                    let w = SUBJECT_WEIGHTS[fac];
+                    let s = 0;
+                    Object.keys(w).forEach(sub => s += (subj_scores[sub] || 0) * w[sub]);
+                    sec1[fac] = s;
+                });
+
+                // --- SEZIONE 2: INTERESSI ---
+                let sec2 = {}; Object.keys(UNI_MAPPING).forEach(k => sec2[k] = 0);
+                const add2 = (list, pts) => list.forEach(f => sec2[f] = Math.min(100, sec2[f] + pts));
+                const sub2 = (list, pts) => list.forEach(f => sec2[f] -= pts);
+
+                const tv = LOGIC_TECH[getRadio("q_tech")];
+                if (tv === "HARDWARE") { add2(["Ingegneria"], 60); add2(["Design & Architettura"], 30); }
+                else if (tv === "SOFTWARE") { add2(["Matematica, Fisica & Informatica"], 60); add2(["Ingegneria"], 40); }
+                else if (tv === "BUSINESS") { add2(["Economia & Finanza"], 60); add2(["Ingegneria"], 20); }
+                else if (tv === "NATURE_TECH") { add2(["Agraria & Veterinaria"], 60); add2(["Chimica, Biologia & Farmacia"], 40); }
+                else { sub2(["Ingegneria", "Matematica, Fisica & Informatica"], 30); sub2(["Agraria & Veterinaria"], 15); }
+
+                const bv = LOGIC_BIZ[getRadio("q_biz")];
+                if (bv === "FINANZA") add2(["Economia & Finanza"], 60);
+                else if (bv === "MARKETING") { add2(["Lingue & Comunicazione"], 60); add2(["Economia & Finanza"], 40); add2(["Psicologia & Sociale"], 30); }
+                else if (bv === "AVVOCATURA") add2(["Giurisprudenza"], 60);
+                else if (bv === "POLITICA") { add2(["Scienze Politiche & Sociali"], 60); add2(["Giurisprudenza"], 30); add2(["Lingue & Comunicazione"], 20); }
+                else sub2(["Economia & Finanza", "Giurisprudenza"], 30);
+
+                const sv = LOGIC_SCI[getRadio("q_sci")];
+                if (sv === "MEDICINA") add2(["Medicina & Sanità"], 60);
+                else if (sv === "VETERINARIA") { add2(["Agraria & Veterinaria"], 60); add2(["Chimica, Biologia & Farmacia"], 20); }
+                else if (sv === "SPORT") { add2(["Scienze Motorie"], 60); add2(["Medicina & Sanità"], 20); }
+                else if (sv === "BIOTECH") { add2(["Chimica, Biologia & Farmacia"], 60); add2(["Medicina & Sanità"], 20); }
+                else if (sv === "PSICOLOGIA") { add2(["Psicologia & Sociale"], 60); add2(["Studi Umanistici"], 20); }
+                else sub2(["Medicina & Sanità", "Chimica, Biologia & Farmacia"], 30);
+
+                const av = LOGIC_ART[getRadio("q_art")];
+                if (av === "ARCHITETTURA") { add2(["Design & Architettura"], 60); add2(["Ingegneria"], 30); }
+                else if (av === "PRODUCT") {add2(["Design & Architettura"], 50); add2(["Ingegneria"], 20)}
+                else if (av === "FASHION") { add2(["Moda"], 70); add2(["Design & Architettura"], 30); }
+                else if (av === "LANGUAGES") { add2(["Lingue & Comunicazione"], 60); add2(["Scienze Politiche & Sociali"], 30); }
+                else if (av === "UMANISTICA") { add2(["Studi Umanistici"], 60); add2(["Scienze Politiche & Sociali"], 20); }
+                else sub2(["Design & Architettura", "Studi Umanistici"], 30);
+
+                // --- SEZIONE 3: MENTE E STILE ---
+                let sec3 = {};
+                const uProf = [getVal('s_detail'), getVal('s_risk'), getVal('s_people'), getVal('s_abs')];
+                Object.keys(IDEAL_PROFILES).forEach(fac => {
+                    let ideal = IDEAL_PROFILES[fac];
+                    let tDist = 0, pen = 0;
+                    for (let i = 0; i < 4; i++) {
+                        let d = Math.abs(uProf[i] - ideal[i]);
+                        tDist += d;
+                        if (d >= 7) pen += 40; else if (d >= 5) pen += 10;
+                    }
+                    let base = Math.max(0, 100 - (tDist / 4) * 10);
+                    sec3[fac] = base - pen;
+                });
+
+                // --- SEZIONE 4: SCENARI ---
+                let sec4 = {}; Object.keys(UNI_MAPPING).forEach(k => sec4[k] = 0);
+                const add4 = (list, pts) => list.forEach(f => sec4[f] += pts);
+                const brV = LOGIC_BROKEN[getRadio("q_broken")];
+
+                if (brV === "TECNICA") add4(["Ingegneria", "Matematica, Fisica & Informatica"], 50);
+                else if (brV === "MERCATO") add4(["Economia & Finanza"], 50);
+                else if (brV === "ESTETICA") add4(["Design & Architettura"], 50);
+                else if (brV === "PRAGMATISMO") add4(["Economia & Finanza", "Ingegneria"], 20);
+                else if (brV === "NARRAZIONE") add4(["Studi Umanistici", "Psicologia & Sociale"], 50);
+
+                const futV = getRadio("q_future");
+                if (futV === "Azienda") { add4(["Economia & Finanza", "Ingegneria"], 50); add4(["Matematica, Fisica & Informatica"], 40); add4(["Lingue & Comunicazione"], 10); }
+                else if (futV === "Camice") { add4(["Medicina & Sanità", "Chimica, Biologia & Farmacia"], 50); add4(["Agraria & Veterinaria"], 30); add4(["Psicologia & Sociale"], 10); }
+                else if (futV === "Creativo") { add4(["Design & Architettura"], 50); add4(["Studi Umanistici", "Lingue & Comunicazione"], 40); add4(["Ingegneria"], 10); }
+                else if (futV === "Istituzioni") { add4(["Giurisprudenza", "Scienze Politiche & Sociali"], 50); add4(["Economia & Finanza"], 20); }
+                else if (futV === "Persone") { add4(["Psicologia & Sociale", "Studi Umanistici"], 50); add4(["Lingue & Comunicazione"], 40); add4(["Medicina & Sanità", "Scienze Motorie"], 30); }
+                else if (futV === "Movimento") { add4(["Agraria & Veterinaria", "Scienze Motorie"], 50); add4(["Design & Architettura"], 20); add4(["Chimica, Biologia & Farmacia", "Ingegneria"], 10); }
+
+                // --- SEZIONE 5: CONFERME ---
+                let sec5 = {}; Object.keys(UNI_MAPPING).forEach(k => sec5[k] = 0);
+                const add5 = (f, pts) => sec5[f] += pts;
+
+                if (getChk("chk_teach")) { add5("Studi Umanistici", 100); add5("Matematica, Fisica & Informatica", 50); add5("Lingue & Comunicazione", 30); add5("Ingegneria", 30); }
+                if (getChk("chk_nature")) { add5("Agraria & Veterinaria", 100); add5("Chimica, Biologia & Farmacia", 30); }
+                if (getChk("chk_money")) { add5("Economia & Finanza", 100); add5("Ingegneria", 40); add5("Giurisprudenza", 20); }
+                if (getChk("chk_care")) { add5("Medicina & Sanità", 100); add5("Psicologia & Sociale", 80); add5("Scienze Motorie", 20); }
+                if (getChk("chk_sport")) { add5("Scienze Motorie", 100); add5("Medicina & Sanità", 20); }
+                if (getChk("chk_write")) { add5("Lingue & Comunicazione", 100); add5("Studi Umanistici", 100); add5("Scienze Politiche & Sociali", 30); }
+                if (getChk("chk_law")) { add5("Giurisprudenza", 100); add5("Scienze Politiche & Sociali", 50); }
+                if (getChk("chk_tech")) { add5("Ingegneria", 100); add5("Matematica, Fisica & Informatica", 100); add5("Design & Architettura", 20); }
+                if (getChk("chk_politics")) { add5("Scienze Politiche & Sociali", 100); add5("Giurisprudenza", 50); add5("Economia & Finanza", 20); }
+                if (getChk("chk_art")) { add5("Moda", 100); add5("Design & Architettura", 80); add5("Studi Umanistici", 20); }
+
+                // CAP A 100 PER SEC 5
+                Object.keys(sec5).forEach(k => { if (sec5[k] > 100) sec5[k] = 100; });
+
+                // --- CALCOLO FINALE ---
+                let finalScores = {};
+                Object.keys(UNI_MAPPING).forEach(fac => {
+                    let raw = (sec0[fac] * 0.5) + (sec1[fac] * 0.25) + (sec2[fac] * 0.30) + (sec3[fac] * 0.25) + (sec4[fac] * 0.10) + (sec5[fac] * 0.10);
+                    if (raw > 75) raw += 10;
+                    finalScores[fac] = Math.min(100, raw);
+                });
+
+                // OUTPUT
+                let sorted = Object.entries(finalScores).sort((a, b) => b[1] - a[1]);
+                const winner = sorted[0];
+
+                document.getElementById('w_name').innerText = "🥇 " + winner[0];
+                document.getElementById('w_score').innerText = "Punteggio: " + Math.round(winner[1]);
+
+                const runDiv = document.getElementById('runners'); runDiv.innerHTML = "";
+                const medals = ["🥈", "🥉", "4️⃣", "5️⃣"];
+
+                // Filtra facoltà con almeno 65% del punteggio del vincitore
+                const threshold = winner[1] * 0.65;
+                // Limit to Top 5 (User request: "mostrate solo diverse/le università consigliate", implying a cap)
+                let recommended = sorted.filter(r => r[1] >= threshold).slice(0, 5);
+
+                // Mostra alternative (escluso il vincitore)
+                recommended.slice(1).forEach((r, index) => {
+                    runDiv.innerHTML += `<div class="runner-card"><strong>${medals[index]} ${r[0]}</strong><br>Punti: ${Math.round(r[1])}</div>`;
+                });
+
+                // Safety check: se recommended è vuoto, usa il vincitore
+                if (recommended.length === 0) {
+                    recommended.push(winner);
+                }
+
+                // Salva dati globalmente per toggle
+                window.allSorted = sorted;
+                window.recommended = recommended; // Store clamped recommended list
+                window.recommendedCount = recommended.length;
+                window.showingAll = false;
+
+                // Aggiorna Chart - mostra solo facoltà consigliate
+                renderChart(recommended);
+
+                // Aggiorna testo bottone e visibilità
+                const btn = document.getElementById('toggle-chart-btn');
+                btn.innerHTML = 'Mostra tutte le facoltà';
+
+                // Aggiorna Dropdown Mappa Custom - solo facoltà consigliate
+                const ms = document.getElementById('map-select'); ms.innerHTML = "";
+                const dropdownOpts = document.getElementById('map-dropdown-options'); dropdownOpts.innerHTML = "";
+
+                recommended.forEach((s, index) => {
+                    // Popola select nascosto
+                    let o = document.createElement('option'); o.value = s[0]; o.innerText = s[0]; ms.appendChild(o);
+
+                    // Popola custom dropdown
+                    const opt = document.createElement('div');
+                    opt.className = 'dropdown-option' + (index === 0 ? ' selected' : '');
+                    opt.innerText = s[0];
+                    opt.onclick = () => selectFaculty(s[0]);
+                    dropdownOpts.appendChild(opt);
+                });
+
+                // Imposta testo iniziale
+                document.getElementById('selected-faculty').innerText = recommended[0][0];
+                updateMap();
+
+                nextStep(6);
+            } catch (e) {
+                console.error("Errore calcolo:", e);
+                alert("Si è verificato un errore: " + e.message);
+            }
+        }
+
+        // Funzione per renderizzare il chart
+        function renderChart(data) {
+            if (myChart) myChart.destroy();
+
+            // Genera colori blu sfumati (basati sulla posizione originale in classifica generale)
+            const allData = (window.allSorted && window.allSorted.length > 0) ? window.allSorted : data;
+            const maxIndex = Math.max(allData.length - 1, 1);
+
+            const blueColors = data.map((item) => {
+                // Trova indice nella classifica globale per mantenere colore costante
+                const originalIndex = allData.findIndex(x => x[0] === item[0]);
+                const i = originalIndex >= 0 ? originalIndex : 0;
+
+                const ratio = i / maxIndex;
+                // Da blu scuro (30, 64, 175) a blu chiaro (147, 197, 253)
+                const r = Math.round(30 + ratio * 117);
+                const g = Math.round(64 + ratio * 133);
+                const b = Math.round(175 + ratio * 78);
+                return `rgba(${r}, ${g}, ${b}, 0.85)`;
+            });
+            const blueBorders = data.map((item) => {
+                const originalIndex = allData.findIndex(x => x[0] === item[0]);
+                const i = originalIndex >= 0 ? originalIndex : 0;
+
+                const ratio = i / maxIndex;
+                const r = Math.round(30 + ratio * 90);
+                const g = Math.round(64 + ratio * 100);
+                const b = Math.round(175 + ratio * 50);
+                return `rgb(${r}, ${g}, ${b})`;
+            });
+
+            const container = document.getElementById('chart-container');
+            container.style.height = (data.length * 45 + 50) + 'px';
+
+            myChart = new Chart(document.getElementById('radarChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: data.map(x => x[0]),
+                    datasets: [{
+                        label: 'Affinità',
+                        data: data.map(x => x[1]),
+                        backgroundColor: blueColors,
+                        borderColor: blueBorders,
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: { color: 'rgba(37, 99, 235, 0.1)' },
+                            ticks: { color: '#64748b', font: { size: 11 } }
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: { color: '#334155', font: { size: 12, weight: '600' } }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Funzione per mostrare/nascondere tutte le facoltà
+        function toggleChartView() {
+            const btn = document.getElementById('toggle-chart-btn');
+            const count = window.recommendedCount || 5;
+            // Use the stored recommended list to ensure consistency (max 5)
+            const recommended = window.recommended || [];
+
+            if (window.showingAll) {
+                renderChart(recommended);
+                btn.innerHTML = 'Mostra tutte le facoltà';
+                window.showingAll = false;
+            } else {
+                renderChart(window.allSorted);
+                btn.innerHTML = `Mostra solo Top ${count}`;
+                window.showingAll = true;
+            }
+        }
+
+        // Dropdown mappa funzioni
+        function toggleMapDropdown() {
+            const selected = document.querySelector('#map-dropdown .dropdown-selected');
+            const options = document.getElementById('map-dropdown-options');
+            selected.classList.toggle('open');
+            options.classList.toggle('show');
+        }
+
+        function selectFaculty(faculty) {
+            document.getElementById('selected-faculty').innerText = faculty;
+            document.getElementById('map-select').value = faculty;
+
+            document.querySelectorAll('#map-dropdown-options .dropdown-option').forEach(opt => {
+                opt.classList.toggle('selected', opt.innerText === faculty);
+            });
+
+            // Chiudi dropdown
+            document.querySelector('#map-dropdown .dropdown-selected').classList.remove('open');
+            document.getElementById('map-dropdown-options').classList.remove('show');
+
+            updateMap();
+        }
+
+        // MAPPA
+        let map, markers = [];
+        function updateMap() {
+            if (!map) {
+                map = L.map('map').setView([45.4642, 9.1900], 11);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors',
+                    maxZoom: 18
+                }).addTo(map);
+            }
+
+            // Fix per mappa grigia: forza refresh dopo render
+            setTimeout(() => {
+                map.invalidateSize();
+            }, 300);
+
+            markers.forEach(m => map.removeLayer(m)); markers = [];
+            const unis = UNI_MAPPING[document.getElementById('map-select').value] || [];
+            unis.forEach(u => {
+                let c = MILANO_DB[u];
+                if (c) markers.push(L.marker([c.lat, c.lon]).addTo(map).bindPopup(`<b>${u}</b>`));
+            });
+
+            // Zoom sempre su Milano (non troppo dezoomato)
+            map.setView([45.4642, 9.1900], 11);
+        }
+        let myChart;
+        init();
+
+        // Inizializza posizione valori slider pagina 3
+        document.addEventListener('DOMContentLoaded', function () {
+            ['sv_detail', 'sv_risk', 'sv_people', 'sv_abs'].forEach(id => {
+                const valueSpan = document.getElementById(id);
+                const slider = valueSpan?.parentElement?.querySelector('input[type="range"]');
+                if (slider && valueSpan) {
+                    positionSliderValue(slider, valueSpan);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
