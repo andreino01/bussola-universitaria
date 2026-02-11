@@ -476,6 +476,100 @@
             z-index: 1;
         }
 
+        /* Nuovi stili per la griglia università */
+        .uni-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .uni-card {
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            border: 1px solid transparent;
+            /* Overridden by badge classes */
+            position: relative;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 110px;
+        }
+
+        .uni-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .uni-link-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 28px;
+            height: 28px;
+            background: rgba(0, 0, 0, 0.05);
+            /* Neutral base */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        /* Colore per card PUBBLICA (Rosso) */
+        .badge-pub .uni-link-icon {
+            color: #c62828;
+            background: rgba(198, 40, 40, 0.1);
+        }
+
+        .badge-pub .uni-link-icon:hover {
+            background: #c62828;
+            color: white;
+            box-shadow: 0 4px 12px rgba(198, 40, 40, 0.3);
+            transform: translate(2px, -2px);
+        }
+
+        /* Colore per card PRIVATA (Blu) */
+        .badge-priv .uni-link-icon {
+            color: #1565c0;
+            background: rgba(21, 101, 192, 0.1);
+        }
+
+        .badge-priv .uni-link-icon:hover {
+            background: #1565c0;
+            color: white;
+            box-shadow: 0 4px 12px rgba(21, 101, 192, 0.3);
+            transform: translate(2px, -2px);
+        }
+
+        .badge-pub {
+            background-color: #ffebee;
+            color: #c62828;
+            border-color: #ef9a9a;
+        }
+
+        .badge-priv {
+            background-color: #e3f2fd;
+            color: #1565c0;
+            border-color: #90caf9;
+        }
+
+        .badge-text {
+            font-size: 0.75em;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 4px;
+            padding: 0;
+            background: transparent;
+        }
+
         /* ============================================= */
         /* MOBILE OPTIMIZATION - Target: 480px e sotto  */
         /* ============================================= */
@@ -808,7 +902,9 @@
                 <div class="dropdown-options" id="map-dropdown-options"></div>
             </div>
             <select id="map-select" style="display:none;"></select>
+
             <div id="map"></div>
+            <div id="unis-list-container"></div>
             <div class="btn-group"><button class="btn-prev" onclick="location.reload()">🔄 Ricomincia</button></div>
         </div>
     </div>
@@ -920,18 +1016,36 @@
         };
 
         const MILANO_DB = {
-            "Politecnico (Leonardo)": { "lat": 45.478, "lon": 9.227 }, "Politecnico (Bovisa)": { "lat": 45.506, "lon": 9.168 },
-            "Bocconi": { "lat": 45.448, "lon": 9.190 }, "Cattolica": { "lat": 45.463, "lon": 9.175 },
-            "LIUC": { "lat": 45.611, "lon": 8.892 }, "Bicocca": { "lat": 45.513, "lon": 9.211 },
-            "Statale": { "lat": 45.460, "lon": 9.194 }, "Statale (Città Studi)": { "lat": 45.476, "lon": 9.224 },
-            "Statale (Lodi)": { "lat": 45.317, "lon": 9.494 }, "IULM": { "lat": 45.444, "lon": 9.162 },
-            "NABA": { "lat": 45.446, "lon": 9.169 }, "IED": { "lat": 45.460, "lon": 9.200 },
-            "Accademia di Brera": { "lat": 45.472, "lon": 9.188 }, "Marangoni": { "lat": 45.465, "lon": 9.195 },
-            "San Raffaele": { "lat": 45.505, "lon": 9.263 }, "Humanitas": { "lat": 45.393, "lon": 9.148 },
-            "UniBg": { "lat": 45.655, "lon": 9.633 }, "UniPv": { "lat": 45.186, "lon": 9.156 }, "Insubria": { "lat": 45.816, "lon": 8.834 },
-            "Domus Academy": { "lat": 45.445, "lon": 9.167 }, "Secoli": { "lat": 45.495, "lon": 9.213 },
-            "Cattolica (Fashion Mng)": { "lat": 45.463, "lon": 9.175 }
+            "Politecnico (Leonardo)": { "lat": 45.478, "lon": 9.227, "type": "Pubblica", "url": "https://www.polimi.it/" },
+            "Politecnico (Bovisa)": { "lat": 45.506, "lon": 9.168, "type": "Pubblica", "url": "https://www.polimi.it/" },
+            "Bocconi": { "lat": 45.448, "lon": 9.190, "type": "Privata", "url": "https://www.unibocconi.it/" },
+            "Cattolica": { "lat": 45.463, "lon": 9.175, "type": "Privata", "url": "https://www.unicatt.it/" },
+            "LIUC": { "lat": 45.611, "lon": 8.892, "type": "Privata", "url": "https://www.liuc.it/" },
+            "Bicocca": { "lat": 45.513, "lon": 9.211, "type": "Pubblica", "url": "https://www.unimib.it/" },
+            "Statale": { "lat": 45.460, "lon": 9.194, "type": "Pubblica", "url": "https://www.unimi.it/" },
+            "Statale (Città Studi)": { "lat": 45.476, "lon": 9.224, "type": "Pubblica", "url": "https://www.unimi.it/" },
+            "Statale (Lodi)": { "lat": 45.317, "lon": 9.494, "type": "Pubblica", "url": "https://www.unimi.it/it/corsi/facolta-e-scuole/medicina-veterinaria" },
+            "Statale (Informatica)": { "lat": 45.476, "lon": 9.224, "type": "Pubblica", "url": "https://www.unimi.it/" },
+            "IULM": { "lat": 45.444, "lon": 9.162, "type": "Privata", "url": "https://www.iulm.it/" },
+            "NABA": { "lat": 45.446, "lon": 9.169, "type": "Privata", "url": "https://www.naba.it/" },
+            "IED": { "lat": 45.460, "lon": 9.200, "type": "Privata", "url": "https://www.ied.it/" },
+            "Accademia di Brera": { "lat": 45.472, "lon": 9.188, "type": "Pubblica", "url": "https://www.accademiadibrera.milano.it/" },
+            "Marangoni": { "lat": 45.465, "lon": 9.195, "type": "Privata", "url": "https://www.istitutomarangoni.com/" },
+            "San Raffaele": { "lat": 45.505, "lon": 9.263, "type": "Privata", "url": "https://www.unisr.it/" },
+            "Humanitas": { "lat": 45.393, "lon": 9.148, "type": "Privata", "url": "https://www.hunimed.eu/" },
+            "UniBg": { "lat": 45.655, "lon": 9.633, "type": "Pubblica", "url": "https://www.unibg.it/" },
+            "UniPv": { "lat": 45.186, "lon": 9.156, "type": "Pubblica", "url": "https://web.unipv.it/" },
+            "Insubria": { "lat": 45.816, "lon": 8.834, "type": "Pubblica", "url": "https://www.uninsubria.it/" },
+            "Domus Academy": { "lat": 45.445, "lon": 9.167, "type": "Privata", "url": "https://www.domusacademy.com/" },
+            "Secoli": { "lat": 45.495, "lon": 9.213, "type": "Privata", "url": "https://www.secoli.com/" },
+            "Cattolica (Fashion Mng)": { "lat": 45.463, "lon": 9.175, "type": "Privata", "url": "https://www.unicatt.it/" },
+            "Civica Altiero Spinelli": { "lat": 45.463, "lon": 9.175, "type": "Pubblica", "url": "https://fondazionemilano.eu/scuole/civica-altiero-spinelli" },
+            "Conservatorio G. Verdi": { "lat": 45.466, "lon": 9.205, "type": "Pubblica", "url": "https://www.consmi.it/" },
+            "Civica Paolo Grassi (Teatro)": { "lat": 45.478, "lon": 9.176, "type": "Pubblica", "url": "https://paolograssi.fondazionemilano.eu/" },
+            "Civica Luchino Visconti (Cinema)": { "lat": 45.508, "lon": 9.202, "type": "Pubblica", "url": "https://cinema.fondazionemilano.eu/" }
         };
+
+        const FUORI_MILANO_KEYS = ["UniBg", "UniPv", "LIUC", "Insubria", "Lodi"];
 
         // --- FUNZIONI DI INTERFACCIA ---
         function init() {
@@ -1496,6 +1610,49 @@
             updateMap();
         }
 
+        function renderUniList(unis) {
+            const container = document.getElementById('unis-list-container');
+            container.innerHTML = "";
+
+            const m = [], f = [];
+            unis.forEach(u => {
+                if (FUORI_MILANO_KEYS.some(k => u.includes(k))) f.push(u);
+                else m.push(u);
+            });
+
+            const genGrid = (list) => {
+                let h = '<div class="uni-grid">';
+                list.forEach(u => {
+                    const d = MILANO_DB[u] || { type: "N/D" };
+                    const cls = d.type === 'Pubblica' ? 'badge-pub' : 'badge-priv';
+                    const lbl = d.type === 'Pubblica' ? '🏛️ PUBBLICA' : '💎 PRIVATA';
+                    const url = d.url || "#";
+
+                    // Card ridisegnata: Freccina in alto a dx, badge in basso
+                    h += `
+                    <div class="uni-card ${cls}">
+                        <a href="${url}" target="_blank" class="uni-link-icon" title="Vai al sito">↗</a>
+                        <div style="margin-right: 30px; margin-bottom: 15px;">
+                            <strong>${u}</strong>
+                        </div>
+                        <div style="margin-top: auto;">
+                            <span class="badge-text">${lbl}</span>
+                        </div>
+                    </div>`;
+                });
+                h += '</div>';
+                return h;
+            };
+
+            if (m.length > 0) {
+                container.innerHTML += `<h4 style="margin-bottom: 15px; color: #1e293b;">🏫 A Milano:</h4>` + genGrid(m);
+            }
+            if (f.length > 0) {
+                if (m.length > 0) container.innerHTML += `<hr style="margin: 30px 0; border: 0; border-top: 1px solid #e2e8f0;">`;
+                container.innerHTML += `<h4 style="margin-bottom: 15px; color: #1e293b;">🚆 Fuori Milano:</h4>` + genGrid(f);
+            }
+        }
+
         // MAPPA
         let map, markers = [];
         function updateMap() {
@@ -1514,9 +1671,15 @@
 
             markers.forEach(m => map.removeLayer(m)); markers = [];
             const unis = UNI_MAPPING[document.getElementById('map-select').value] || [];
+
+            renderUniList(unis);
+
             unis.forEach(u => {
                 let c = MILANO_DB[u];
-                if (c) markers.push(L.marker([c.lat, c.lon]).addTo(map).bindPopup(`<b>${u}</b>`));
+                if (c) {
+                    let popupContent = `<b>${u}</b><br><a href="${c.url || '#'}" target="_blank" style="color:#2563eb">Visita sito</a>`;
+                    markers.push(L.marker([c.lat, c.lon]).addTo(map).bindPopup(popupContent));
+                }
             });
 
             // Zoom sempre su Milano (non troppo dezoomato)
