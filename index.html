@@ -19,7 +19,7 @@
         :root {
             --primary: #6366f1;
             --primary-dark: #4f46e5;
-            --success: #10b981;
+            --success: #4f46e5;
             --bg: linear-gradient(135deg, #f0f4ff 0%, #faf5ff 50%, #fff1f2 100%);
             --card-bg: rgba(255, 255, 255, 0.85);
             --text: #1e293b;
@@ -842,6 +842,10 @@
             border-radius: 24px;
             width: 90%;
             max-width: 500px;
+            max-height: 85vh;
+            /* Added to prevent overflow on mobile */
+            overflow-y: auto;
+            /* Enable vertical scrolling */
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
             transform: translateY(20px);
             transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -1089,7 +1093,8 @@
         </div>
 
         <div id="step-6" class="step">
-            <div class="winner-box">
+            <div class="winner-box" onclick="openModal(document.getElementById('w_name').innerText)"
+                style="cursor:pointer;">
                 <div style="color:#15803d; text-transform:uppercase; font-size:0.9em;">Consiglio</div>
                 <div class="winner-name" id="w_name">...</div>
                 <div id="w_score">Punteggio: 0</div>
@@ -1116,6 +1121,41 @@
             <div id="map"></div>
             <div id="unis-list-container"></div>
             <div class="btn-group"><button class="btn-prev" onclick="location.reload()">🔄 Ricomincia</button></div>
+        </div>
+    </div>
+
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal(event, true)">×</button>
+            <h2 id="modal-title" style="margin-top:0; font-size:1.8rem;">Titolo Facoltà</h2>
+
+            <div class="stat-grid">
+                <div class="stat-box">
+                    <span class="stat-val" id="stat-duration">3 + 2</span>
+                    <span class="stat-label">Durata</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-val" id="stat-employment">90%</span>
+                    <span class="stat-label">Occupazione (3 anni)</span>
+                </div>
+                <div class="stat-box" style="grid-column: 1 / -1;">
+                    <span class="stat-val" id="stat-salary">1.500 €</span>
+                    <span class="stat-label">Stipendio Netto (3 anni)</span>
+                </div>
+            </div>
+
+            <div style="text-align:left; margin-top:20px;">
+                <h4 style="margin-bottom:10px; color:#475569;">Corsi di Laurea Inclusi:</h4>
+                <ul id="modal-courses" style="padding-left:20px; color:#4b5563; font-size:0.95rem; line-height:1.6;">
+                    <li>Esempio Corso 1</li>
+                    <li>Esempio Corso 2</li>
+                </ul>
+            </div>
+
+            <div class="source-note">Dati Almalaurea 2024 (Stime medie nazionali)</div>
         </div>
     </div>
 
@@ -1257,20 +1297,126 @@
 
         // --- DATI ALMALAUREA 2024 (STIME) ---
         const FACULTY_DETAILS = {
-            "Ingegneria": { color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)", border: "#3b82f6", duration: "3 + 2 o 5 Anni", employment: "96,5%", salary: "1.950 €" },
-            "Matematica, Fisica & Informatica": { color: "linear-gradient(135deg, #e0e7ff 0%, #eef2ff 100%)", border: "#6366f1", duration: "3 + 2 Anni", employment: "94,2%", salary: "1.850 €" },
-            "Economia & Finanza": { color: "linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%)", border: "#10b981", duration: "3 + 2 Anni", employment: "93,8%", salary: "1.780 €" },
-            "Medicina & Sanità": { color: "linear-gradient(135deg, #fef2f2 0%, #fff1f2 100%)", border: "#ef4444", duration: "6 Anni", employment: "95,0%", salary: "1.910 € (Spec.)" }, // Stipendio specializzando netto variabile
-            "Chimica, Biologia & Farmacia": { color: "linear-gradient(135deg, #f0fdfa 0%, #ecfeff 100%)", border: "#06b6d4", duration: "3 + 2 o 5 Anni", employment: "89,5%", salary: "1.650 €" },
-            "Giurisprudenza": { color: "linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)", border: "#f59e0b", duration: "5 Anni (Ciclo Unico)", employment: "82,5%", salary: "1.580 €" },
-            "Design & Architettura": { color: "linear-gradient(135deg, #fff1f2 0%, #fff0f5 100%)", border: "#ec4899", duration: "3 + 2 o 5 Anni", employment: "88,0%", salary: "1.620 €" },
-            "Studi Umanistici": { color: "linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%)", border: "#d946ef", duration: "3 + 2 Anni", employment: "79,5%", salary: "1.450 €" },
-            "Lingue & Comunicazione": { color: "linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)", border: "#8b5cf6", duration: "3 + 2 Anni", employment: "84,0%", salary: "1.480 €" },
-            "Psicologia & Sociale": { color: "linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)", border: "#f97316", duration: "3 + 2 Anni", employment: "86,5%", salary: "1.420 €" },
-            "Scienze Politiche & Sociali": { color: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)", border: "#64748b", duration: "3 + 2 Anni", employment: "85,0%", salary: "1.550 €" },
-            "Agraria & Veterinaria": { color: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)", border: "#22c55e", duration: "5 Anni / 3+2", employment: "89,0%", salary: "1.600 €" },
-            "Scienze Motorie": { color: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)", border: "#3b82f6", duration: "3 + 2 Anni", employment: "83,0%", salary: "1.400 €" },
-            "Moda": { color: "linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%)", border: "#db2777", duration: "3 Anni (+ Master)", employment: "87,5%", salary: "1.520 €" }
+            "Ingegneria": {
+                color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)",
+                border: "#3b82f6",
+                duration: "3 + 2 o 5 Anni",
+                employment: "96,5%",
+                salary: "1.950 €",
+                courses: [
+                    "Ingegneria Aerospaziale", "Ingegneria Biomedica", "Ingegneria Chimica",
+                    "Ingegneria Civile", "Ingegneria dei Materiali e delle Nanotecnologie",
+                    "Ingegneria dell'Automazione", "Ingegneria della Produzione Industriale",
+                    "Ingegneria Edile e delle Costruzioni", "Ingegneria Elettrica", "Ingegneria Elettronica",
+                    "Ingegneria Energetica", "Ingegneria Fisica", "Ingegneria Gestionale",
+                    "Ingegneria Informatica", "Ingegneria Matematica", "Ingegneria Meccanica",
+                    "Ingegneria per l'Ambiente e il Territorio"
+                ]
+            },
+            "Matematica, Fisica & Informatica": {
+                color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)",
+                border: "#3b82f6",
+                duration: "3 + 2 Anni",
+                employment: "94,2%",
+                salary: "1.850 €",
+                courses: ["Matematica", "Fisica", "Informatica", "Data Science", "Astronomia"]
+            },
+            "Economia & Finanza": {
+                color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)",
+                border: "#3b82f6",
+                duration: "3 + 2 Anni",
+                employment: "93,8%",
+                salary: "1.780 €",
+                courses: ["Economia Aziendale", "Finanza", "Marketing", "Management", "Economia e Commercio"]
+            },
+            "Medicina & Sanità": {
+                color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)",
+                border: "#3b82f6",
+                duration: "6 Anni (Ciclo Unico)",
+                employment: "95,0%",
+                salary: "1.910 € (Spec.)",
+                courses: ["Medicina e Chirurgia", "Odontoiatria", "Infermieristica", "Fisioterapia", "Ostetricia"]
+            },
+            "Chimica, Biologia & Farmacia": {
+                color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)",
+                border: "#3b82f6",
+                duration: "3 + 2 o 5 Anni",
+                employment: "89,5%",
+                salary: "1.650 €",
+                courses: ["Biologia", "Biotecnologie", "Chimica", "Farmacia", "CTF", "Scienze Naturali"]
+            },
+            "Giurisprudenza": {
+                color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)",
+                border: "#3b82f6",
+                duration: "5 Anni (Ciclo Unico)",
+                employment: "82,5%",
+                salary: "1.580 €",
+                courses: ["Giurisprudenza", "Diritto d'Impresa", "Scienze dei servizi giuridici", "Consulente del Lavoro"]
+            },
+            "Design & Architettura": {
+                color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)",
+                border: "#3b82f6",
+                duration: "3 + 2 o 5 Anni",
+                employment: "88,0%",
+                salary: "1.620 €",
+                courses: ["Architettura", "Design del Prodotto", "Interior Design", "Visual Design", "Urbanistica"]
+            },
+            "Studi Umanistici": {
+                color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)",
+                border: "#3b82f6",
+                duration: "3 + 2 Anni",
+                employment: "79,5%",
+                salary: "1.450 €",
+                courses: ["Lettere Moderne", "Lettere Antiche", "Filosofia", "Storia", "Beni Culturali", "Archeologia"]
+            },
+            "Lingue & Comunicazione": {
+                color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)",
+                border: "#3b82f6",
+                duration: "3 + 2 Anni",
+                employment: "84,0%",
+                salary: "1.480 €",
+                courses: ["Lingue e Letterature Straniere", "Scienze della Comunicazione", "Mediazione Linguistica", "DAMS"]
+            },
+            "Psicologia & Sociale": {
+                color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)",
+                border: "#3b82f6",
+                duration: "3 + 2 Anni",
+                employment: "86,5%",
+                salary: "1.420 €",
+                courses: ["Psicologia", "Scienze dell'Educazione", "Servizio Sociale", "Sociologia"]
+            },
+            "Scienze Politiche & Sociali": {
+                color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)",
+                border: "#3b82f6",
+                duration: "3 + 2 Anni",
+                employment: "85,0%",
+                salary: "1.550 €",
+                courses: ["Scienze Politiche", "Relazioni Internazionali", "Scienze dell'Amministrazione"]
+            },
+            "Agraria & Veterinaria": {
+                color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)",
+                border: "#3b82f6",
+                duration: "5 Anni / 3+2",
+                employment: "89,0%",
+                salary: "1.600 €",
+                courses: ["Medicina Veterinaria", "Scienze Agrarie", "Produzioni Animali", "Viticoltura ed Enologia"]
+            },
+            "Scienze Motorie": {
+                color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)",
+                border: "#3b82f6",
+                duration: "3 + 2 Anni",
+                employment: "83,0%",
+                salary: "1.400 €",
+                courses: ["Scienze Motorie", "Management dello Sport", "Attività Motoria Preventiva"]
+            },
+            "Moda": {
+                color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)",
+                border: "#3b82f6",
+                duration: "3 Anni (+ Master)",
+                employment: "87,5%",
+                salary: "1.520 €",
+                courses: ["Fashion Design", "Fashion Business", "Fashion Styling", "Modellistica"]
+            }
         };
 
         const FUORI_MILANO_KEYS = ["UniBg", "UniPv", "LIUC", "Insubria", "Lodi"];
@@ -1766,12 +1912,19 @@
                     // Rimossi stili inline per score -> Usa CSS .runner-score (Purple Gradient Badge)
                     // Added border to score matching card bg (#eff6ff approx)
                     runDiv.innerHTML += `
-                    <div class="runner-card" onclick="openModal('${r[0]}')">
+                    <div class="runner-card" data-faculty="${r[0]}" style="cursor: pointer;">
                         <div class="runner-name">
                             <span style="font-size:1.2em">${medals[index]}</span> ${r[0]}
                         </div>
                         <div class="runner-score" style="border: 3px solid #eff6ff;">${Math.round(r[1])}</div>
                     </div>`;
+                });
+
+                // Attach click handlers safely via JS (better than inline HTML which can break with special chars)
+                runDiv.querySelectorAll('.runner-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        openModal(card.dataset.faculty);
+                    });
                 });
 
                 // Apply dynamic layout class based on number of runners
@@ -1946,6 +2099,17 @@
             document.getElementById('stat-duration').innerText = data.duration;
             document.getElementById('stat-employment').innerText = data.employment;
             document.getElementById('stat-salary').innerText = data.salary;
+
+            // Populate courses list
+            const coursesList = document.getElementById('modal-courses');
+            coursesList.innerHTML = "";
+            if (data.courses && data.courses.length > 0) {
+                data.courses.forEach(c => {
+                    coursesList.innerHTML += `<li>${c}</li>`;
+                });
+            } else {
+                coursesList.innerHTML = "<li>Dati non disponibili</li>";
+            }
 
             // Header color matching
             document.getElementById('modal-title').style.color = data.border;
