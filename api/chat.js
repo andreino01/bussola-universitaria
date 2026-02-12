@@ -20,7 +20,7 @@ export default async function handler(req, res) {
         }
 
         const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemma-2-27b-it" }); // Updated to a stable model name if needed, or keep existing
+        const model = genAI.getGenerativeModel({ model: "gemma-3-27b" });
 
         // 3. Costruisci il prompt di sistema (il "ruolo" dell'AI)
         const systemInstruction = `
