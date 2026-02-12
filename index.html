@@ -1300,7 +1300,7 @@
             "Ingegneria": {
                 color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)",
                 border: "#3b82f6",
-                duration: "3 + 2 o 5 Anni",
+                duration: "3 + 2",
                 employment: "96,5%",
                 salary: "1.950 €",
                 courses: [
@@ -1385,7 +1385,7 @@
                 salary: "1.420 €",
                 courses: ["Psicologia", "Scienze dell'Educazione", "Servizio Sociale", "Sociologia"]
             },
-            "Scienze Politiche & Sociali": {
+            "Scienze Potiche & Sociali": {
                 color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)",
                 border: "#3b82f6",
                 duration: "3 + 2 Anni",
@@ -1412,7 +1412,7 @@
             "Moda": {
                 color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)",
                 border: "#3b82f6",
-                duration: "3 Anni (+ Master)",
+                duration: "3 Anni<br>(+ Master)",
                 employment: "87,5%",
                 salary: "1.520 €",
                 courses: ["Fashion Design", "Fashion Business", "Fashion Styling", "Modellistica"]
@@ -2096,7 +2096,7 @@
             if (!data) return;
 
             document.getElementById('modal-title').innerText = facultyName;
-            document.getElementById('stat-duration').innerText = data.duration;
+            document.getElementById('stat-duration').innerHTML = data.duration; // Changed to innerHTML for <br>
             document.getElementById('stat-employment').innerText = data.employment;
             document.getElementById('stat-salary').innerText = data.salary;
 
