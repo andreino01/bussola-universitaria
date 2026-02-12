@@ -1121,6 +1121,50 @@
             <div id="map"></div>
             <div id="unis-list-container"></div>
             <div class="btn-group"><button class="btn-prev" onclick="location.reload()">🔄 Ricomincia</button></div>
+
+            <!-- CHATBOT ACCORDION START -->
+            <hr style="margin: 30px 0; border: 0; border-top: 1px solid #e2e8f0;">
+
+            <div
+                style="border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; margin-bottom: 30px; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+                <div onclick="toggleChatAccordion()"
+                    style="padding: 20px; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid transparent; transition: all 0.2s;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span style="font-size: 24px;">🤖</span>
+                        <div>
+                            <div style="font-weight: 700; color: #1e293b; font-size: 1.1rem;">Tutor Orientamento AI ✨
+                            </div>
+                            <div style="color: #64748b; font-size: 0.9rem;">Dubbi sui risultati? Chiedimi un consiglio!
+                            </div>
+                        </div>
+                    </div>
+                    <span id="chat-arrow"
+                        style="font-size: 1.2rem; color: #64748b; transition: transform 0.3s ease;">▼</span>
+                </div>
+
+                <div id="chat-accordion-content"
+                    style="display: none; height: 0; transition: height 0.3s ease; flex-direction: column;">
+                    <div id="chat-messages"
+                        style="height: 350px; padding: 20px; overflow-y: auto; background: #f8fafc; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid #e2e8f0;">
+                        <div class="msg-ai"
+                            style="background: white; padding: 12px 16px; border-radius: 12px 12px 12px 0; align-self: flex-start; max-width: 85%; font-size: 0.95rem; border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                            Ciao! 👋 Ho visto i tuoi risultati. Hai dubbi su qualche facoltà o vuoi un consiglio?
+                        </div>
+                    </div>
+
+                    <div
+                        style="padding: 15px; background: white; border-top: 1px solid #e2e8f0; display: flex; gap: 10px; align-items: center;">
+                        <input type="text" id="chat-input" placeholder="Scrivi la tua domanda..."
+                            onkeypress="handleEnter(event)"
+                            style="flex: 1; border: 1px solid #cbd5e1; padding: 12px 16px; border-radius: 24px; outline: none; font-size: 0.95rem; transition: border-color 0.2s;">
+                        <button onclick="sendMessage()"
+                            style="background: #6366f1; color: white; border: none; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; box-shadow: 0 2px 5px rgba(99, 102, 241, 0.3);">
+                            <span style="font-size: 1.2rem; margin-left: 2px;">➤</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- CHATBOT ACCORDION END -->
         </div>
     </div>
 
@@ -1875,6 +1919,9 @@
                     finalScores[fac] = Math.min(100, raw);
                 });
 
+                // EXPOSE SCORES FOR CHATBOT
+                window.scores = finalScores;
+
                 // OUTPUT
                 let sorted = Object.entries(finalScores).sort((a, b) => b[1] - a[1]);
                 const winner = sorted[0];
@@ -2213,6 +2260,124 @@
                 }
             });
         });
+    </script>
+
+    <!-- CHATBOT LOGIC -->
+    <script>
+        let chatHistory = []; // Memoria della conversazione
+
+        function toggleChatAccordion() {
+            const content = document.getElementById('chat-accordion-content');
+            const arrow = document.getElementById('chat-arrow');
+
+            if (content.style.display === 'none' || content.style.display === '') {
+                content.style.display = 'flex';
+                content.style.height = 'auto'; // Lascia che il contenuto definisca l'altezza
+                arrow.style.transform = 'rotate(180deg)';
+                // Scrolla leggermente per mostrare la chat se necessario
+                setTimeout(() => {
+                    content.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            } else {
+                content.style.display = 'none';
+                content.style.height = '0';
+                arrow.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        function handleEnter(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            // 1. Mostra messaggio utente
+            appendMessage(msg, 'user');
+            input.value = "";
+
+            // 2. Mostra "Sta scrivendo..."
+            const loadingId = appendMessage("Sto pensando...", 'ai', true);
+
+            // 3. Raccogli i dati del contesto (vincitore, risposte, ecc)
+            // Prendiamo i dati globali che hai già nello script principale
+            let contextData = "Nessun dato ancora.";
+
+            // USE window.scores if available
+            if (typeof window.scores !== 'undefined' || typeof scores !== 'undefined') {
+                const s = window.scores || scores;
+                // Creiamo un riassunto testuale semplice per l'AI
+                const winnerName = document.getElementById('w_name') ? document.getElementById('w_name').innerText : "Sconosciuto";
+
+                // Create a top 3 summary
+                let sorted = Object.entries(s).sort((a, b) => b[1] - a[1]);
+                let top3 = sorted.slice(0, 3).map(x => `${x[0]} (${Math.round(x[1])})`).join(", ");
+
+                contextData = `L'utente ha ottenuto come risultato vincente: ${winnerName}. Top 3 facoltà: ${top3}.`;
+            }
+
+            try {
+                // 4. Chiama la TUA API su Vercel (adjust path if needed)
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: msg,
+                        history: chatHistory,
+                        context: contextData
+                    })
+                });
+
+                const data = await response.json();
+
+                // 5. Rimuovi loading e mostra risposta
+                document.getElementById(loadingId).remove();
+                appendMessage(data.reply, 'ai');
+
+                // 6. Aggiorna cronologia per memoria
+                chatHistory.push({ role: "user", parts: [{ text: msg }] });
+                chatHistory.push({ role: "model", parts: [{ text: data.reply }] });
+
+            } catch (err) {
+                document.getElementById(loadingId).innerText = "Errore di connessione 😔";
+                console.error(err);
+            }
+        }
+
+        function appendMessage(text, sender, isLoading = false) {
+            const div = document.createElement('div');
+            div.innerText = text;
+            div.style.padding = "12px 16px";
+            div.style.maxWidth = "85%";
+            div.style.fontSize = "0.95rem";
+            div.style.lineHeight = "1.5";
+            div.style.border = "1px solid transparent";
+
+            if (sender === 'user') {
+                div.style.background = "#6366f1";
+                div.style.color = "white";
+                div.style.borderRadius = "12px 12px 0 12px";
+                div.style.alignSelf = "flex-end";
+                div.style.boxShadow = "0 2px 5px rgba(99, 102, 241, 0.2)";
+            } else {
+                div.style.background = isLoading ? "#f8fafc" : "white";
+                div.style.color = isLoading ? "#94a3b8" : "#1e293b";
+                div.style.borderRadius = "12px 12px 12px 0";
+                div.style.alignSelf = "flex-start";
+                div.style.borderColor = "#e2e8f0";
+                div.style.boxShadow = "0 2px 4px rgba(0,0,0,0.02)";
+                if (isLoading) div.style.fontStyle = "italic";
+            }
+
+            const container = document.getElementById('chat-messages');
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+
+            div.id = "msg-" + Date.now();
+            return div.id;
+        }
     </script>
 </body>
 
