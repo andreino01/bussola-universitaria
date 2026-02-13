@@ -1,5 +1,12 @@
 // api/chat.js
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { GoogleGenAI } from "@google/genai";
+
+// Carica .env.local esplicitamente
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.resolve(__dirname, '..', '.env.local') });
 
 export default async function handler(req, res) {
     // 1. Controllo sicurezza (accetta solo POST)
@@ -14,61 +21,68 @@ export default async function handler(req, res) {
     }
 
     try {
-        // 2. Collega Gemini usando la chiave segreta salvata su Vercel
-        if (!process.env.GOOGLE_API_KEY) {
-            throw new Error("GOOGLE_API_KEY mancante");
+        const apiKey = process.env.GEMINI_API_KEY;
+
+        if (!apiKey) {
+            console.error("ERRORE: Variabile d'ambiente GEMINI_API_KEY mancante.");
+            throw new Error("Chiave API non configurata nel server.");
         }
 
-        const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+        const ai = new GoogleGenAI({ apiKey: apiKey });
 
-        // 3. Costruisci il prompt di sistema (il "ruolo" dell'AI)
-        const systemInstruction = `
+        // 1. Definiamo le istruzioni (come testo semplice)
+        const systemText = `
+        ISTRUZIONI DI SISTEMA:
         Agisci come un orientatore universitario esperto, empatico e visionario.
         Stai parlando con uno studente che ha appena fatto un test di orientamento.
         
-        DATI STUDENTE COMPLETI:
+        DATI STUDENTE:
         ${context || "Nessun dato disponibile."}
 
-        ISTRUZIONI:
+        REGOLE:
         1. Rispondi in modo breve (max 4 frasi) e motivante.
-        2. Usa emoji.
-        3. Basati SUI DATI FORNITI per dare consigli personalizzati. Cita le risposte dell'utente se utile (es. "Visto che ti piacciono i razzi...").
+        2. Usa qualche emoji ma mai più di 3 per messaggio.
+        3. Basati SUI DATI FORNITI per dare consigli personalizzati.
         4. Non inventare facoltà che non esistono.
+        5. NON mostrare MAI all'utente nomi di variabili interne, codici tecnici o chiavi dei dati (es. "q_broken", "q_manual", "score_mat", ecc.). Traduci sempre questi concetti in linguaggio naturale comprensibile (es. "la tua curiosità nello smontare le cose" invece di "q_broken").
+        6. NON usare formattazione Markdown (no **grassetto**, no *corsivo*, no elenchi puntati con -, no #titoli). Scrivi sempre in testo semplice e discorsivo.
         `;
 
-        // 4. Prepara la chat
-        // Gemini vuole la history in formato { role: 'user'|'model', parts: [{ text: '...' }] }
-        // Filtriamo eventuali messaggi vuoti o malformati dalla history
+        // 4. Prepara la cronologia (pulizia dati)
+        // La nuova SDK accetta lo stesso formato: { role: 'user' | 'model', parts: [{ text: '...' }] }
         const validHistory = (history || []).filter(h => h.parts && h.parts[0] && h.parts[0].text);
 
-        const chat = model.startChat({
+        // 5. Crea la chat
+        // Usiamo il modello "gemini-2.0-flash" che è stabile sulla nuova SDK
+        const chat = ai.chats.create({
+            model: "gemma-3-27b-it",
             history: [
-                {
-                    role: "user",
-                    parts: [{ text: systemInstruction }],
-                },
-                {
-                    role: "model",
-                    parts: [{ text: "Chiarissimo. Ho analizzato i dati dello studente e sono pronto a dare consigli personalizzati." }],
-                },
+                { role: 'user', parts: [{ text: systemText }] },
+                { role: 'model', parts: [{ text: "Ricevuto. Ho analizzato i dati e sono pronto a comportarmi come orientatore." }] },
                 ...validHistory
-            ],
+            ]
         });
 
-        // 5. Invia il messaggio
-        const result = await chat.sendMessage(message);
-        const response = await result.response;
-        const text = response.text();
+        // 6. Invia messaggio
+        const response = await chat.sendMessage({ message: message });
 
-        if (!text) {
-            throw new Error("Risposta vuota dall'AI");
-        }
+        // Risposta
+        const text = response.text;
+
+        if (!text) throw new Error("Risposta vuota");
 
         res.status(200).json({ reply: text });
 
     } catch (error) {
-        console.error("Errore Gemini API:", error);
-        res.status(500).json({ error: "L'AI è stanca, riprova tra poco! (Dettaglio: " + error.message + ")" });
+        console.error("Errore GenAI SDK:", error);
+
+        // Gestione errori specifica per capire se è un problema di modello
+        let errorMsg = "L'AI sta riposando. Riprova!";
+        if (error.message.includes("404")) errorMsg = "Modello non trovato o non accessibile.";
+        if (error.message.includes("429")) errorMsg = "Troppe richieste (Quota esaurita).";
+
+        res.status(500).json({
+            error: errorMsg + " (Dettaglio: " + error.message + ")"
+        });
     }
 }

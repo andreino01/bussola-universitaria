@@ -1429,7 +1429,7 @@
                 salary: "1.420 €",
                 courses: ["Psicologia", "Scienze dell'Educazione", "Servizio Sociale", "Sociologia"]
             },
-            "Scienze Potiche & Sociali": {
+            "Scienze Politiche & Sociali": {
                 color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)",
                 border: "#3b82f6",
                 duration: "3 + 2 Anni",
@@ -2292,18 +2292,21 @@
         function getUserContext() {
             let context = "DATI UTENTE:\n";
 
-            // 1. Scuola
-            const school = document.getElementById('school-select').value;
-            context += `- Scuola di provenienza: ${school}\n`;
+            // 1. Scuola (Controllo se esiste l'elemento)
+            const schoolEl = document.getElementById('school-select');
+            if (schoolEl && schoolEl.value) {
+                context += `- Scuola di provenienza: ${schoolEl.value}\n`;
+            }
 
             // 2. Risposte Questionnaire
             const radios = ['q_tech', 'q_biz', 'q_sci', 'q_art', 'q_youtube', 'q_netflix', 'q_startup', 'q_broken', 'q_future'];
             radios.forEach(r => {
                 const el = document.querySelector(`input[name="${r}"]:checked`);
                 if (el) {
-                    // Troviamo il testo associato (label) se possibile, o il valore
-                    const label = el.closest('label').textContent.trim();
-                    context += `- Domanda ${r}: ${label} (${el.value})\n`;
+                    // Controllo difensivo per evitare crash se closest non trova nulla
+                    const labelEl = el.closest('label');
+                    const labelText = labelEl ? labelEl.textContent.trim() : "N/A";
+                    context += `- Domanda ${r}: ${labelText} (${el.value})\n`;
                 }
             });
 
@@ -2313,18 +2316,28 @@
             checkboxes.forEach(c => {
                 const el = document.getElementById(c);
                 if (el && el.checked) {
-                    checks.push(el.closest('label').textContent.trim());
+                    const labelEl = el.closest('label');
+                    if (labelEl) checks.push(labelEl.textContent.trim());
                 }
             });
             if (checks.length > 0) context += `- Interessi confermati: ${checks.join(', ')}\n`;
 
-            // 4. Risultati (access window.scores)
-            if (typeof window.scores !== 'undefined') {
+            // 4. Risultati (Protezione massima)
+            if (typeof window.scores !== 'undefined' && document.getElementById('w_name')) {
+                // Ordina i punteggi
                 let sorted = Object.entries(window.scores).sort((a, b) => b[1] - a[1]);
+                // Prendi solo i primi 3 se esistono
                 let top3 = sorted.slice(0, 3).map(x => `${x[0]} (${Math.round(x[1])})`).join(", ");
-                const winnerName = document.getElementById('w_name') ? document.getElementById('w_name').innerText : "Sconosciuto";
-                context += `- Risultato vincente: ${winnerName}\n`;
-                context += `- Top 3 facoltà: ${top3}\n`;
+
+                const winnerName = document.getElementById('w_name').innerText;
+
+                // Aggiungi al contesto solo se c'è un vincitore reale
+                if (winnerName && winnerName.length > 0) {
+                    context += `- Risultato vincente: ${winnerName}\n`;
+                    context += `- Top 3 facoltà: ${top3}\n`;
+                }
+            } else {
+                context += "(L'utente sta ancora svolgendo il test)";
             }
 
             return context;

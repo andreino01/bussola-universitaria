@@ -1,0 +1,21 @@
+# --- SICUREZZA (Fondamentale) ---
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+
+# --- DIPENDENZE (Pesantissime, NON caricare mai) ---
+node_modules/
+/npm-debug.log*
+/yarn-error.log
+package-lock.json # (Opzionale: di solito si tiene, ma se dà conflitti puoi ignorarlo, meglio tenerlo però)
+
+# --- VERCEL (File temporanei del server locale) ---
+.vercel
+
+# --- SISTEMA OPERATIVO (File spazzatura) ---
+.DS_Store
+Thumbs.db
+.env*.local
