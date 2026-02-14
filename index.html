@@ -27,6 +27,41 @@
             --radius: 16px;
             --shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
             --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.08);
+            --input-bg: rgba(255, 255, 255, 0.8);
+            --border-color: rgba(226, 232, 240, 0.8);
+            --card-inner-bg: rgba(255, 255, 255, 0.7);
+            --winner-bg: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            --winner-border: #3b82f6;
+            --winner-text: #1e3a8a;
+            --runner-bg: linear-gradient(135deg, rgba(239, 246, 255, 0.8) 0%, rgba(240, 249, 255, 0.8) 100%);
+            --runner-border: #bfdbfe;
+            --runner-text: #1e293b;
+            --runner-score-bg: #eff6ff;
+            --runner-score-text: #1e3a8a;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary: #818cf8;
+                --primary-dark: #6366f1;
+                --success: #818cf8;
+                --bg: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+                --card-bg: rgba(30, 41, 59, 0.85);
+                --text: #f1f5f9;
+                --text-muted: #94a3b8;
+                --input-bg: rgba(30, 41, 59, 0.6);
+                --border-color: rgba(71, 85, 105, 0.6);
+                --card-inner-bg: rgba(15, 23, 42, 0.8);
+                --card-bg: rgba(15, 23, 42, 0.95);
+                --winner-bg: linear-gradient(135deg, #1e3a8a 0%, #172554 100%);
+                --winner-border: #3b82f6;
+                --winner-text: #e0e7ff;
+                --runner-bg: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.8) 100%);
+                --runner-border: #334155;
+                --runner-text: #f1f5f9;
+                --runner-score-bg: #1e293b;
+                --runner-score-text: #e0e7ff;
+            }
         }
 
         /* Scrollbar personalizzata */
@@ -79,7 +114,7 @@
         }
 
         h1 {
-            color: #0f172a;
+            color: var(--text);
             text-align: center;
             margin-top: 0;
             font-weight: 800;
@@ -91,19 +126,19 @@
             font-size: 1.4em;
             margin-bottom: 0.5em;
             font-weight: 700;
-            color: #1e293b;
+            color: var(--text);
         }
 
         h5 {
             font-size: 1.05em;
             margin: 15px 0 8px 0;
-            color: #334155;
+            color: var(--text);
             font-weight: 600;
         }
 
         .caption {
             font-size: 0.9em;
-            color: #666;
+            color: var(--text-muted);
             margin-bottom: 10px;
             display: block;
             font-style: italic;
@@ -131,10 +166,10 @@
         }
 
         .card {
-            border: 1px solid rgba(226, 232, 240, 0.8);
+            border: 1px solid var(--border-color);
             padding: 20px;
             border-radius: var(--radius);
-            background: rgba(255, 255, 255, 0.7);
+            background: var(--card-inner-bg);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             margin-bottom: 15px;
@@ -152,9 +187,9 @@
             padding: 14px 16px;
             font-size: 1rem;
             font-family: inherit;
-            border: 1px solid rgba(226, 232, 240, 0.8);
+            border: 1px solid var(--border-color);
             border-radius: var(--radius);
-            background: rgba(255, 255, 255, 0.8);
+            background: var(--input-bg);
             color: var(--text);
             cursor: pointer;
             transition: all 0.3s ease;
@@ -176,13 +211,36 @@
         }
 
         select:focus:not(:focus-visible) {
-            border-color: rgba(226, 232, 240, 0.8);
+            border-color: var(--border-color);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Fix per textarea e input nel nuovo form */
+        textarea,
+        input[type="text"] {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 1rem;
+            font-family: inherit;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background: var(--input-bg);
+            color: var(--text);
+            transition: all 0.3s ease;
+            resize: vertical;
+        }
+
+        textarea:focus,
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
         }
 
         select option {
             padding: 12px;
-            background: white;
+            background: var(--card-bg);
+            color: var(--text);
         }
 
         .grid-2 {
@@ -273,14 +331,14 @@
         }
 
         .btn-prev {
-            background: #e2e8f0;
-            color: #333;
+            background: var(--input-bg);
+            color: var(--text);
             transition: all 0.3s ease;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .btn-prev:hover {
-            background: #cbd5e1;
+            background: var(--border-color);
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
         }
@@ -288,12 +346,12 @@
         .radio-option {
             display: block;
             padding: 14px 16px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
             border-radius: 12px;
             margin-bottom: 10px;
             cursor: pointer;
             transition: all 0.25s ease;
-            background: rgba(255, 255, 255, 0.6);
+            background: var(--input-bg);
             font-weight: 500;
         }
 
@@ -349,9 +407,9 @@
         .dropdown-selected {
             padding: 14px 16px;
             font-size: 1rem;
-            border: 1px solid rgba(226, 232, 240, 0.8);
+            border: 1px solid var(--border-color);
             border-radius: var(--radius);
-            background: rgba(255, 255, 255, 0.8);
+            background: var(--input-bg);
             color: var(--text);
             cursor: pointer;
             transition: all 0.3s ease;
@@ -385,7 +443,7 @@
             top: 100%;
             left: 0;
             right: 0;
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--card-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(99, 102, 241, 0.3);
@@ -417,7 +475,7 @@
             padding: 12px 16px;
             cursor: pointer;
             transition: all 0.2s ease;
-            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .dropdown-option:last-child {
@@ -439,8 +497,8 @@
         /* Risultati */
         .winner-box {
             /* Blu Vincitore */
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-            border: 2px solid #3b82f6;
+            background: var(--winner-bg);
+            border: 2px solid var(--winner-border);
             padding: 35px;
             text-align: center;
             border-radius: 20px;
@@ -455,7 +513,7 @@
         }
 
         .winner-name {
-            color: #1e3a8a;
+            color: var(--winner-text);
             /* Dark Blue */
             font-size: 2rem;
             margin: 12px 0;
@@ -499,8 +557,8 @@
 
         .runner-card {
             /* Azzurro Alternative */
-            background: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%);
-            border: 1px solid #bfdbfe;
+            background: var(--runner-bg);
+            border: 1px solid var(--runner-border);
             padding: 16px 20px;
             border-radius: 16px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
@@ -525,7 +583,8 @@
         .runner-name {
             font-weight: 700;
             font-size: 1.05rem;
-            color: var(--text);
+            color: var(--runner-text);
+            /* Keep dark text for runner cards as they have light bg */
             display: flex;
             align-items: center;
             gap: 8px;
@@ -533,8 +592,8 @@
 
         .runner-score {
             /* Background matches card (Azure) */
-            background: #eff6ff;
-            color: #1e3a8a;
+            background: var(--runner-score-bg);
+            color: var(--runner-score-text);
             /* Dark Blue Text */
             padding: 6px 14px;
             border-radius: 20px;
@@ -569,7 +628,7 @@
             border: 1px solid transparent;
             /* Overridden by badge classes */
             position: relative;
-            background: #fff;
+            background: var(--card-bg);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             display: flex;
@@ -905,6 +964,194 @@
             margin-top: 15px;
             font-style: italic;
         }
+
+        /* ======================== */
+        /* FEEDBACK MODAL STYLES    */
+        /* ======================== */
+        .feedback-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: overlayFadeIn 0.3s ease;
+        }
+
+        .feedback-overlay.show {
+            display: flex;
+        }
+
+        @keyframes overlayFadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .feedback-modal {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 35px 30px 30px;
+            max-width: 440px;
+            width: 100%;
+            position: relative;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            text-align: center;
+            animation: modalSlideIn 0.4s ease;
+        }
+
+        .feedback-close {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 1.6rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            line-height: 1;
+        }
+
+        .feedback-close:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .feedback-modal h3 {
+            margin: 0 0 6px 0;
+            font-size: 1.3rem;
+            color: var(--text);
+        }
+
+        .feedback-modal .feedback-subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+        }
+
+        /* Star Rating */
+        .star-rating {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            direction: rtl;
+        }
+
+        .star-rating input[type="radio"] {
+            display: none;
+        }
+
+        .star-rating label {
+            font-size: 2.4rem;
+            color: var(--border-color);
+            cursor: pointer;
+            transition: color 0.2s ease, transform 0.15s ease;
+            line-height: 1;
+        }
+
+        .star-rating label:hover,
+        .star-rating label:hover~label,
+        .star-rating input:checked~label {
+            color: #facc15;
+        }
+
+        .star-rating label:hover {
+            transform: scale(1.25);
+        }
+
+        .feedback-textarea {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--input-bg);
+            color: var(--text);
+            resize: vertical;
+            min-height: 80px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .feedback-textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .feedback-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .btn-feedback {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-feedback:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-feedback:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .feedback-success {
+            margin-top: 16px;
+            padding: 14px 20px;
+            border-radius: 12px;
+            background: rgba(34, 197, 94, 0.1);
+            color: #16a34a;
+            font-weight: 600;
+            display: none;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .feedback-success {
+                background: rgba(34, 197, 94, 0.15);
+                color: #4ade80;
+            }
+        }
     </style>
 </head>
 
@@ -1168,6 +1415,34 @@
         </div>
     </div>
 
+    </div>
+
+    <!-- FEEDBACK MODAL OVERLAY (fuori dal container) -->
+    <div id="feedback-overlay" class="feedback-overlay">
+        <div class="feedback-modal">
+            <button class="feedback-close" onclick="closeFeedback()" title="Chiudi">×</button>
+            <h3>🚀 Aiutaci a migliorare</h3>
+            <p class="feedback-subtitle">Quanto sei soddisfatto dei risultati? Dai un voto!</p>
+
+            <div class="star-rating">
+                <input type="radio" name="fb_rating" id="star5" value="5">
+                <label for="star5" title="5 stelle">★</label>
+                <input type="radio" name="fb_rating" id="star4" value="4">
+                <label for="star4" title="4 stelle">★</label>
+                <input type="radio" name="fb_rating" id="star3" value="3">
+                <label for="star3" title="3 stelle">★</label>
+                <input type="radio" name="fb_rating" id="star2" value="2">
+                <label for="star2" title="2 stelle">★</label>
+                <input type="radio" name="fb_rating" id="star1" value="1">
+                <label for="star1" title="1 stella">★</label>
+            </div>
+
+            <textarea id="fb_comment" class="feedback-textarea"
+                placeholder="Ti aspettavi un altro risultato? Hai consigli su come migliorare il sito? (facoltativo)"></textarea>
+
+            <button onclick="submitFeedback()" id="btn-feedback" class="btn-feedback">Invia Feedback ✨</button>
+            <div id="fb-message" class="feedback-success"></div>
+        </div>
     </div>
 
     <!-- MODAL -->
@@ -2018,6 +2293,11 @@
                 document.getElementById('selected-faculty').innerText = recommended[0][0];
                 updateMap();
 
+                // Mostra popup feedback dopo 2 secondi
+                setTimeout(() => {
+                    document.getElementById('feedback-overlay').classList.add('show');
+                }, 2000);
+
                 nextStep(6);
             } catch (e) {
                 console.error("Errore calcolo:", e);
@@ -2424,6 +2704,86 @@
 
             div.id = "msg-" + Date.now();
             return div.id;
+        }
+
+        // --- GOOGLE SHEETS INTEGRATION ---
+        function collectFeedbackData() {
+            const ratingEl = document.querySelector('input[name="fb_rating"]:checked');
+            const rating = ratingEl ? ratingEl.value : "";
+            const comment = document.getElementById('fb_comment').value.trim();
+
+            return {
+                timestamp: new Date().toISOString(),
+                winner: (window.allSorted && window.allSorted.length > 0) ? window.allSorted[0][0] : "N/D",
+                winnerScore: (window.allSorted && window.allSorted.length > 0) ? Math.round(window.allSorted[0][1]) : 0,
+                alternatives: (window.recommended || []).slice(1).map(r => ({ name: r[0], score: Math.round(r[1]) })),
+                answers: {
+                    school: document.getElementById('school-select').value,
+                    q_tech: getRadioSafe('q_tech'),
+                    q_biz: getRadioSafe('q_biz'),
+                    q_sci: getRadioSafe('q_sci'),
+                    q_art: getRadioSafe('q_art'),
+                    q_youtube: getRadioSafe('q_youtube'),
+                    q_netflix: getRadioSafe('q_netflix'),
+                    q_startup: getRadioSafe('q_startup'),
+                    q_broken: getRadioSafe('q_broken'),
+                    q_future: getRadioSafe('q_future'),
+                    checks: ['chk_teach', 'chk_nature', 'chk_money', 'chk_care', 'chk_sport', 'chk_write', 'chk_law', 'chk_tech', 'chk_politics', 'chk_art']
+                        .filter(id => document.getElementById(id).checked)
+                },
+                feedbackRating: rating,
+                feedbackComment: comment
+            };
+        }
+
+        async function sendToGoogleSheets(data) {
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyROkQIn8FhDZq8b-UK04F7SzY3VkgFKwtowey7r4vJi0CmFP1tp0LqdmZasRFLulCx/exec";
+            await fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify(data)
+            });
+        }
+
+        async function submitFeedback() {
+            const btn = document.getElementById('btn-feedback');
+            const ratingEl = document.querySelector('input[name="fb_rating"]:checked');
+            if (!ratingEl) {
+                alert("Per favore, dai un voto al quiz prima di inviare.");
+                return;
+            }
+            btn.disabled = true;
+            btn.innerText = "Invio in corso...";
+
+            try {
+                const data = collectFeedbackData();
+                await sendToGoogleSheets(data);
+                // Chiudi modale dopo successo
+                setTimeout(() => {
+                    document.getElementById('feedback-overlay').classList.remove('show');
+                }, 800);
+            } catch (err) {
+                console.error(err);
+                btn.disabled = false;
+                btn.innerText = "Invia Feedback ✨";
+            }
+        }
+
+        async function closeFeedback() {
+            // Invia dati anche se chiude (con eventuale voto parziale)
+            try {
+                const data = collectFeedbackData();
+                await sendToGoogleSheets(data);
+            } catch (err) {
+                console.error(err);
+            }
+            document.getElementById('feedback-overlay').classList.remove('show');
+        }
+
+        function getRadioSafe(name) {
+            const el = document.querySelector(`input[name="${name}"]:checked`);
+            return el ? el.value : null;
         }
     </script>
 </body>
