@@ -298,6 +298,50 @@
             width: 100%;
             accent-color: var(--primary);
             margin: 10px 0;
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+        }
+
+        input[type="range"]::-webkit-slider-runnable-track {
+            height: 6px;
+            background: transparent;
+            border-radius: 3px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            margin-top: -5px;
+            box-shadow: 0 1px 4px rgba(99, 102, 241, 0.3);
+        }
+
+        input[type="range"]::-moz-range-track {
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 3px;
+            border: none;
+        }
+
+        input[type="range"]::-moz-range-progress {
+            height: 6px;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 1px 4px rgba(99, 102, 241, 0.3);
         }
 
         .btn-group {
@@ -697,6 +741,30 @@
             border-color: #90caf9;
         }
 
+        @media (prefers-color-scheme: dark) {
+            .badge-pub {
+                background-color: #3b1515;
+                color: #ef9a9a;
+                border-color: #5c2020;
+            }
+
+            .badge-pub .uni-link-icon {
+                color: #ef9a9a;
+                background: rgba(239, 154, 154, 0.15);
+            }
+
+            .badge-priv {
+                background-color: #0d2137;
+                color: #90caf9;
+                border-color: #1a3a5c;
+            }
+
+            .badge-priv .uni-link-icon {
+                color: #90caf9;
+                background: rgba(144, 202, 249, 0.15);
+            }
+        }
+
         .badge-text {
             font-size: 0.75em;
             font-weight: bold;
@@ -896,20 +964,22 @@
         }
 
         .modal-content {
-            background: white;
+            background: var(--card-bg);
+            color: var(--text);
             padding: 30px;
             border-radius: 24px;
             width: 90%;
             max-width: 500px;
             max-height: 85vh;
-            /* Added to prevent overflow on mobile */
             overflow-y: auto;
-            /* Enable vertical scrolling */
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
             transform: translateY(20px);
             transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             text-align: center;
             position: relative;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
         }
 
         .modal-overlay.active .modal-content {
@@ -936,10 +1006,10 @@
         }
 
         .stat-box {
-            background: #f8fafc;
+            background: var(--card-inner-bg);
             padding: 15px;
             border-radius: 12px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
         }
 
         .stat-val {
@@ -952,7 +1022,7 @@
 
         .stat-label {
             font-size: 0.8rem;
-            color: #64748b;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.05em;
             font-weight: 600;
@@ -1071,7 +1141,7 @@
 
         .star-rating label {
             font-size: 2.4rem;
-            color: var(--border-color);
+            color: #cbd5e1;
             cursor: pointer;
             transition: color 0.2s ease, transform 0.15s ease;
             line-height: 1;
@@ -1150,6 +1220,77 @@
             .feedback-success {
                 background: rgba(34, 197, 94, 0.15);
                 color: #4ade80;
+            }
+
+            /* Dark mode: chatbot accordion */
+            .chat-accordion {
+                background: var(--card-inner-bg) !important;
+                border-color: var(--border-color) !important;
+            }
+
+            .chat-header {
+                background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 27, 75, 0.9) 100%) !important;
+                border-bottom-color: var(--border-color) !important;
+            }
+
+            .chat-header-title {
+                color: var(--text) !important;
+            }
+
+            .chat-header-subtitle {
+                color: var(--text-muted) !important;
+            }
+
+            .chat-messages-area {
+                background: rgba(15, 23, 42, 0.95) !important;
+                border-top-color: var(--border-color) !important;
+            }
+
+            .chat-input-area {
+                background: var(--card-inner-bg) !important;
+                border-top-color: var(--border-color) !important;
+            }
+
+            .chat-input-area input {
+                background: var(--input-bg) !important;
+                color: var(--text) !important;
+                border-color: var(--border-color) !important;
+            }
+
+            .msg-ai {
+                background: rgba(30, 41, 59, 0.9) !important;
+                color: var(--text) !important;
+                border-color: var(--border-color) !important;
+            }
+
+            /* Dark mode: modal content */
+            .modal-content h4 {
+                color: var(--text-muted) !important;
+            }
+
+            .modal-content ul {
+                color: var(--text) !important;
+            }
+
+            .modal-close {
+                color: var(--text-muted);
+            }
+
+            /* Dark mode: misc hardcoded text */
+            #step-indicator {
+                color: var(--text-muted) !important;
+            }
+
+            .slider-helper-text {
+                color: var(--text-muted) !important;
+            }
+
+            .uni-section-heading {
+                color: var(--text) !important;
+            }
+
+            .container hr {
+                border-color: var(--border-color) !important;
             }
         }
     </style>
@@ -1372,16 +1513,19 @@
             <!-- CHATBOT ACCORDION START -->
             <hr style="margin: 30px 0; border: 0; border-top: 1px solid #e2e8f0;">
 
-            <div
-                style="border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; margin-bottom: 30px; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+            <div style="border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; margin-bottom: 30px; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.02);"
+                class="chat-accordion">
                 <div onclick="toggleChatAccordion()"
-                    style="padding: 20px; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid transparent; transition: all 0.2s;">
+                    style="padding: 20px; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid transparent; transition: all 0.2s;"
+                    class="chat-header">
                     <div style="display: flex; align-items: center; gap: 15px;">
                         <span style="font-size: 24px;">🤖</span>
                         <div>
-                            <div style="font-weight: 700; color: #1e293b; font-size: 1.1rem;">Tutor Orientamento AI ✨
+                            <div style="font-weight: 700; color: #1e293b; font-size: 1.1rem;" class="chat-header-title">
+                                Tutor Orientamento AI ✨
                             </div>
-                            <div style="color: #64748b; font-size: 0.9rem;">Dubbi sui risultati? Chiedimi un consiglio!
+                            <div style="color: #64748b; font-size: 0.9rem;" class="chat-header-subtitle">Dubbi sui
+                                risultati? Chiedimi un consiglio!
                             </div>
                         </div>
                     </div>
@@ -1392,15 +1536,16 @@
                 <div id="chat-accordion-content"
                     style="display: none; height: 0; transition: height 0.3s ease; flex-direction: column;">
                     <div id="chat-messages"
-                        style="height: 350px; padding: 20px; overflow-y: auto; background: #f8fafc; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid #e2e8f0;">
+                        style="height: 350px; padding: 20px; overflow-y: auto; background: #f8fafc; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid #e2e8f0;"
+                        class="chat-messages-area">
                         <div class="msg-ai"
                             style="background: white; padding: 12px 16px; border-radius: 12px 12px 12px 0; align-self: flex-start; max-width: 85%; font-size: 0.95rem; border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
                             Ciao! 👋 Ho visto i tuoi risultati. Hai dubbi su qualche facoltà o vuoi un consiglio?
                         </div>
                     </div>
 
-                    <div
-                        style="padding: 15px; background: white; border-top: 1px solid #e2e8f0; display: flex; gap: 10px; align-items: center;">
+                    <div style="padding: 15px; background: white; border-top: 1px solid #e2e8f0; display: flex; gap: 10px; align-items: center;"
+                        class="chat-input-area">
                         <input type="text" id="chat-input" placeholder="Scrivi la tua domanda..."
                             onkeypress="handleEnter(event)"
                             style="flex: 1; border: 1px solid #cbd5e1; padding: 12px 16px; border-radius: 24px; outline: none; font-size: 0.95rem; transition: border-color 0.2s;">
@@ -1467,8 +1612,9 @@
             </div>
 
             <div style="text-align:left; margin-top:20px;">
-                <h4 style="margin-bottom:10px; color:#475569;">Corsi di Laurea Inclusi:</h4>
-                <ul id="modal-courses" style="padding-left:20px; color:#4b5563; font-size:0.95rem; line-height:1.6;">
+                <h4 style="margin-bottom:10px; color:var(--text-muted);">Corsi di Laurea Inclusi:</h4>
+                <ul id="modal-courses"
+                    style="padding-left:20px; color:var(--text); font-size:0.95rem; line-height:1.6;">
                     <li>Esempio Corso 1</li>
                     <li>Esempio Corso 2</li>
                 </ul>
@@ -1816,13 +1962,13 @@
                 <input type="range" min="1" max="10" value="6" oninput="updateSliderValue(this, 'sv_${sub.id}')" data-id="${sub.id}" data-type="vote" data-cat="${sub.cat}">
                 <div class="slider-range"><span>1</span><span>10</span></div>
             </div>
-            <div style="font-size:0.75em; text-align:center; color:#94a3b8; margin-top:-18px; margin-bottom:6px;">Voto (Media)</div>
+            <div style="font-size:0.75em; text-align:center; color:#94a3b8; margin-top:-18px; margin-bottom:6px;" class="slider-helper-text">Voto (Media)</div>
             <div class="slider-wrapper" style="margin-top:15px;">
                 <span class="slider-value" id="se_${sub.id}">5</span>
                 <input type="range" min="1" max="10" value="5" oninput="updateSliderValue(this, 'se_${sub.id}')" data-id="${sub.id}" data-type="effort">
                 <div class="slider-range"><span>1</span><span>10</span></div>
             </div>
-            <div style="font-size:0.75em; text-align:center; color:#94a3b8; margin-top:-18px;">Fatica (1=Poca, 10=Tanta)</div>
+            <div style="font-size:0.75em; text-align:center; color:#94a3b8; margin-top:-18px;" class="slider-helper-text">Fatica (1=Poca, 10=Tanta)</div>
             <hr style="border:0; border-top:1px solid #eee; margin-top:15px;">
         </div>`;
             });
@@ -1973,6 +2119,13 @@
             const val = parseFloat(slider.value);
             const percent = ((val - min) / (max - min)) * 100;
             valueSpan.style.left = `calc(${percent}% + (${8 - percent * 0.16}px))`;
+            // Fill track left side with primary color (WebKit fix)
+            const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const trackColor = isDark ? 'rgba(71, 85, 105, 0.6)' : 'rgba(226, 232, 240, 0.8)';
+            const primaryColor = isDark ? '#818cf8' : '#6366f1';
+            slider.style.background = `linear-gradient(to right, ${primaryColor} 0%, ${primaryColor} ${percent}%, ${trackColor} ${percent}%, ${trackColor} 100%)`;
+            slider.style.borderRadius = '3px';
+            slider.style.height = '6px';
         }
 
         function initSliderValue(slider) {
@@ -2293,10 +2446,10 @@
                 document.getElementById('selected-faculty').innerText = recommended[0][0];
                 updateMap();
 
-                // Mostra popup feedback dopo 2 secondi
+                // Mostra popup feedback dopo 5 secondi
                 setTimeout(() => {
                     document.getElementById('feedback-overlay').classList.add('show');
-                }, 2000);
+                }, 5000);
 
                 nextStep(6);
             } catch (e) {
@@ -2487,11 +2640,11 @@
             };
 
             if (m.length > 0) {
-                container.innerHTML += `<h4 style="margin-bottom: 15px; color: #1e293b;">🏫 A Milano:</h4>` + genGrid(m);
+                container.innerHTML += `<h4 style="margin-bottom: 15px; color: #1e293b;" class="uni-section-heading">🏫 A Milano:</h4>` + genGrid(m);
             }
             if (f.length > 0) {
                 if (m.length > 0) container.innerHTML += `<hr style="margin: 30px 0; border: 0; border-top: 1px solid #e2e8f0;">`;
-                container.innerHTML += `<h4 style="margin-bottom: 15px; color: #1e293b;">🚆 Fuori Milano:</h4>` + genGrid(f);
+                container.innerHTML += `<h4 style="margin-bottom: 15px; color: #1e293b;" class="uni-section-heading">🚆 Fuori Milano:</h4>` + genGrid(f);
             }
         }
 
@@ -2682,6 +2835,9 @@
             div.style.lineHeight = "1.5";
             div.style.border = "1px solid transparent";
 
+            // Check dark mode
+            const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
             if (sender === 'user') {
                 div.style.background = "#6366f1";
                 div.style.color = "white";
@@ -2689,11 +2845,18 @@
                 div.style.alignSelf = "flex-end";
                 div.style.boxShadow = "0 2px 5px rgba(99, 102, 241, 0.2)";
             } else {
-                div.style.background = isLoading ? "#f8fafc" : "white";
-                div.style.color = isLoading ? "#94a3b8" : "#1e293b";
+                div.classList.add('msg-ai');
+                if (isDark) {
+                    div.style.background = isLoading ? "rgba(15, 23, 42, 0.8)" : "rgba(30, 41, 59, 0.9)";
+                    div.style.color = isLoading ? "#94a3b8" : "#f1f5f9";
+                    div.style.borderColor = "rgba(71, 85, 105, 0.6)";
+                } else {
+                    div.style.background = isLoading ? "#f8fafc" : "white";
+                    div.style.color = isLoading ? "#94a3b8" : "#1e293b";
+                    div.style.borderColor = "#e2e8f0";
+                }
                 div.style.borderRadius = "12px 12px 12px 0";
                 div.style.alignSelf = "flex-start";
-                div.style.borderColor = "#e2e8f0";
                 div.style.boxShadow = "0 2px 4px rgba(0,0,0,0.02)";
                 if (isLoading) div.style.fontStyle = "italic";
             }
