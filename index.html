@@ -64,6 +64,29 @@
             }
         }
 
+        .beta-disclaimer {
+            background: #ffe4e6;
+            border: 2px solid #f43f5e;
+            color: #be123c;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            text-align: left;
+            font-weight: 500;
+            box-shadow: 0 4px 6px rgba(244, 63, 94, 0.1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .beta-disclaimer {
+                background: rgba(136, 19, 55, 0.3);
+                border-color: #fb7185;
+                color: #fecdd3;
+                box-shadow: none;
+            }
+        }
+
         /* Scrollbar personalizzata */
         ::-webkit-scrollbar {
             width: 6px;
@@ -1307,6 +1330,11 @@
             di 5</div>
 
         <div id="step-1" class="step active">
+            <div class="beta-disclaimer">
+                <strong>⚠️ Disclaimer (Beta):</strong> Il sito è stato creato per puro scopo indicativo e informativo.
+                Essendo in beta potrebbero esserci dei problemi. I dati inseriti vengono salvati (in modo anonimo) per
+                migliorare il calcolo dei punteggi grazie ai vostri feedback.
+            </div>
             <h2>🏫 Che scuola frequenti?</h2>
             <div class="custom-dropdown" id="school-dropdown">
                 <div class="dropdown-selected" onclick="toggleDropdown()">
@@ -2517,11 +2545,11 @@
                             beginAtZero: true,
                             max: 100,
                             grid: { color: 'rgba(37, 99, 235, 0.1)' },
-                            ticks: { color: '#64748b', font: { size: 11 } }
+                            ticks: { color: (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? '#ffffff' : '#64748b', font: { size: 11 } }
                         },
                         y: {
                             grid: { display: false },
-                            ticks: { color: '#334155', font: { size: 12, weight: '600' } }
+                            ticks: { color: (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? '#ffffff' : '#334155', font: { size: 12, weight: '600' } }
                         }
                     }
                 }
@@ -2875,6 +2903,22 @@
             const rating = ratingEl ? ratingEl.value : "";
             const comment = document.getElementById('fb_comment').value.trim();
 
+            // Raccogli voti e fatica materie
+            const gradesInputs = document.querySelectorAll('#subjects-container input[type="range"]');
+            let gradesMap = {};
+            gradesInputs.forEach(i => {
+                const id = i.dataset.id;
+                if (!gradesMap[id]) gradesMap[id] = {};
+                if (i.dataset.type === 'vote') gradesMap[id].vote = parseInt(i.value);
+                if (i.dataset.type === 'effort') gradesMap[id].effort = parseInt(i.value);
+            });
+            // Converti in array leggibile
+            const grades = Object.entries(gradesMap).map(([id, vals]) => ({
+                id: id,
+                vote: vals.vote || 6,
+                effort: vals.effort || 5
+            }));
+
             return {
                 timestamp: new Date().toISOString(),
                 winner: (window.allSorted && window.allSorted.length > 0) ? window.allSorted[0][0] : "N/D",
@@ -2882,6 +2926,7 @@
                 alternatives: (window.recommended || []).slice(1).map(r => ({ name: r[0], score: Math.round(r[1]) })),
                 answers: {
                     school: document.getElementById('school-select').value,
+                    grades: grades,
                     q_tech: getRadioSafe('q_tech'),
                     q_biz: getRadioSafe('q_biz'),
                     q_sci: getRadioSafe('q_sci'),
@@ -2909,38 +2954,33 @@
             });
         }
 
-        async function submitFeedback() {
+        function submitFeedback() {
             const btn = document.getElementById('btn-feedback');
             const ratingEl = document.querySelector('input[name="fb_rating"]:checked');
             if (!ratingEl) {
                 alert("Per favore, dai un voto al quiz prima di inviare.");
                 return;
             }
+            // Invia in background senza attendere risposta
+            const data = collectFeedbackData();
+            sendToGoogleSheets(data).catch(err => console.error(err));
+            // Mostra conferma sul bottone
             btn.disabled = true;
-            btn.innerText = "Invio in corso...";
-
-            try {
-                const data = collectFeedbackData();
-                await sendToGoogleSheets(data);
-                // Chiudi modale dopo successo
-                setTimeout(() => {
-                    document.getElementById('feedback-overlay').classList.remove('show');
-                }, 800);
-            } catch (err) {
-                console.error(err);
+            btn.innerText = "Feedback inviato, grazie! ✨";
+            // Chiudi modale dopo 0.5 secondi
+            setTimeout(() => {
+                document.getElementById('feedback-overlay').classList.remove('show');
+                // Reset bottone per eventuale riapertura
                 btn.disabled = false;
                 btn.innerText = "Invia Feedback ✨";
-            }
+            }, 800);
         }
 
-        async function closeFeedback() {
-            // Invia dati anche se chiude (con eventuale voto parziale)
-            try {
-                const data = collectFeedbackData();
-                await sendToGoogleSheets(data);
-            } catch (err) {
-                console.error(err);
-            }
+        function closeFeedback() {
+            // Invia dati in background anche se chiude
+            const data = collectFeedbackData();
+            sendToGoogleSheets(data).catch(err => console.error(err));
+            // Chiudi subito
             document.getElementById('feedback-overlay').classList.remove('show');
         }
 
