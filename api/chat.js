@@ -59,9 +59,9 @@ export default async function handler(req, res) {
         const validHistory = (history || []).filter(h => h.parts && h.parts[0] && h.parts[0].text);
 
         // 5. Crea la chat
-        // Usiamo gemini-2.0-flash che è velocissimo e rispetta i limiti di tempo di Vercel (10s nel piano free)
+        // Usiamo il modello "gemini-2.0-flash" che è stabile sulla nuova SDK
         const chat = ai.chats.create({
-            model: "gemini-2.0-flash",
+            model: "gemma-3-27b-it",
             history: [
                 { role: 'user', parts: [{ text: systemText }] },
                 { role: 'model', parts: [{ text: "Ricevuto. Ho analizzato i dati e sono pronto a comportarmi come orientatore." }] },
