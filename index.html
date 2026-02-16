@@ -113,6 +113,18 @@
             /* Prevent padding from adding to width */
         }
 
+        html {
+            overflow: hidden;
+            height: 100%;
+            /* Previene pull-to-refresh su iOS */
+        }
+
+        body {
+            overflow: auto;
+            height: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+
         html,
         body {
             font-family: 'Inter', sans-serif;
@@ -126,7 +138,7 @@
             align-items: center;
             padding: 20px;
             overscroll-behavior-y: contain;
-            /* Previene refresh involontario su mobile */
+            /* Previene refresh involontario su Android/Chrome */
         }
 
         .container {
@@ -3007,6 +3019,23 @@
             history.scrollRestoration = 'manual';
         }
         window.scrollTo(0, 0);
+
+        // --- Disabilita pull-to-refresh su iOS ---
+        (function () {
+            let lastTouchY = 0;
+            document.addEventListener('touchstart', function (e) {
+                lastTouchY = e.touches[0].clientY;
+            }, { passive: true });
+
+            document.body.addEventListener('touchmove', function (e) {
+                const touchY = e.touches[0].clientY;
+                const scrollTop = document.body.scrollTop || 0;
+                // Se siamo in cima e si scorre verso il basso, blocca
+                if (scrollTop <= 0 && touchY > lastTouchY) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        })();
     </script>
 </body>
 
