@@ -113,18 +113,6 @@
             /* Prevent padding from adding to width */
         }
 
-        html {
-            overflow: hidden;
-            height: 100%;
-            /* Previene pull-to-refresh su iOS */
-        }
-
-        body {
-            overflow: auto;
-            height: 100%;
-            -webkit-overflow-scrolling: touch;
-        }
-
         html,
         body {
             font-family: 'Inter', sans-serif;
@@ -135,10 +123,11 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             padding: 20px;
             overscroll-behavior-y: contain;
-            /* Previene refresh involontario su Android/Chrome */
+            -webkit-overflow-scrolling: touch;
+            /* Previene pull-to-refresh su iOS/Android senza bloccare lo scroll */
         }
 
         .container {
@@ -3020,20 +3009,22 @@
         }
         window.scrollTo(0, 0);
 
-        // --- Disabilita pull-to-refresh su iOS ---
+        // --- Disabilita pull-to-refresh su iOS (fallback per versioni che non supportano overscroll-behavior) ---
         (function () {
             let lastTouchY = 0;
             document.addEventListener('touchstart', function (e) {
                 lastTouchY = e.touches[0].clientY;
             }, { passive: true });
 
-            document.body.addEventListener('touchmove', function (e) {
+            document.addEventListener('touchmove', function (e) {
                 const touchY = e.touches[0].clientY;
-                const scrollTop = document.body.scrollTop || 0;
-                // Se siamo in cima e si scorre verso il basso, blocca
-                if (scrollTop <= 0 && touchY > lastTouchY) {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+                const isScrollingDown = touchY > lastTouchY;
+                // Blocca solo il pull-to-refresh: siamo in cima alla pagina e si tira verso il basso
+                if (scrollTop <= 0 && isScrollingDown) {
                     e.preventDefault();
                 }
+                lastTouchY = touchY;
             }, { passive: false });
         })();
     </script>
