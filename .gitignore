@@ -10,7 +10,7 @@
 node_modules/
 /npm-debug.log*
 /yarn-error.log
-package-lock.json # (Opzionale: di solito si tiene, ma se dà conflitti puoi ignorarlo, meglio tenerlo però)
+# package-lock.json # (Consigliato caricarlo per coerenza versioni)
 
 # --- VERCEL (File temporanei del server locale) ---
 .vercel
