@@ -1,17 +1,3 @@
-// ISTRUZIONI:
-// 1. Vai su https://script.google.com/home
-// 2. Crea un "Nuovo progetto"
-// 3. Incolla questo codice nel file "Code.gs" (cancella tutto quello che c'è prima)
-// 4. Salva il progetto (icona Floppy o Ctrl+S)
-// 5. Clicca su "Deploy" (in alto a destra) -> "Nuovo deploy"
-// 6. Seleziona il tipo: "Web app" (ingranaggio -> Web app)
-// 7. Descrizione: "Bussola Quiz Backend"
-// 8. Esegui come: "Me" (la tua email)
-// 9. Chi può accedere: "Chiunque" (Anyone) -> IMPORTANTE!
-// 10. Clicca "Deploy"
-// 11. Autorizza l'accesso quando richiesto
-// 12. Copia l'URL della Web App (finisce con /exec) e dallo a me (o incollalo nel codice JS)
-
 function doPost(e) {
   try {
     var sheetName = "RisposteQuiz"; // Nome del foglio (tab)
