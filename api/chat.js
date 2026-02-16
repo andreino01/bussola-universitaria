@@ -4,9 +4,15 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI } from "@google/genai";
 
-// Carica .env.local esplicitamente
+// Carica .env.local solo se necessario (locale)
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: path.resolve(__dirname, '..', '.env.local') });
+try {
+    if (!process.env.GEMINI_API_KEY) {
+        dotenv.config({ path: path.resolve(__dirname, '..', '.env.local') });
+    }
+} catch (e) {
+    console.warn("Dotenv non caricato (probabilmente in produzione):", e.message);
+}
 
 export default async function handler(req, res) {
     // 1. Controllo sicurezza (accetta solo POST)
