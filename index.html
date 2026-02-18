@@ -64,27 +64,142 @@
             }
         }
 
-        .beta-disclaimer {
-            background: #ffe4e6;
-            border: 2px solid #f43f5e;
-            color: #be123c;
-            padding: 15px;
-            border-radius: 12px;
-            font-size: 0.9em;
-            line-height: 1.5;
-            margin-bottom: 25px;
-            text-align: left;
+        /* Privacy Button */
+        .privacy-fab {
+            display: inline-flex;
+            width: 25px;
+            height: 25px;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: var(--card-inner-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.78rem;
             font-weight: 500;
-            box-shadow: 0 4px 6px rgba(244, 63, 94, 0.1);
+            color: var(--text-muted);
+            transition: all 0.25s ease;
         }
 
-        @media (prefers-color-scheme: dark) {
-            .beta-disclaimer {
-                background: rgba(136, 19, 55, 0.3);
-                border-color: #fb7185;
-                color: #fecdd3;
-                box-shadow: none;
-            }
+        .privacy-fab:hover {
+            color: var(--primary);
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.12);
+            transform: translateY(-1px);
+        }
+
+        .privacy-fab svg {
+            width: 14px;
+            height: 14px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
+        }
+
+        .step-indicator-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .step-indicator-row .step-indicator-text {
+            font-size: 0.9em;
+            color: #64748b;
+        }
+
+        .step-indicator-row .privacy-fab {
+            position: absolute;
+            right: 0;
+        }
+
+        /* Privacy Modal */
+        .privacy-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 1001;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .privacy-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .privacy-modal-content {
+            background: var(--card-bg);
+            color: var(--text);
+            padding: 32px;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 540px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            text-align: left;
+            position: relative;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+        }
+
+        .privacy-overlay.active .privacy-modal-content {
+            transform: translateY(0);
+        }
+
+        .privacy-modal-content h3 {
+            margin-top: 0;
+            font-size: 1.4rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .privacy-modal-content h4 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin: 20px 0 8px 0;
+            color: var(--primary);
+        }
+
+        .privacy-modal-content p {
+            font-size: 0.92rem;
+            line-height: 1.65;
+            color: var(--text-muted);
+            margin: 0 0 4px 0;
+        }
+
+        .privacy-modal-content ul {
+            padding-left: 20px;
+            margin: 6px 0 0 0;
+            font-size: 0.92rem;
+            line-height: 1.65;
+            color: var(--text-muted);
+        }
+
+        .privacy-modal-content ul li {
+            margin-bottom: 4px;
         }
 
         /* Scrollbar personalizzata */
@@ -1212,7 +1327,7 @@
         }
 
         .btn-feedback {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            background: var(--primary);
             color: white;
             border: none;
             padding: 14px 40px;
@@ -1220,13 +1335,14 @@
             font-weight: 700;
             font-size: 1rem;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
             transition: all 0.3s ease;
         }
 
         .btn-feedback:hover {
+            background: #1d4ed8;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
         }
 
         .btn-feedback:disabled {
@@ -1280,6 +1396,12 @@
                 border-top-color: var(--border-color) !important;
             }
 
+            .chat-disclaimer {
+                background: var(--card-inner-bg) !important;
+                color: var(--text-muted) !important;
+                border-top-color: var(--border-color) !important;
+            }
+
             .chat-input-area input {
                 background: var(--input-bg) !important;
                 color: var(--text) !important;
@@ -1321,6 +1443,166 @@
             .container hr {
                 border-color: var(--border-color) !important;
             }
+
+            .shared-view-wrapper {
+                background: var(--card-bg) !important;
+                border-color: var(--border-color) !important;
+            }
+
+            .shared-rank-bar-fill {
+                background: linear-gradient(135deg, #818cf8 0%, #6366f1 100%) !important;
+            }
+
+            .shared-rank-name {
+                color: var(--text) !important;
+            }
+
+            .shared-rank-score {
+                color: var(--text-muted) !important;
+            }
+        }
+
+        /* ======================== */
+        /* SHARED VIEW STYLES       */
+        /* ======================== */
+        .shared-view-wrapper {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border-color);
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .shared-view-wrapper h2 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .shared-view-subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+        }
+
+        .shared-rank-list {
+            text-align: left;
+            max-width: 500px;
+            margin: 0 auto 30px;
+        }
+
+        .shared-rank-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .shared-rank-medal {
+            font-size: 1.5rem;
+            width: 36px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .shared-rank-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .shared-rank-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .shared-rank-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .shared-rank-score {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            flex-shrink: 0;
+            margin-left: 8px;
+        }
+
+        .shared-rank-bar {
+            width: 100%;
+            height: 10px;
+            background: var(--border-color);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .shared-rank-bar-fill {
+            height: 100%;
+            border-radius: 5px;
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .btn-share {
+            background: var(--primary);
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-share:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-cta-test {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 30px;
+            font-weight: 800;
+            font-size: 1.15rem;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-cta-test:hover {
+            background: #1d4ed8;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.45);
+        }
+
+        @media (max-width: 480px) {
+            .shared-view-wrapper {
+                padding: 25px 18px;
+            }
+
+            .shared-view-wrapper h2 {
+                font-size: 1.4rem;
+            }
+
+            .shared-rank-name {
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
@@ -1332,15 +1614,17 @@
         <div style="height:4px; background:#e2e8f0; margin-bottom:8px;">
             <div id="progress" style="height:100%; width:0%; background:var(--primary); transition:0.3s;"></div>
         </div>
-        <div id="step-indicator" style="text-align:center; font-size:0.9em; color:#64748b; margin-bottom:20px;">Step 1
-            di 5</div>
+        <div class="step-indicator-row">
+            <span class="step-indicator-text" id="step-indicator">Step 1 di 5</span>
+            <button class="privacy-fab" id="privacy-fab-btn" onclick="openPrivacy()" aria-label="Privacy Policy"
+                title="Privacy Policy">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+            </button>
+        </div>
 
         <div id="step-1" class="step active">
-            <div class="beta-disclaimer">
-                <strong>⚠️ Disclaimer (Beta):</strong> Il sito è stato creato per puro scopo indicativo e informativo.
-                Essendo in beta potrebbero esserci dei problemi. I dati inseriti vengono salvati (in modo anonimo) per
-                migliorare il calcolo dei punteggi grazie ai vostri feedback.
-            </div>
             <h2>🏫 Che scuola frequenti?</h2>
             <div class="custom-dropdown" id="school-dropdown">
                 <div class="dropdown-selected" onclick="toggleDropdown()">
@@ -1542,8 +1826,10 @@
 
             <div id="map"></div>
             <div id="unis-list-container"></div>
-            <div class="btn-group"><button class="btn-prev" onclick="window.scrollTo(0,0); location.reload()">🔄
-                    Ricomincia</button></div>
+            <div class="btn-group">
+                <button class="btn-prev" onclick="window.scrollTo(0,0); location.reload()">🔄 Ricomincia</button>
+                <button class="btn-share" id="btn-share" onclick="copyShareLink()">📤 Condividi</button>
+            </div>
 
             <!-- CHATBOT ACCORDION START -->
             <hr style="margin: 30px 0; border: 0; border-top: 1px solid #e2e8f0;">
@@ -1589,12 +1875,29 @@
                             <span style="font-size: 1.2rem; margin-left: 2px;">➤</span>
                         </button>
                     </div>
+                    <div class="chat-disclaimer"
+                        style="padding: 5px 19px 5px; background: white; font-size: 0.5rem; color: #94a3b8; text-align: center; line-height: 1.3; border-top: 2px solid #e2e8f0;">
+                        L'intelligenza artificiale può commettere errori. Questi consigli sono a scopo orientativo e non
+                        sostituiscono una consulenza professionale.
+                    </div>
                 </div>
             </div>
             <!-- CHATBOT ACCORDION END -->
         </div>
     </div>
 
+    <!-- SHARED VIEW (visible only when opening a share link) -->
+    <div id="shared-view" style="display:none; padding: 20px 15px; min-height: 100vh;">
+        <div class="shared-view-wrapper">
+            <h2>🏆 Risultati del tuo amico</h2>
+            <p class="shared-view-subtitle">Ecco le facoltà più adatte secondo il test di orientamento</p>
+            <div id="shared-winner" class="winner-box" style="display:none; cursor:pointer; text-align:center;"></div>
+            <h3 style="text-align:left;">💡 Alternative:</h3>
+            <div class="runners-grid" id="shared-runners" style="text-align:left;"></div>
+            <div style="margin-top: 30px; text-align: center;">
+                <button class="btn-cta-test" onclick="startTestFromShared()">🚀 Fai anche tu il test!</button>
+            </div>
+        </div>
     </div>
 
     <!-- FEEDBACK MODAL OVERLAY (fuori dal container) -->
@@ -1656,6 +1959,39 @@
             </div>
 
             <div class="source-note">Dati Almalaurea 2024 (Stime medie nazionali)</div>
+        </div>
+    </div>
+
+    <!-- PRIVACY MODAL -->
+    <div class="privacy-overlay" id="privacy-overlay" onclick="closePrivacy(event)">
+        <div class="privacy-modal-content">
+            <button class="modal-close" onclick="closePrivacy(event, true)">×</button>
+            <h3>🔒 Informativa Privacy</h3>
+
+            <h4>1. Chi siamo</h4>
+            <p>Questo è un progetto amatoriale di orientamento universitario sviluppato da Andrea Malliani.</p>
+
+            <h4>2. Quali dati raccolgo</h4>
+            <p>Non raccolgo dati personali identificativi (niente nomi, email, indirizzi IP o numeri di telefono).
+            </p>
+            <p>Raccolgo solo:</p>
+            <ul>
+                <li>Le risposte date al quiz.</li>
+                <li>Il risultato ottenuto.</li>
+                <li>Il voto di gradimento e i commenti lasciati volontariamente.</li>
+            </ul>
+
+            <h4>3. Cookie</h4>
+            <p>Questo sito non utilizza cookie di profilazione o tracciamento.
+            </p>
+
+            <h4>4. Dove finiscono i dati</h4>
+            <p>I dati anonimi vengono salvati su un Foglio Google privato, accessibile solo allo sviluppatore (a me), e
+                vengono
+                usati esclusivamente per calibrare meglio l'algoritmo del quiz e migliorare i suggerimenti.</p>
+
+            <h4>5. Servizi Terzi</h4>
+            <p>Il sito è ospitato su Vercel (hosting) e utilizza Google Apps Script (per il salvataggio dati).</p>
         </div>
     </div>
 
@@ -1918,7 +2254,7 @@
             "Moda": {
                 color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)",
                 border: "#3b82f6",
-                duration: "3 Anni<br>(+ Master)",
+                duration: "3 Anni<br><span style='font-size:0.85em; white-space:nowrap; display:inline-block; margin-top:2px;'>(+ Master)</span>",
                 employment: "87,5%",
                 salary: "1.520 €",
                 courses: ["Fashion Design", "Fashion Business", "Fashion Styling", "Modellistica", "Design del Gioiello e Accessori"]
@@ -2139,6 +2475,12 @@
                 indicator.innerText = "I tuoi risultati";
             } else {
                 indicator.innerText = `Step ${n} di 5`;
+            }
+
+            // Mostra bottone privacy solo su step 1
+            const privacyBtn = document.getElementById('privacy-fab-btn');
+            if (privacyBtn) {
+                privacyBtn.style.display = (n === 1) ? '' : 'none';
             }
 
             window.scrollTo(0, 0);
@@ -2734,7 +3076,173 @@
                     positionSliderValue(slider, valueSpan);
                 }
             });
+
+            // --- SHARED VIEW: Check URL for ?results= parameter ---
+            checkSharedResults();
         });
+
+        // Faculty abbreviation map for compact URLs
+        const FAC_ABBREV = {};
+        const FAC_FROM_ABBREV = {};
+        (function buildAbbrevMap() {
+            const faculties = Object.keys(UNI_MAPPING);
+            faculties.forEach(f => {
+                // Generate 2-3 char abbreviation (only alpha words)
+                const words = f.split(/[\s\/]+/).filter(w => /^[A-Za-z]/.test(w));
+                let abbr;
+                if (words.length >= 2) {
+                    abbr = (words[0][0] + words[1][0]).toUpperCase();
+                } else if (words.length === 1) {
+                    abbr = words[0].substring(0, 3).toUpperCase();
+                } else {
+                    abbr = f.replace(/[^A-Za-z]/g, '').substring(0, 3).toUpperCase();
+                }
+                // Handle collisions by appending alpha chars
+                let key = abbr;
+                const alphaOnly = f.replace(/[^A-Za-z]/g, '');
+                let i = 2;
+                while (FAC_FROM_ABBREV[key]) {
+                    key = abbr + (alphaOnly[i] || i).toString().toUpperCase();
+                    i++;
+                }
+                FAC_ABBREV[f] = key;
+                FAC_FROM_ABBREV[key] = f;
+            });
+        })();
+
+        function checkSharedResults() {
+            const params = new URLSearchParams(window.location.search);
+            const encoded = params.get('r');
+            if (!encoded) return;
+
+            try {
+                // Decode URL-safe Base64, then parse compact format
+                const b64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
+                const decoded = atob(b64);
+                const parts = decoded.split('.');
+
+                const data = parts.map(p => {
+                    // Extract abbreviation (letters) and score (digits at end)
+                    const match = p.match(/^([A-Za-z]+)(\d+)$/);
+                    if (!match) return null;
+                    return [match[1], parseInt(match[2])];
+                }).filter(Boolean);
+
+                if (data.length === 0) return;
+
+                // Resolve abbreviations back to full names
+                const resolved = data.map(item => {
+                    const fullName = FAC_FROM_ABBREV[item[0]] || item[0];
+                    return [fullName, item[1]];
+                });
+
+                // Hide the quiz container, show shared view
+                document.querySelector('.container').style.display = 'none';
+                const sharedView = document.getElementById('shared-view');
+                sharedView.style.display = 'block';
+
+                // Render winner box
+                const winner = resolved[0];
+                const wBox = document.getElementById('shared-winner');
+                wBox.style.display = '';
+                wBox.innerHTML = `
+                    <div style="color:#15803d; text-transform:uppercase; font-size:0.9em;">Consiglio</div>
+                    <div class="winner-name"><span style="font-size:1.2em">🥇</span> ${winner[0]}</div>
+                    <div>Punteggio: ${Math.round(winner[1])}</div>
+                `;
+                wBox.onclick = () => openModal(winner[0]);
+
+                // Render runner cards
+                const runDiv = document.getElementById('shared-runners');
+                runDiv.innerHTML = '';
+                runDiv.className = 'runners-grid';
+                const medals = ['🥈', '🥉', '4️⃣', '5️⃣'];
+                const runners = resolved.slice(1);
+
+                if (runners.length > 0) {
+                    runDiv.classList.add('layout-' + runners.length);
+                }
+
+                runners.forEach((r, index) => {
+                    runDiv.innerHTML += `
+                    <div class="runner-card" data-faculty="${r[0]}" style="cursor: pointer;">
+                        <div class="runner-name">
+                            <span style="font-size:1.2em">${medals[index] || ''}</span> ${r[0]}
+                        </div>
+                        <div class="runner-score" style="border: 3px solid #eff6ff;">${Math.round(r[1])}</div>
+                    </div>`;
+                });
+
+                // Attach click handlers to runner cards
+                runDiv.querySelectorAll('.runner-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        openModal(card.dataset.faculty);
+                    });
+                });
+
+            } catch (e) {
+                console.error('Errore nel parsing dei risultati condivisi:', e);
+            }
+        }
+
+        function copyShareLink() {
+            if (!window.scores) {
+                alert('Nessun risultato da condividere.');
+                return;
+            }
+
+            // Sort and take Top 5, use abbreviations
+            const sorted = Object.entries(window.scores)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5)
+                .map(s => [FAC_ABBREV[s[0]] || s[0], Math.round(s[1])]);
+
+            // Encode as compact dot-separated string, then URL-safe Base64
+            const compact = sorted.map(s => s[0] + s[1]).join('.');
+            const b64 = btoa(compact).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+            const url = window.location.origin + window.location.pathname + '?r=' + b64;
+
+            // Copy to clipboard
+            const btn = document.getElementById('btn-share');
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(() => {
+                    btn.innerHTML = '✅ Link copiato!';
+                    setTimeout(() => { btn.innerHTML = '📤 Condividi'; }, 2500);
+                }).catch(() => {
+                    fallbackCopy(url, btn);
+                });
+            } else {
+                fallbackCopy(url, btn);
+            }
+        }
+
+        function fallbackCopy(text, btn) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try {
+                document.execCommand('copy');
+                btn.innerHTML = '✅ Link copiato!';
+                setTimeout(() => { btn.innerHTML = '📤 Condividi'; }, 2500);
+            } catch (e) {
+                alert('Copia questo link:\n' + text);
+            }
+            document.body.removeChild(ta);
+        }
+
+        function startTestFromShared() {
+            // Clean URL without reload
+            history.replaceState({}, '', window.location.pathname);
+            // Hide shared view, show quiz
+            document.getElementById('shared-view').style.display = 'none';
+            document.querySelector('.container').style.display = '';
+            // Reset to step 1
+            nextStep(1);
+            window.scrollTo(0, 0);
+        }
     </script>
 
     <!-- CHATBOT LOGIC -->
@@ -3001,6 +3509,16 @@
         function getRadioSafe(name) {
             const el = document.querySelector(`input[name="${name}"]:checked`);
             return el ? el.value : null;
+        }
+
+        // --- PRIVACY MODAL FUNCTIONS ---
+        function openPrivacy() {
+            document.getElementById('privacy-overlay').classList.add('active');
+        }
+        function closePrivacy(e, force = false) {
+            if (force || e.target.classList.contains('privacy-overlay')) {
+                document.getElementById('privacy-overlay').classList.remove('active');
+            }
         }
 
         // Force scroll to top on reload
