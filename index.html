@@ -1576,13 +1576,20 @@
             padding: 18px 40px;
             border-radius: 30px;
             font-weight: 800;
-            font-size: 1.15rem;
+            font-size: 1.3rem;
+            /* Larger font */
             cursor: pointer;
             box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
+            /* Center content */
             gap: 10px;
+            white-space: nowrap;
+            /* Force single line */
+            max-width: 100%;
+            /* Ensure it doesn't overflow container */
         }
 
         .btn-cta-test:hover {
@@ -1889,13 +1896,13 @@
     <!-- SHARED VIEW (visible only when opening a share link) -->
     <div id="shared-view" style="display:none; padding: 20px 15px; min-height: 100vh;">
         <div class="shared-view-wrapper">
-            <h2>🏆 Risultati del tuo amico</h2>
-            <p class="shared-view-subtitle">Ecco le facoltà più adatte secondo il test di orientamento</p>
+            <h2>Il Verdetto della Bussola 🧭</h2>
+            <p class="shared-view-subtitle">Ecco le facoltà più adatte secondo l'algoritmo</p>
             <div id="shared-winner" class="winner-box" style="display:none; cursor:pointer; text-align:center;"></div>
             <h3 style="text-align:left;">💡 Alternative:</h3>
             <div class="runners-grid" id="shared-runners" style="text-align:left;"></div>
             <div style="margin-top: 30px; text-align: center;">
-                <button class="btn-cta-test" onclick="startTestFromShared()">🚀 Fai anche tu il test!</button>
+                <button class="btn-cta-test" onclick="startTestFromShared()">Scopri anche tu la tua rotta 🧭</button>
             </div>
         </div>
     </div>
@@ -1968,8 +1975,10 @@
             <button class="modal-close" onclick="closePrivacy(event, true)">×</button>
             <h3>🔒 Informativa Privacy</h3>
 
-            <h4>1. Chi siamo</h4>
-            <p>Questo è un progetto amatoriale di orientamento universitario sviluppato da Andrea Malliani.</p>
+            <h4>1. Chi sono</h4>
+            <p>Sono uno studente di Ingegneria. Ho costruito questa "Bussola" per aiutare gli studenti indecisi,
+                non c'è un team di esperti dietro, solo io e il mio computer: prendi i risultati come uno spunto di
+                partenza e goditi l'esperienza!</p>
 
             <h4>2. Quali dati raccolgo</h4>
             <p>Non raccolgo dati personali identificativi (niente nomi, email, indirizzi IP o numeri di telefono).
@@ -1981,14 +1990,14 @@
                 <li>Il voto di gradimento e i commenti lasciati volontariamente.</li>
             </ul>
 
-            <h4>3. Cookie</h4>
-            <p>Questo sito non utilizza cookie di profilazione o tracciamento.
-            </p>
-
-            <h4>4. Dove finiscono i dati</h4>
+            <h4>3. Dove finiscono i dati</h4>
             <p>I dati anonimi vengono salvati su un Foglio Google privato, accessibile solo allo sviluppatore (a me), e
                 vengono
                 usati esclusivamente per calibrare meglio l'algoritmo del quiz e migliorare i suggerimenti.</p>
+
+            <h4>4. Cookie</h4>
+            <p>Questo sito non utilizza cookie di profilazione o tracciamento.
+            </p>
 
             <h4>5. Servizi Terzi</h4>
             <p>Il sito è ospitato su Vercel (hosting) e utilizza Google Apps Script (per il salvataggio dati).</p>
@@ -2254,7 +2263,7 @@
             "Moda": {
                 color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)",
                 border: "#3b82f6",
-                duration: "3 Anni<br><span style='font-size:0.85em; white-space:nowrap; display:inline-block; margin-top:2px;'>(+ Master)</span>",
+                duration: "3 Anni<br><span style='font-size:0.8em'>(+ Master)</span>",
                 employment: "87,5%",
                 salary: "1.520 €",
                 courses: ["Fashion Design", "Fashion Business", "Fashion Styling", "Modellistica", "Design del Gioiello e Accessori"]
