@@ -3216,7 +3216,7 @@
                 try {
                     await navigator.share({
                         title: 'Bussola Universitaria 🧭',
-                        text: 'Ho scoperto quale facoltà fa per me! Fai anche tu il test 👇',
+                        text: 'Ho scoperto quali facoltà fanno per me! Guarda i risultati e fai anche tu il test 👇',
                         url: url
                     });
                     return; // Condivisione avviata con successo o completata
@@ -3231,7 +3231,7 @@
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(url).then(() => {
                     btn.innerHTML = '✅ Link copiato!';
-                    setTimeout(() => { btn.innerHTML = '📤 Condividi'; }, 2500);
+                    setTimeout(() => { btn.innerHTML = '📤 Condividi i tuoi risultati'; }, 2500);
                 }).catch(() => {
                     fallbackCopy(url, btn);
                 });
@@ -3250,7 +3250,7 @@
             try {
                 document.execCommand('copy');
                 btn.innerHTML = '✅ Link copiato!';
-                setTimeout(() => { btn.innerHTML = '📤 Condividi'; }, 2500);
+                setTimeout(() => { btn.innerHTML = '📤 Condividi i tuoi risultati'; }, 2500);
             } catch (e) {
                 alert('Copia questo link:\n' + text);
             }
