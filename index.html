@@ -493,7 +493,6 @@
             justify-content: space-between;
             margin-top: 20px;
             padding-top: 20px;
-            border-top: 1px solid #eee;
         }
 
         button {
@@ -509,13 +508,17 @@
             background: var(--primary);
             color: white;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+            -webkit-tap-highlight-color: transparent;
         }
 
         .btn-next:hover {
-            background: #1d4ed8;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+        }
+
+        .btn-next:active {
+            color: white;
         }
 
         .btn-prev {
@@ -523,12 +526,17 @@
             color: var(--text);
             transition: all 0.3s ease;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            -webkit-tap-highlight-color: transparent;
         }
 
         .btn-prev:hover {
-            background: var(--border-color);
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-prev:active {
+            background: var(--input-bg);
+            color: var(--text);
         }
 
         .radio-option {
@@ -1335,14 +1343,14 @@
             font-weight: 700;
             font-size: 1rem;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
             transition: all 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .btn-feedback:hover {
-            background: #1d4ed8;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
         }
 
         .btn-feedback:disabled {
@@ -1560,13 +1568,74 @@
             background: var(--primary);
             color: white;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+            -webkit-tap-highlight-color: transparent;
         }
 
         .btn-share:hover {
-            background: #1d4ed8;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+        }
+
+        .btn-share:active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* SHARE SUB-BUTTONS */
+        .share-options {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            margin-bottom: 12px;
+            animation: shareOptionsIn 0.25s ease;
+        }
+
+        .share-options.active {
+            display: flex;
+        }
+
+        @keyframes shareOptionsIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn-share-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 14px;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            color: white;
+            -webkit-tap-highlight-color: transparent;
+            background: var(--primary);
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+        }
+
+        .btn-share-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+        }
+
+        .btn-share-option:active {
+            background: var(--primary);
+            color: white;
         }
 
         .btn-cta-test {
@@ -1577,23 +1646,19 @@
             border-radius: 30px;
             font-weight: 800;
             font-size: 1.3rem;
-            /* Larger font */
             cursor: pointer;
             box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            /* Center content */
             gap: 10px;
             white-space: nowrap;
-            /* Force single line */
             max-width: 100%;
-            /* Ensure it doesn't overflow container */
+            -webkit-tap-highlight-color: transparent;
         }
 
         .btn-cta-test:hover {
-            background: #1d4ed8;
             transform: translateY(-3px);
             box-shadow: 0 10px 30px rgba(99, 102, 241, 0.45);
         }
@@ -1833,9 +1898,15 @@
 
             <div id="map"></div>
             <div id="unis-list-container"></div>
+            <hr>
+            <div class="share-options" id="share-options">
+                <button class="btn-share-option btn-share-test" onclick="shareTest()">🔗 Condividi il test</button>
+                <button class="btn-share-option btn-share-results" onclick="copyShareLink()">📊 Condividi i tuoi
+                    risultati</button>
+            </div>
             <div class="btn-group">
+                <button class="btn-share" id="btn-share" onclick="toggleShareMenu()">📤 Condividi</button>
                 <button class="btn-prev" onclick="window.scrollTo(0,0); location.reload()">🔄 Ricomincia</button>
-                <button class="btn-share" id="btn-share" onclick="copyShareLink()">📤 Condividi</button>
             </div>
 
             <!-- CHATBOT ACCORDION START -->
@@ -3194,7 +3265,49 @@
             }
         }
 
+        function toggleShareMenu() {
+            const options = document.getElementById('share-options');
+            options.classList.toggle('active');
+        }
+
+        function closeShareMenu() {
+            document.getElementById('share-options').classList.remove('active');
+        }
+
+        async function shareTest() {
+            closeShareMenu();
+            const baseUrl = 'https://bussola-universitaria.vercel.app';
+            const shareText = 'Scopri anche tu quale facoltà fa per te, fai il quiz ora!';
+
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: 'Bussola Universitaria 🧭',
+                        text: shareText,
+                        url: baseUrl
+                    });
+                    return;
+                } catch (err) {
+                    console.log('Condivisione non riuscita:', err);
+                }
+            }
+
+            // Fallback: copy to clipboard
+            const btn = document.getElementById('btn-share');
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(shareText + '\n' + baseUrl).then(() => {
+                    btn.innerHTML = '✅ Link copiato!';
+                    setTimeout(() => { btn.innerHTML = '📤 Condividi'; }, 2500);
+                }).catch(() => {
+                    fallbackCopy(shareText + '\n' + baseUrl, btn);
+                });
+            } else {
+                fallbackCopy(shareText + '\n' + baseUrl, btn);
+            }
+        }
+
         async function copyShareLink() {
+            closeShareMenu();
             if (!window.scores) {
                 alert('Nessun risultato da condividere.');
                 return;
@@ -3219,9 +3332,8 @@
                         text: 'Ho scoperto quali facoltà fanno per me! Guarda i risultati e fai anche tu il test 👇',
                         url: url
                     });
-                    return; // Condivisione avviata con successo o completata
+                    return;
                 } catch (err) {
-                    // Se l'utente annulla o c'è un errore, proseguiamo col fallback (copia link)
                     console.log('Condivisione non riuscita:', err);
                 }
             }
@@ -3231,7 +3343,7 @@
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(url).then(() => {
                     btn.innerHTML = '✅ Link copiato!';
-                    setTimeout(() => { btn.innerHTML = '📤 Condividi i tuoi risultati'; }, 2500);
+                    setTimeout(() => { btn.innerHTML = '📤 Condividi'; }, 2500);
                 }).catch(() => {
                     fallbackCopy(url, btn);
                 });
@@ -3250,7 +3362,7 @@
             try {
                 document.execCommand('copy');
                 btn.innerHTML = '✅ Link copiato!';
-                setTimeout(() => { btn.innerHTML = '📤 Condividi i tuoi risultati'; }, 2500);
+                setTimeout(() => { btn.innerHTML = '📤 Condividi'; }, 2500);
             } catch (e) {
                 alert('Copia questo link:\n' + text);
             }
