@@ -3296,9 +3296,11 @@
                 const region = prov ? (Object.values(ITALIA_DB).find(u => u.provincia === prov)?.regione || '') : '';
                 let msg = 'Nessuna università trovata in questa zona.';
                 if (currentFaculty && prov && currentZoomLevel === 'provincia') {
-                    msg = `Non esiste nessuna università di <b>${currentFaculty}</b> a ${prov}.`;
+                    const startsWithVowel = /^[a]/i.test(prov);
+                    const prep = startsWithVowel ? 'ad' : 'a';
+                    msg = `Non esiste nessuna università di <b>${currentFaculty}</b> ${prep} <b>${prov}</b>.`;
                 } else if (currentFaculty && region && currentZoomLevel === 'regione') {
-                    msg = `Non esiste nessuna università di <b>${currentFaculty}</b> in ${region}.`;
+                    msg = `Non esiste nessuna università di <b>${currentFaculty}</b> in <b>${region}</b>.`;
                 }
                 container.innerHTML = `<p style="color:var(--text-muted); text-align:center; padding:20px;">${msg}</p>`;
                 return;
