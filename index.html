@@ -1887,14 +1887,39 @@
                 onclick="toggleChartView()">Mostra tutte le facoltà</button>
             <hr>
             <h3>📍 Dove studiare?</h3>
+
+            <!-- 1. Province dropdown -->
+            <p style="margin-bottom:8px; font-size:0.95rem; color:var(--text-muted);">Scegli dove vorresti studiare:</p>
             <div class="custom-dropdown" id="map-dropdown">
                 <div class="dropdown-selected" onclick="toggleMapDropdown()">
-                    <span id="selected-faculty">Seleziona facoltà</span>
+                    <span id="selected-area">Seleziona una provincia</span>
                     <span class="dropdown-arrow">▼</span>
                 </div>
-                <div class="dropdown-options" id="map-dropdown-options"></div>
+                <div class="dropdown-options" id="map-dropdown-options" style="max-height:300px; overflow-y:auto;">
+                </div>
             </div>
             <select id="map-select" style="display:none;"></select>
+
+            <!-- 2. Faculty filter buttons (populated from quiz results) -->
+
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid var(--border-color);">
+
+            <div id="faculty-filter-container" style="display:flex; gap:8px; margin:15px 0; flex-wrap:wrap;"></div>
+
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid var(--border-color);">
+
+            <!-- 3. Zoom buttons -->
+            <div style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap;">
+                <button id="zoom-provincia-btn" class="btn-prev"
+                    style="flex:1; min-width:90px; margin:0; padding:10px 14px; font-size:0.9rem; opacity:0.6;"
+                    onclick="setZoomLevel('provincia')">📌 Provincia</button>
+                <button id="zoom-regione-btn" class="btn-prev"
+                    style="flex:1; min-width:90px; margin:0; padding:10px 14px; font-size:0.9rem; opacity:0.6;"
+                    onclick="setZoomLevel('regione')">🗺️ Regione</button>
+                <button id="zoom-italia-btn" class="btn-prev"
+                    style="flex:1; min-width:90px; margin:0; padding:10px 14px; font-size:0.9rem; box-shadow: 0 0 0 2px var(--primary);"
+                    onclick="setZoomLevel('italia')">🇮🇹 Italia</button>
+            </div>
 
             <div id="map"></div>
             <div id="unis-list-container"></div>
@@ -2181,35 +2206,151 @@
             "Moda": [8, 7, 8, 5]
         };
 
-        const MILANO_DB = {
-            "Politecnico (Leonardo)": { "lat": 45.478, "lon": 9.227, "type": "Pubblica", "url": "https://www.polimi.it/" },
-            "Politecnico (Bovisa)": { "lat": 45.506, "lon": 9.168, "type": "Pubblica", "url": "https://www.polimi.it/" },
-            "Bocconi": { "lat": 45.448, "lon": 9.190, "type": "Privata", "url": "https://www.unibocconi.it/" },
-            "Cattolica": { "lat": 45.463, "lon": 9.175, "type": "Privata", "url": "https://www.unicatt.it/" },
-            "LIUC": { "lat": 45.611, "lon": 8.892, "type": "Privata", "url": "https://www.liuc.it/" },
-            "Bicocca": { "lat": 45.513, "lon": 9.211, "type": "Pubblica", "url": "https://www.unimib.it/" },
-            "Statale": { "lat": 45.460, "lon": 9.194, "type": "Pubblica", "url": "https://www.unimi.it/" },
-            "Statale (Città Studi)": { "lat": 45.476, "lon": 9.224, "type": "Pubblica", "url": "https://www.unimi.it/" },
-            "Statale (Lodi)": { "lat": 45.317, "lon": 9.494, "type": "Pubblica", "url": "https://www.unimi.it/it/corsi/facolta-e-scuole/medicina-veterinaria" },
-            "Statale (Informatica)": { "lat": 45.476, "lon": 9.224, "type": "Pubblica", "url": "https://www.unimi.it/" },
-            "IULM": { "lat": 45.444, "lon": 9.162, "type": "Privata", "url": "https://www.iulm.it/" },
-            "NABA": { "lat": 45.446, "lon": 9.169, "type": "Privata", "url": "https://www.naba.it/" },
-            "IED": { "lat": 45.460, "lon": 9.200, "type": "Privata", "url": "https://www.ied.it/" },
-            "Accademia di Brera": { "lat": 45.472, "lon": 9.188, "type": "Pubblica", "url": "https://www.accademiadibrera.milano.it/" },
-            "Marangoni": { "lat": 45.465, "lon": 9.195, "type": "Privata", "url": "https://www.istitutomarangoni.com/" },
-            "San Raffaele": { "lat": 45.505, "lon": 9.263, "type": "Privata", "url": "https://www.unisr.it/" },
-            "Humanitas": { "lat": 45.393, "lon": 9.148, "type": "Privata", "url": "https://www.hunimed.eu/" },
-            "UniBg": { "lat": 45.655, "lon": 9.633, "type": "Pubblica", "url": "https://www.unibg.it/" },
-            "UniPv": { "lat": 45.186, "lon": 9.156, "type": "Pubblica", "url": "https://web.unipv.it/" },
-            "Insubria": { "lat": 45.816, "lon": 8.834, "type": "Pubblica", "url": "https://www.uninsubria.it/" },
-            "Domus Academy": { "lat": 45.445, "lon": 9.167, "type": "Privata", "url": "https://www.domusacademy.com/" },
-            "Secoli": { "lat": 45.495, "lon": 9.213, "type": "Privata", "url": "https://www.secoli.com/" },
-            "Cattolica (Fashion Mng)": { "lat": 45.463, "lon": 9.175, "type": "Privata", "url": "https://www.unicatt.it/" },
-            "Civica Altiero Spinelli": { "lat": 45.463, "lon": 9.175, "type": "Pubblica", "url": "https://fondazionemilano.eu/scuole/civica-altiero-spinelli" },
-            "Conservatorio G. Verdi": { "lat": 45.466, "lon": 9.205, "type": "Pubblica", "url": "https://www.consmi.it/" },
-            "Civica Paolo Grassi (Teatro)": { "lat": 45.478, "lon": 9.176, "type": "Pubblica", "url": "https://paolograssi.fondazionemilano.eu/" },
-            "Civica Luchino Visconti (Cinema)": { "lat": 45.508, "lon": 9.202, "type": "Pubblica", "url": "https://cinema.fondazionemilano.eu/" }
+        const ITALIA_DB = {
+            // === NORD-OVEST ===
+            "Torino": { "lat": 45.068, "lon": 7.688, "type": "Pubblica", "url": "https://www.unito.it/", "provincia": "Torino", "regione": "Piemonte" },
+            "Politecnico di Torino": { "lat": 45.063, "lon": 7.661, "type": "Pubblica", "url": "https://www.polito.it/", "provincia": "Torino", "regione": "Piemonte" },
+            "Piemonte Orientale": { "lat": 45.326, "lon": 8.422, "type": "Pubblica", "url": "https://www.uniupo.it/", "provincia": "Vercelli", "regione": "Piemonte" },
+            "Scienze Gastronomiche (Bra)": { "lat": 44.683, "lon": 7.896, "type": "Privata", "url": "https://www.unisg.it/", "provincia": "Cuneo", "regione": "Piemonte" },
+            "Valle d'Aosta": { "lat": 45.736, "lon": 7.315, "type": "Privata", "url": "https://www.univda.it/", "provincia": "Aosta", "regione": "Valle d'Aosta" },
+            "Genova": { "lat": 44.415, "lon": 8.926, "type": "Pubblica", "url": "https://unige.it/", "provincia": "Genova", "regione": "Liguria" },
+            "LIUC (Castellanza)": { "lat": 45.611, "lon": 8.892, "type": "Privata", "url": "https://www.liuc.it/", "provincia": "Varese", "regione": "Lombardia" },
+            "Insubria": { "lat": 45.816, "lon": 8.834, "type": "Pubblica", "url": "https://www.uninsubria.it/", "provincia": "Varese", "regione": "Lombardia" },
+            "Statale di Milano": { "lat": 45.460, "lon": 9.194, "type": "Pubblica", "url": "https://www.unimi.it/", "provincia": "Milano", "regione": "Lombardia" },
+            "Politecnico di Milano": { "lat": 45.478, "lon": 9.227, "type": "Pubblica", "url": "https://www.polimi.it/", "provincia": "Milano", "regione": "Lombardia" },
+            "Bocconi": { "lat": 45.448, "lon": 9.190, "type": "Privata", "url": "https://www.unibocconi.it/", "provincia": "Milano", "regione": "Lombardia" },
+            "Cattolica": { "lat": 45.463, "lon": 9.175, "type": "Privata", "url": "https://www.unicatt.it/", "provincia": "Milano", "regione": "Lombardia" },
+            "IULM": { "lat": 45.444, "lon": 9.162, "type": "Privata", "url": "https://www.iulm.it/", "provincia": "Milano", "regione": "Lombardia" },
+            "San Raffaele": { "lat": 45.505, "lon": 9.263, "type": "Privata", "url": "https://www.unisr.it/", "provincia": "Milano", "regione": "Lombardia" },
+            "Bicocca": { "lat": 45.513, "lon": 9.211, "type": "Pubblica", "url": "https://www.unimib.it/", "provincia": "Milano", "regione": "Lombardia" },
+            "Humanitas University": { "lat": 45.393, "lon": 9.148, "type": "Privata", "url": "https://www.hunimed.eu/", "provincia": "Milano", "regione": "Lombardia" },
+            "Bergamo": { "lat": 45.704, "lon": 9.663, "type": "Pubblica", "url": "https://www.unibg.it/", "provincia": "Bergamo", "regione": "Lombardia" },
+            "Brescia": { "lat": 45.539, "lon": 10.219, "type": "Pubblica", "url": "https://www.unibs.it/", "provincia": "Brescia", "regione": "Lombardia" },
+            "Pavia": { "lat": 45.186, "lon": 9.156, "type": "Pubblica", "url": "https://web.unipv.it/", "provincia": "Pavia", "regione": "Lombardia" },
+            // === NORD-EST ===
+            "Libera Università di Bolzano": { "lat": 46.498, "lon": 11.349, "type": "Privata", "url": "https://www.unibz.it/", "provincia": "Bolzano", "regione": "Trentino-Alto Adige" },
+            "Trento": { "lat": 46.067, "lon": 11.121, "type": "Pubblica", "url": "https://www.unitn.it/", "provincia": "Trento", "regione": "Trentino-Alto Adige" },
+            "Verona": { "lat": 45.438, "lon": 11.002, "type": "Pubblica", "url": "https://www.univr.it/", "provincia": "Verona", "regione": "Veneto" },
+            "Ca' Foscari Venezia": { "lat": 45.434, "lon": 12.326, "type": "Pubblica", "url": "https://www.unive.it/", "provincia": "Venezia", "regione": "Veneto" },
+            "Iuav Venezia": { "lat": 45.437, "lon": 12.318, "type": "Pubblica", "url": "https://www.iuav.it/", "provincia": "Venezia", "regione": "Veneto" },
+            "Padova": { "lat": 45.406, "lon": 11.877, "type": "Pubblica", "url": "https://www.unipd.it/", "provincia": "Padova", "regione": "Veneto" },
+            "Udine": { "lat": 46.062, "lon": 13.236, "type": "Pubblica", "url": "https://www.uniud.it/", "provincia": "Udine", "regione": "Friuli-Venezia Giulia" },
+            "Trieste": { "lat": 45.659, "lon": 13.794, "type": "Pubblica", "url": "https://www.units.it/", "provincia": "Trieste", "regione": "Friuli-Venezia Giulia" },
+            "Parma": { "lat": 44.802, "lon": 10.327, "type": "Pubblica", "url": "https://www.unipr.it/", "provincia": "Parma", "regione": "Emilia-Romagna" },
+            "Modena e Reggio Emilia": { "lat": 44.646, "lon": 10.925, "type": "Pubblica", "url": "https://www.unimore.it/", "provincia": "Modena", "regione": "Emilia-Romagna" },
+            "Bologna": { "lat": 44.496, "lon": 11.353, "type": "Pubblica", "url": "https://www.unibo.it/", "provincia": "Bologna", "regione": "Emilia-Romagna" },
+            "Ferrara": { "lat": 44.836, "lon": 11.618, "type": "Pubblica", "url": "https://www.unife.it/", "provincia": "Ferrara", "regione": "Emilia-Romagna" },
+            // === CENTRO ===
+            "Urbino Carlo Bo": { "lat": 43.726, "lon": 12.636, "type": "Pubblica", "url": "https://www.uniurb.it/", "provincia": "Pesaro e Urbino", "regione": "Marche" },
+            "Politecnica delle Marche (Ancona)": { "lat": 43.616, "lon": 13.516, "type": "Pubblica", "url": "https://www.univpm.it/", "provincia": "Ancona", "regione": "Marche" },
+            "Macerata": { "lat": 43.300, "lon": 13.453, "type": "Pubblica", "url": "https://www.unimc.it/", "provincia": "Macerata", "regione": "Marche" },
+            "Camerino": { "lat": 43.136, "lon": 13.068, "type": "Pubblica", "url": "https://www.unicam.it/", "provincia": "Macerata", "regione": "Marche" },
+            "Firenze": { "lat": 43.777, "lon": 11.259, "type": "Pubblica", "url": "https://www.unifi.it/", "provincia": "Firenze", "regione": "Toscana" },
+            "Pisa": { "lat": 43.716, "lon": 10.400, "type": "Pubblica", "url": "https://www.unipi.it/", "provincia": "Pisa", "regione": "Toscana" },
+            "Siena": { "lat": 43.318, "lon": 11.331, "type": "Pubblica", "url": "https://www.unisi.it/", "provincia": "Siena", "regione": "Toscana" },
+            "Stranieri di Siena": { "lat": 43.323, "lon": 11.325, "type": "Pubblica", "url": "https://www.unistrasi.it/", "provincia": "Siena", "regione": "Toscana" },
+            "Perugia": { "lat": 43.114, "lon": 12.388, "type": "Pubblica", "url": "https://www.unipg.it/", "provincia": "Perugia", "regione": "Umbria" },
+            "Stranieri di Perugia": { "lat": 43.114, "lon": 12.390, "type": "Pubblica", "url": "https://www.unistrapg.it/", "provincia": "Perugia", "regione": "Umbria" },
+            "Tuscia (Viterbo)": { "lat": 42.417, "lon": 12.104, "type": "Pubblica", "url": "https://www.unitus.it/", "provincia": "Viterbo", "regione": "Lazio" },
+            "La Sapienza": { "lat": 41.902, "lon": 12.515, "type": "Pubblica", "url": "https://www.uniroma1.it/", "provincia": "Roma", "regione": "Lazio" },
+            "Tor Vergata": { "lat": 41.854, "lon": 12.624, "type": "Pubblica", "url": "https://web.uniroma2.it/", "provincia": "Roma", "regione": "Lazio" },
+            "LUMSA": { "lat": 41.903, "lon": 12.461, "type": "Privata", "url": "https://www.lumsa.it/", "provincia": "Roma", "regione": "Lazio" },
+            "Luiss": { "lat": 41.921, "lon": 12.499, "type": "Privata", "url": "https://www.luiss.it/", "provincia": "Roma", "regione": "Lazio" },
+            "Foro Italico": { "lat": 41.933, "lon": 12.456, "type": "Pubblica", "url": "https://www.uniroma4.it/", "provincia": "Roma", "regione": "Lazio" },
+            "Roma Tre": { "lat": 41.862, "lon": 12.479, "type": "Pubblica", "url": "https://www.uniroma3.it/", "provincia": "Roma", "regione": "Lazio" },
+            "Campus Bio-Medico": { "lat": 41.767, "lon": 12.459, "type": "Privata", "url": "https://www.unicampus.it/", "provincia": "Roma", "regione": "Lazio" },
+            "UNINT": { "lat": 41.858, "lon": 12.497, "type": "Privata", "url": "https://www.unint.eu/", "provincia": "Roma", "regione": "Lazio" },
+            "Europea di Roma": { "lat": 41.884, "lon": 12.405, "type": "Privata", "url": "https://www.universitaeuropeadiroma.it/", "provincia": "Roma", "regione": "Lazio" },
+            "Link Campus University": { "lat": 41.897, "lon": 12.427, "type": "Privata", "url": "https://www.unilink.it/", "provincia": "Roma", "regione": "Lazio" },
+            "Saint Camillus": { "lat": 41.939, "lon": 12.607, "type": "Privata", "url": "https://www.unicamillus.org/", "provincia": "Roma", "regione": "Lazio" },
+            "Cassino e Lazio Meridionale": { "lat": 41.488, "lon": 13.829, "type": "Pubblica", "url": "https://www.unicas.it/", "provincia": "Frosinone", "regione": "Lazio" },
+            // === SUD ===
+            "Sannio": { "lat": 41.130, "lon": 14.777, "type": "Pubblica", "url": "https://www.unisannio.it/", "provincia": "Benevento", "regione": "Campania" },
+            "Federico II Napoli": { "lat": 40.844, "lon": 14.258, "type": "Pubblica", "url": "https://www.unina.it/", "provincia": "Napoli", "regione": "Campania" },
+            "Parthenope": { "lat": 40.838, "lon": 14.251, "type": "Pubblica", "url": "https://www.uniparthenope.it/", "provincia": "Napoli", "regione": "Campania" },
+            "L'Orientale": { "lat": 40.838, "lon": 14.253, "type": "Pubblica", "url": "https://www.unior.it/", "provincia": "Napoli", "regione": "Campania" },
+            "Suor Orsola Benincasa": { "lat": 40.841, "lon": 14.242, "type": "Privata", "url": "https://www.unisob.na.it/", "provincia": "Napoli", "regione": "Campania" },
+            "Vanvitelli (Caserta)": { "lat": 41.073, "lon": 14.331, "type": "Pubblica", "url": "https://www.unicampania.it/", "provincia": "Caserta", "regione": "Campania" },
+            "Salerno": { "lat": 40.771, "lon": 14.789, "type": "Pubblica", "url": "https://www.unisa.it/", "provincia": "Salerno", "regione": "Campania" },
+            "L'Aquila": { "lat": 42.349, "lon": 13.399, "type": "Pubblica", "url": "https://www.univaq.it/", "provincia": "L'Aquila", "regione": "Abruzzo" },
+            "Teramo": { "lat": 42.664, "lon": 13.702, "type": "Pubblica", "url": "https://www.unite.it/", "provincia": "Teramo", "regione": "Abruzzo" },
+            "Chieti e Pescara": { "lat": 42.368, "lon": 14.145, "type": "Pubblica", "url": "https://www.unich.it/", "provincia": "Chieti", "regione": "Abruzzo" },
+            "Molise": { "lat": 41.558, "lon": 14.654, "type": "Pubblica", "url": "https://www.unimol.it/", "provincia": "Campobasso", "regione": "Molise" },
+            "Foggia": { "lat": 41.458, "lon": 15.551, "type": "Pubblica", "url": "https://www.unifg.it/", "provincia": "Foggia", "regione": "Puglia" },
+            "Bari": { "lat": 41.119, "lon": 16.871, "type": "Pubblica", "url": "https://www.uniba.it/", "provincia": "Bari", "regione": "Puglia" },
+            "Politecnico di Bari": { "lat": 41.109, "lon": 16.881, "type": "Pubblica", "url": "https://www.poliba.it/", "provincia": "Bari", "regione": "Puglia" },
+            "LUM G. Degennaro (Casamassima)": { "lat": 40.957, "lon": 16.920, "type": "Privata", "url": "https://www.lum.it/", "provincia": "Bari", "regione": "Puglia" },
+            "Salento (Lecce)": { "lat": 40.353, "lon": 18.174, "type": "Pubblica", "url": "https://www.unisalento.it/", "provincia": "Lecce", "regione": "Puglia" },
+            "Basilicata": { "lat": 40.645, "lon": 15.808, "type": "Pubblica", "url": "https://portale.unibas.it/", "provincia": "Potenza", "regione": "Basilicata" },
+            "Calabria": { "lat": 39.362, "lon": 16.226, "type": "Pubblica", "url": "https://www.unical.it/", "provincia": "Cosenza", "regione": "Calabria" },
+            "Catanzaro - Magna Grecia": { "lat": 38.868, "lon": 16.579, "type": "Pubblica", "url": "https://www.unicz.it/", "provincia": "Catanzaro", "regione": "Calabria" },
+            "Mediterranea di Reggio Calabria": { "lat": 38.118, "lon": 15.659, "type": "Pubblica", "url": "https://www.unirc.it/", "provincia": "Reggio Calabria", "regione": "Calabria" },
+            "Dante Alighieri (Reggio Calabria)": { "lat": 38.113, "lon": 15.651, "type": "Privata", "url": "https://www.unistrada.it/", "provincia": "Reggio Calabria", "regione": "Calabria" },
+            // === ISOLE ===
+            "Palermo": { "lat": 38.117, "lon": 13.368, "type": "Pubblica", "url": "https://www.unipa.it/", "provincia": "Palermo", "regione": "Sicilia" },
+            "Messina": { "lat": 38.191, "lon": 15.554, "type": "Pubblica", "url": "https://www.unime.it/", "provincia": "Messina", "regione": "Sicilia" },
+            "Catania": { "lat": 37.505, "lon": 15.087, "type": "Pubblica", "url": "https://www.unict.it/", "provincia": "Catania", "regione": "Sicilia" },
+            "KORE Enna": { "lat": 37.553, "lon": 14.288, "type": "Privata", "url": "https://unikore.it/", "provincia": "Enna", "regione": "Sicilia" },
+            "Sassari": { "lat": 40.725, "lon": 8.561, "type": "Pubblica", "url": "https://www.uniss.it/", "provincia": "Sassari", "regione": "Sardegna" },
+            "Cagliari": { "lat": 39.219, "lon": 9.112, "type": "Pubblica", "url": "https://www.unica.it/", "provincia": "Cagliari", "regione": "Sardegna" }
         };
+
+        // Costruisci automaticamente le mappe provincia→università e regione→università
+        const PROVINCE_UNIS = {};
+        const REGIONE_UNIS = {};
+        const PROVINCE_SET = new Set();
+        const REGIONE_SET = new Set();
+        Object.entries(ITALIA_DB).forEach(([name, data]) => {
+            // Province
+            if (!PROVINCE_UNIS[data.provincia]) PROVINCE_UNIS[data.provincia] = [];
+            PROVINCE_UNIS[data.provincia].push(name);
+            PROVINCE_SET.add(data.provincia);
+            // Regioni
+            if (!REGIONE_UNIS[data.regione]) REGIONE_UNIS[data.regione] = [];
+            REGIONE_UNIS[data.regione].push(name);
+            REGIONE_SET.add(data.regione);
+        });
+
+        // Ordine regioni da Nord a Sud
+        const REGIONI_ORDINATE = [
+            "Piemonte", "Valle d'Aosta", "Liguria", "Lombardia",
+            "Trentino-Alto Adige", "Veneto", "Friuli-Venezia Giulia",
+            "Emilia-Romagna", "Toscana", "Umbria", "Marche", "Lazio",
+            "Abruzzo", "Molise", "Campania", "Puglia", "Basilicata",
+            "Calabria", "Sicilia", "Sardegna"
+        ];
+
+        // Province ordinate per regione
+        const PROVINCE_PER_REGIONE = {};
+        REGIONI_ORDINATE.forEach(r => {
+            if (REGIONE_UNIS[r]) {
+                const provs = [...new Set(Object.values(ITALIA_DB).filter(u => u.regione === r).map(u => u.provincia))];
+                provs.sort();
+                PROVINCE_PER_REGIONE[r] = provs;
+            }
+        });
+
+        // Mapping facoltà → università che la offrono
+        const FACOLTA_UNIS = {
+            "Ingegneria": ["Politecnico di Torino", "Torino", "Genova", "Politecnico di Milano", "Statale di Milano", "Bicocca", "Bergamo", "Brescia", "Pavia", "Insubria", "LIUC (Castellanza)", "Trento", "Padova", "Verona", "Udine", "Trieste", "Parma", "Bologna", "Modena e Reggio Emilia", "Ferrara", "Firenze", "Pisa", "Siena", "Perugia", "Politecnica delle Marche (Ancona)", "Camerino", "La Sapienza", "Tor Vergata", "Roma Tre", "Campus Bio-Medico", "Cassino e Lazio Meridionale", "Federico II Napoli", "Salerno", "Vanvitelli (Caserta)", "Parthenope", "Sannio", "L'Aquila", "Chieti e Pescara", "Molise", "Bari", "Politecnico di Bari", "Salento (Lecce)", "Foggia", "Basilicata", "Calabria", "Catanzaro - Magna Grecia", "Mediterranea di Reggio Calabria", "Palermo", "Catania", "Messina", "KORE Enna", "Cagliari", "Sassari", "Libera Università di Bolzano"],
+            "Matematica, Fisica & Informatica": ["Torino", "Genova", "Statale di Milano", "Bicocca", "Pavia", "Insubria", "Bergamo", "Brescia", "Trento", "Padova", "Verona", "Ca' Foscari Venezia", "Udine", "Trieste", "Parma", "Bologna", "Modena e Reggio Emilia", "Ferrara", "Firenze", "Pisa", "Siena", "Perugia", "Camerino", "La Sapienza", "Tor Vergata", "Roma Tre", "Federico II Napoli", "Salerno", "L'Aquila", "Chieti e Pescara", "Bari", "Salento (Lecce)", "Calabria", "Catania", "Palermo", "Messina", "Cagliari", "Sassari"],
+            "Chimica, Biologia & Farmacia": ["Torino", "Piemonte Orientale", "Genova", "Statale di Milano", "Bicocca", "Pavia", "Insubria", "Brescia", "Trento", "Padova", "Verona", "Ca' Foscari Venezia", "Udine", "Trieste", "Parma", "Bologna", "Modena e Reggio Emilia", "Ferrara", "Firenze", "Pisa", "Siena", "Perugia", "Camerino", "Urbino Carlo Bo", "La Sapienza", "Tor Vergata", "Roma Tre", "Federico II Napoli", "Salerno", "L'Aquila", "Chieti e Pescara", "Bari", "Salento (Lecce)", "Foggia", "Basilicata", "Calabria", "Catanzaro - Magna Grecia", "Catania", "Palermo", "Messina", "Cagliari", "Sassari"],
+            "Economia & Finanza": ["Torino", "Piemonte Orientale", "Genova", "Bocconi", "Cattolica", "Statale di Milano", "Bicocca", "Bergamo", "Brescia", "Pavia", "LIUC (Castellanza)", "Insubria", "Trento", "Padova", "Verona", "Ca' Foscari Venezia", "Udine", "Trieste", "Parma", "Bologna", "Modena e Reggio Emilia", "Ferrara", "Firenze", "Pisa", "Siena", "Perugia", "Macerata", "Urbino Carlo Bo", "Politecnica delle Marche (Ancona)", "La Sapienza", "Tor Vergata", "Roma Tre", "Luiss", "LUMSA", "UNINT", "Europea di Roma", "Cassino e Lazio Meridionale", "Tuscia (Viterbo)", "Federico II Napoli", "Salerno", "Vanvitelli (Caserta)", "Parthenope", "Sannio", "L'Aquila", "Teramo", "Chieti e Pescara", "Molise", "Bari", "LUM G. Degennaro (Casamassima)", "Salento (Lecce)", "Foggia", "Basilicata", "Calabria", "Catanzaro - Magna Grecia", "Mediterranea di Reggio Calabria", "Palermo", "Catania", "Messina", "KORE Enna", "Cagliari", "Sassari", "Libera Università di Bolzano", "Valle d'Aosta"],
+            "Medicina & Sanità": ["Torino", "Piemonte Orientale", "Genova", "Statale di Milano", "Bicocca", "San Raffaele", "Humanitas University", "Cattolica", "Pavia", "Brescia", "Insubria", "Padova", "Verona", "Udine", "Trieste", "Parma", "Bologna", "Modena e Reggio Emilia", "Ferrara", "Firenze", "Pisa", "Siena", "Perugia", "Politecnica delle Marche (Ancona)", "La Sapienza", "Tor Vergata", "Campus Bio-Medico", "Saint Camillus", "Cassino e Lazio Meridionale", "Federico II Napoli", "Salerno", "Vanvitelli (Caserta)", "L'Aquila", "Chieti e Pescara", "Molise", "Bari", "Foggia", "Basilicata", "Calabria", "Catanzaro - Magna Grecia", "Palermo", "Catania", "Messina", "Cagliari", "Sassari"],
+            "Psicologia & Sociale": ["Torino", "Genova", "Cattolica", "Bicocca", "Statale di Milano", "San Raffaele", "Bergamo", "Pavia", "Padova", "Trento", "Bologna", "Parma", "Firenze", "Siena", "Perugia", "La Sapienza", "LUMSA", "Europea di Roma", "Federico II Napoli", "Vanvitelli (Caserta)", "L'Aquila", "Chieti e Pescara", "Bari", "Salento (Lecce)", "Calabria", "Catania", "Palermo", "Messina", "KORE Enna", "Cagliari", "Valle d'Aosta"],
+            "Giurisprudenza": ["Torino", "Piemonte Orientale", "Genova", "Statale di Milano", "Cattolica", "Bicocca", "Bocconi", "Bergamo", "Brescia", "Pavia", "Insubria", "Trento", "Padova", "Verona", "Ca' Foscari Venezia", "Udine", "Trieste", "Parma", "Bologna", "Modena e Reggio Emilia", "Ferrara", "Firenze", "Pisa", "Siena", "Perugia", "Macerata", "Urbino Carlo Bo", "Camerino", "La Sapienza", "Tor Vergata", "Roma Tre", "Luiss", "LUMSA", "Link Campus University", "Europea di Roma", "Cassino e Lazio Meridionale", "Tuscia (Viterbo)", "Federico II Napoli", "Salerno", "Vanvitelli (Caserta)", "Suor Orsola Benincasa", "Sannio", "L'Aquila", "Teramo", "Chieti e Pescara", "Molise", "Bari", "LUM G. Degennaro (Casamassima)", "Salento (Lecce)", "Foggia", "Basilicata", "Calabria", "Catanzaro - Magna Grecia", "Mediterranea di Reggio Calabria", "Palermo", "Catania", "Messina", "KORE Enna", "Cagliari", "Sassari"],
+            "Design & Architettura": ["Politecnico di Torino", "Politecnico di Milano", "Iuav Venezia", "Politecnico di Bari", "Politecnica delle Marche (Ancona)", "La Sapienza", "Roma Tre", "Federico II Napoli", "Vanvitelli (Caserta)", "Firenze", "Genova", "Padova", "Trieste", "Ferrara", "Catania", "Palermo", "Mediterranea di Reggio Calabria", "Cagliari", "Sassari", "Camerino"],
+            "Studi Umanistici": ["Torino", "Genova", "Statale di Milano", "Cattolica", "IULM", "Bicocca", "Bergamo", "Pavia", "Brescia", "Trento", "Padova", "Verona", "Ca' Foscari Venezia", "Udine", "Trieste", "Parma", "Bologna", "Modena e Reggio Emilia", "Ferrara", "Firenze", "Pisa", "Siena", "Stranieri di Siena", "Perugia", "Stranieri di Perugia", "Macerata", "Urbino Carlo Bo", "La Sapienza", "Tor Vergata", "Roma Tre", "LUMSA", "Cassino e Lazio Meridionale", "Tuscia (Viterbo)", "Federico II Napoli", "Salerno", "Suor Orsola Benincasa", "L'Orientale", "L'Aquila", "Chieti e Pescara", "Teramo", "Molise", "Bari", "Salento (Lecce)", "Foggia", "Basilicata", "Calabria", "Catanzaro - Magna Grecia", "Palermo", "Catania", "Messina", "Cagliari", "Sassari", "Libera Università di Bolzano"],
+            "Scienze Politiche & Sociali": ["Torino", "Genova", "Statale di Milano", "Cattolica", "Bicocca", "Bocconi", "Pavia", "Bergamo", "Padova", "Bologna", "Firenze", "Pisa", "Perugia", "Macerata", "Urbino Carlo Bo", "La Sapienza", "Tor Vergata", "Roma Tre", "Luiss", "Link Campus University", "Federico II Napoli", "Salerno", "L'Orientale", "L'Aquila", "Teramo", "Molise", "Bari", "Salento (Lecce)", "Calabria", "Catania", "Palermo", "Messina", "Cagliari", "Sassari", "Trieste"],
+            "Lingue & Comunicazione": ["Torino", "Genova", "Statale di Milano", "Cattolica", "IULM", "Bicocca", "Bergamo", "Brescia", "Pavia", "Trento", "Padova", "Verona", "Ca' Foscari Venezia", "Udine", "Trieste", "Parma", "Bologna", "Modena e Reggio Emilia", "Firenze", "Pisa", "Siena", "Stranieri di Siena", "Perugia", "Stranieri di Perugia", "Macerata", "Urbino Carlo Bo", "La Sapienza", "Tor Vergata", "Roma Tre", "LUMSA", "UNINT", "Federico II Napoli", "Salerno", "L'Orientale", "Suor Orsola Benincasa", "L'Aquila", "Chieti e Pescara", "Teramo", "Bari", "Salento (Lecce)", "Calabria", "Catania", "Palermo", "Messina", "Cagliari", "Sassari", "Libera Università di Bolzano", "Valle d'Aosta", "Dante Alighieri (Reggio Calabria)"],
+            "Agraria & Veterinaria": ["Torino", "Statale di Milano", "Pavia", "Scienze Gastronomiche (Bra)", "Padova", "Bologna", "Parma", "Modena e Reggio Emilia", "Firenze", "Pisa", "Perugia", "Tuscia (Viterbo)", "La Sapienza", "Federico II Napoli", "Salerno", "Teramo", "Molise", "Bari", "Foggia", "Basilicata", "Calabria", "Mediterranea di Reggio Calabria", "Catania", "Palermo", "Sassari", "Cagliari"],
+            "Scienze Motorie": ["Torino", "Genova", "Statale di Milano", "Cattolica", "Bicocca", "Pavia", "Brescia", "Insubria", "Padova", "Verona", "Bologna", "Parma", "Firenze", "Perugia", "Foro Italico", "La Sapienza", "Federico II Napoli", "Salerno", "Parthenope", "L'Aquila", "Chieti e Pescara", "Bari", "Foggia", "Calabria", "Catania", "Palermo", "Messina", "KORE Enna", "Cagliari", "Sassari"],
+            "Moda": ["Politecnico di Milano", "Cattolica", "IULM", "Bologna", "Firenze", "La Sapienza", "Federico II Napoli"]
+        };
+
+        // Stato mappa
+        let currentZoomLevel = 'italia';  // 'provincia', 'regione', 'italia'
+        let currentFaculty = null;  // facoltà selezionata per il filtro
 
         // --- DATI ALMALAUREA 2024 (STIME) ---
         const FACULTY_DETAILS = {
@@ -2341,7 +2482,7 @@
             }
         };
 
-        const FUORI_MILANO_KEYS = ["UniBg", "UniPv", "LIUC", "Insubria", "Lodi"];
+        // (FUORI_MILANO_KEYS rimosso - ora usiamo ITALIA_DB con province e regioni)
 
         // --- FUNZIONI DI INTERFACCIA ---
         function init() {
@@ -2369,6 +2510,7 @@
                 });
 
                 renderSubjects(); renderRadios(); renderChecks();
+                populateProvinceDropdown();
                 updateMap();
             } catch (e) {
                 alert("Errore di inizializzazione: " + e.message);
@@ -2890,24 +3032,9 @@
                 const btn = document.getElementById('toggle-chart-btn');
                 btn.innerHTML = 'Mostra tutte le facoltà';
 
-                // Aggiorna Dropdown Mappa Custom - solo facoltà consigliate
-                const ms = document.getElementById('map-select'); ms.innerHTML = "";
-                const dropdownOpts = document.getElementById('map-dropdown-options'); dropdownOpts.innerHTML = "";
-
-                recommended.forEach((s, index) => {
-                    // Popola select nascosto
-                    let o = document.createElement('option'); o.value = s[0]; o.innerText = s[0]; ms.appendChild(o);
-
-                    // Popola custom dropdown
-                    const opt = document.createElement('div');
-                    opt.className = 'dropdown-option' + (index === 0 ? ' selected' : '');
-                    opt.innerText = s[0];
-                    opt.onclick = () => selectFaculty(s[0]);
-                    dropdownOpts.appendChild(opt);
-                });
-
-                // Imposta testo iniziale
-                document.getElementById('selected-faculty').innerText = recommended[0][0];
+                // Popola provincia dropdown e faculty buttons
+                populateProvinceDropdown();
+                populateFacultyButtons(recommended);
                 updateMap();
 
                 // Mostra popup feedback dopo 5 secondi
@@ -3018,19 +3145,109 @@
             options.classList.toggle('show');
         }
 
-        function selectFaculty(faculty) {
-            document.getElementById('selected-faculty').innerText = faculty;
-            document.getElementById('map-select').value = faculty;
+        // Popola dropdown provincie raggruppate per regione
+        function populateProvinceDropdown() {
+            const ms = document.getElementById('map-select'); ms.innerHTML = '';
+            const defaultOpt = document.createElement('option'); defaultOpt.value = ''; defaultOpt.innerText = ''; ms.appendChild(defaultOpt);
+            const dropdownOpts = document.getElementById('map-dropdown-options'); dropdownOpts.innerHTML = '';
 
-            // Aggiorna stili opzioni map dropdown
+            // Province raggruppate per regione (ordinata alfabeticamente)
+            const regioniAlf = [...REGIONI_ORDINATE].sort();
+            regioniAlf.forEach(regione => {
+                const provs = PROVINCE_PER_REGIONE[regione];
+                if (!provs || provs.length === 0) return;
+                // Header regione
+                const header = document.createElement('div');
+                header.style.cssText = 'padding:8px 16px; font-size:0.8rem; font-weight:700; color:var(--primary); text-transform:uppercase; letter-spacing:0.05em; background:var(--card-inner-bg); border-bottom:1px solid var(--border-color);';
+                header.innerText = regione;
+                dropdownOpts.appendChild(header);
+
+                provs.forEach(prov => {
+                    let o = document.createElement('option'); o.value = prov; o.innerText = prov; ms.appendChild(o);
+                    const opt = document.createElement('div');
+                    opt.className = 'dropdown-option';
+                    opt.setAttribute('data-prov', prov);
+                    const count = PROVINCE_UNIS[prov] ? PROVINCE_UNIS[prov].length : 0;
+                    opt.innerHTML = '&nbsp;&nbsp;' + prov + ' <span style="color:var(--text-muted); font-size:0.85em;">(' + count + ')</span>';
+                    opt.onclick = () => selectProvince(prov);
+                    dropdownOpts.appendChild(opt);
+                });
+            });
+
+            // Nessuna provincia pre-selezionata
+            document.getElementById('selected-area').innerText = 'Seleziona una provincia';
+        }
+
+        function selectProvince(prov) {
+            document.getElementById('selected-area').innerText = prov;
+            document.getElementById('map-select').value = prov;
+
+            // Aggiorna stili opzioni dropdown
             document.querySelectorAll('#map-dropdown-options .dropdown-option').forEach(opt => {
-                opt.classList.toggle('selected', opt.innerText === faculty);
+                opt.classList.toggle('selected', opt.getAttribute('data-prov') === prov);
             });
 
             // Chiudi dropdown
             document.querySelector('#map-dropdown .dropdown-selected').classList.remove('open');
             document.getElementById('map-dropdown-options').classList.remove('show');
 
+            // Auto-seleziona zoom "Provincia" e la prima facoltà consigliata
+            setZoomLevel('provincia');
+            if (!currentFaculty && window.mapRecommended && window.mapRecommended.length > 0) {
+                selectFaculty(window.mapRecommended[0][0]);
+            } else {
+                updateMap();
+            }
+        }
+
+        // Faculty filter buttons
+        function populateFacultyButtons(recommended) {
+            const container = document.getElementById('faculty-filter-container');
+            container.innerHTML = '';
+            if (!recommended || recommended.length === 0) return;
+
+            // Salva facoltà raccomandate per uso globale
+            window.mapRecommended = recommended;
+            currentFaculty = recommended[0][0];
+
+            recommended.forEach((fac, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-prev';
+                btn.style.cssText = 'margin:0; padding:8px 16px; font-size:0.85rem; border-radius:20px; white-space:nowrap;' + (i === 0 ? ' box-shadow: 0 0 0 2px var(--primary);' : ' opacity:0.6;');
+                btn.innerText = fac[0];
+                btn.setAttribute('data-faculty', fac[0]);
+                btn.onclick = () => selectFaculty(fac[0]);
+                container.appendChild(btn);
+            });
+        }
+
+        function selectFaculty(faculty) {
+            currentFaculty = faculty;
+            // Aggiorna stili bottoni facoltà
+            document.querySelectorAll('#faculty-filter-container button').forEach(btn => {
+                const isActive = btn.getAttribute('data-faculty') === faculty;
+                btn.style.opacity = isActive ? '1' : '0.6';
+                btn.style.boxShadow = isActive ? '0 0 0 2px var(--primary)' : 'none';
+            });
+            updateMap(true); // true = skip reposition, keep current zoom/pan
+        }
+
+        // Zoom level buttons
+        function setZoomLevel(level) {
+            // Guard: serve una provincia per zoom provincia/regione
+            const selectedProv = document.getElementById('map-select').value;
+            if ((level === 'provincia' || level === 'regione') && !selectedProv) {
+                alert('Prima devi selezionare una provincia!');
+                return;
+            }
+            currentZoomLevel = level;
+            ['provincia', 'regione', 'italia'].forEach(l => {
+                const btn = document.getElementById('zoom-' + l + '-btn');
+                if (btn) {
+                    btn.style.opacity = (l === level) ? '1' : '0.6';
+                    btn.style.boxShadow = (l === level) ? '0 0 0 2px var(--primary)' : 'none';
+                }
+            });
             updateMap();
         }
 
@@ -3069,25 +3286,49 @@
             }
         }
 
-        function renderUniList(unis) {
+        function renderUniList(uniNames) {
             const container = document.getElementById('unis-list-container');
-            container.innerHTML = "";
+            container.innerHTML = '';
+            container.style.marginTop = '15px';
 
-            const m = [], f = [];
-            unis.forEach(u => {
-                if (FUORI_MILANO_KEYS.some(k => u.includes(k))) f.push(u);
-                else m.push(u);
+            if (!uniNames || uniNames.length === 0) {
+                const prov = document.getElementById('map-select').value;
+                const region = prov ? (Object.values(ITALIA_DB).find(u => u.provincia === prov)?.regione || '') : '';
+                let msg = 'Nessuna università trovata in questa zona.';
+                if (currentFaculty && prov && currentZoomLevel === 'provincia') {
+                    msg = `Non esiste nessuna università di <b>${currentFaculty}</b> a ${prov}.`;
+                } else if (currentFaculty && region && currentZoomLevel === 'regione') {
+                    msg = `Non esiste nessuna università di <b>${currentFaculty}</b> in ${region}.`;
+                }
+                container.innerHTML = `<p style="color:var(--text-muted); text-align:center; padding:20px;">${msg}</p>`;
+                return;
+            }
+
+            // Raggruppa per provincia
+            const byProv = {};
+            uniNames.forEach(name => {
+                const d = ITALIA_DB[name];
+                if (!d) return;
+                const prov = d.provincia || 'Altro';
+                if (!byProv[prov]) byProv[prov] = [];
+                byProv[prov].push(name);
             });
 
-            const genGrid = (list) => {
+            const provKeys = Object.keys(byProv).sort();
+            const showProvHeaders = provKeys.length > 1;
+
+            provKeys.forEach((prov, idx) => {
+                if (showProvHeaders) {
+                    if (idx > 0) container.innerHTML += '<hr style="margin: 20px 0; border: 0; border-top: 1px solid var(--border-color);">';
+                    container.innerHTML += `<h4 style="margin-bottom: 15px; color: var(--text);" class="uni-section-heading">📍 ${prov}:</h4>`;
+                }
+
                 let h = '<div class="uni-grid">';
-                list.forEach(u => {
-                    const d = MILANO_DB[u] || { type: "N/D" };
+                byProv[prov].forEach(u => {
+                    const d = ITALIA_DB[u] || { type: 'N/D' };
                     const cls = d.type === 'Pubblica' ? 'badge-pub' : 'badge-priv';
                     const lbl = d.type === 'Pubblica' ? '🏛️ PUBBLICA' : '💎 PRIVATA';
-                    const url = d.url || "#";
-
-                    // Card ridisegnata: Freccina in alto a dx, badge in basso
+                    const url = d.url || '#';
                     h += `
                     <div class="uni-card ${cls}">
                         <a href="${url}" target="_blank" class="uni-link-icon" title="Vai al sito">↗</a>
@@ -3100,49 +3341,125 @@
                     </div>`;
                 });
                 h += '</div>';
-                return h;
-            };
-
-            if (m.length > 0) {
-                container.innerHTML += `<h4 style="margin-bottom: 15px; color: #1e293b;" class="uni-section-heading">🏫 A Milano:</h4>` + genGrid(m);
-            }
-            if (f.length > 0) {
-                if (m.length > 0) container.innerHTML += `<hr style="margin: 30px 0; border: 0; border-top: 1px solid #e2e8f0;">`;
-                container.innerHTML += `<h4 style="margin-bottom: 15px; color: #1e293b;" class="uni-section-heading">🚆 Fuori Milano:</h4>` + genGrid(f);
-            }
+                container.innerHTML += h;
+            });
         }
 
         // MAPPA
         let map, markers = [];
-        function updateMap() {
+        function updateMap(skipReposition) {
             if (!map) {
-                map = L.map('map').setView([45.4642, 9.1900], 11);
+                map = L.map('map').setView([42.5, 12.5], 4.5);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '© OpenStreetMap contributors',
                     maxZoom: 18
                 }).addTo(map);
             }
 
-            // Fix per mappa grigia: forza refresh dopo render
-            setTimeout(() => {
-                map.invalidateSize();
-            }, 300);
+            // Fix per mappa grigia
+            setTimeout(() => { map.invalidateSize(); }, 300);
 
             markers.forEach(m => map.removeLayer(m)); markers = [];
-            const unis = UNI_MAPPING[document.getElementById('map-select').value] || [];
 
-            renderUniList(unis);
+            const selectedProv = document.getElementById('map-select').value;
 
-            unis.forEach(u => {
-                let c = MILANO_DB[u];
+            // 1. Get universities that offer the selected faculty
+            const facultyUnis = currentFaculty && FACOLTA_UNIS[currentFaculty]
+                ? FACOLTA_UNIS[currentFaculty]
+                : Object.keys(ITALIA_DB);
+
+            // Se nessuna provincia selezionata, mostra tutte le uni della facoltà su Italia
+            if (!selectedProv) {
+                const uniNames = facultyUnis.filter(name => ITALIA_DB[name]);
+                renderUniList(uniNames);
+                const bounds = [];
+                uniNames.forEach(name => {
+                    const c = ITALIA_DB[name];
+                    if (c) {
+                        const typeBadge = c.type === 'Pubblica' ? '🏛️' : '💎';
+                        let popupContent = `<b>${name}</b><br><span style="font-size:0.85em; color:#64748b;">${typeBadge} ${c.type} — ${c.provincia}</span><br><a href="${c.url || '#'}" target="_blank" style="color:#2563eb">Visita sito ↗</a>`;
+                        markers.push(L.marker([c.lat, c.lon]).addTo(map).bindPopup(popupContent));
+                        bounds.push([c.lat, c.lon]);
+                    }
+                });
+                map.flyTo([42.5, 12.5], 5);
+                return;
+            }
+
+            // 2. Find the region of the selected province
+            const selectedRegion = Object.values(ITALIA_DB).find(u => u.provincia === selectedProv)?.regione || '';
+
+            // 3. Filter by geographic scope based on zoom level
+            let uniNames = [];
+            if (currentZoomLevel === 'italia') {
+                // All universities offering this faculty in all of Italy
+                uniNames = facultyUnis.filter(name => ITALIA_DB[name]);
+            } else if (currentZoomLevel === 'regione') {
+                // Universities offering this faculty in the same region as selected province
+                uniNames = facultyUnis.filter(name => {
+                    const d = ITALIA_DB[name];
+                    return d && d.regione === selectedRegion;
+                });
+            } else {
+                // provincia: only in the selected province
+                uniNames = facultyUnis.filter(name => {
+                    const d = ITALIA_DB[name];
+                    return d && d.provincia === selectedProv;
+                });
+            }
+
+            renderUniList(uniNames);
+
+            // Add markers
+            const bounds = [];
+            uniNames.forEach(name => {
+                const c = ITALIA_DB[name];
                 if (c) {
-                    let popupContent = `<b>${u}</b><br><a href="${c.url || '#'}" target="_blank" style="color:#2563eb">Visita sito</a>`;
+                    const typeBadge = c.type === 'Pubblica' ? '🏛️' : '💎';
+                    let popupContent = `<b>${name}</b><br><span style="font-size:0.85em; color:#64748b;">${typeBadge} ${c.type} — ${c.provincia}</span><br><a href="${c.url || '#'}" target="_blank" style="color:#2563eb">Visita sito ↗</a>`;
                     markers.push(L.marker([c.lat, c.lon]).addTo(map).bindPopup(popupContent));
+                    bounds.push([c.lat, c.lon]);
                 }
             });
 
-            // Zoom sempre su Milano (non troppo dezoomato)
-            map.setView([45.4642, 9.1900], 11);
+            // Zoom sulla zona corretta (skip se è solo un cambio facoltà)
+            if (!skipReposition) {
+                if (currentZoomLevel === 'italia') {
+                    map.flyTo([42.5, 12.5], 5);
+                } else if (bounds.length > 1) {
+                    map.flyToBounds(bounds, { padding: [40, 40], maxZoom: 13 });
+                } else if (bounds.length === 1) {
+                    if (currentZoomLevel === 'regione') {
+                        map.flyTo(bounds[0], 9); // Zoom regione
+                    } else {
+                        map.flyTo(bounds[0], 13); // Zoom provincia
+                    }
+                } else {
+                    // Nessuna università trovata per i filtri correnti
+                    let lat = 42.5, lon = 12.5, zoom = 5;
+
+                    if (currentZoomLevel === 'regione') {
+                        // Zoom sulla regione (prendiamo una qualsiasi uni della regione)
+                        const anyUniInRegion = Object.values(ITALIA_DB).find(u => u.regione === selectedRegion);
+                        if (anyUniInRegion) {
+                            lat = anyUniInRegion.lat; lon = anyUniInRegion.lon; zoom = 8;
+                        }
+                    } else {
+                        // Zoom sulla provincia (prendiamo una qualsiasi uni della provincia)
+                        const anyUniInProv = Object.values(ITALIA_DB).find(u => u.provincia === selectedProv);
+                        if (anyUniInProv) {
+                            lat = anyUniInProv.lat; lon = anyUniInProv.lon; zoom = 11;
+                        } else {
+                            // Se fallisce (es. provincia strana), tenta regione
+                            const anyUniInRegion = Object.values(ITALIA_DB).find(u => u.regione === selectedRegion);
+                            if (anyUniInRegion) {
+                                lat = anyUniInRegion.lat; lon = anyUniInRegion.lon; zoom = 8;
+                            }
+                        }
+                    }
+                    map.flyTo([lat, lon], zoom);
+                }
+            }
         }
         let myChart;
         init();
