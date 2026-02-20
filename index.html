@@ -3300,7 +3300,13 @@
                     const prep = startsWithVowel ? 'ad' : 'a';
                     msg = `Non esiste nessuna università di <b>${currentFaculty}</b> ${prep} <b>${prov}</b>.`;
                 } else if (currentFaculty && region && currentZoomLevel === 'regione') {
-                    msg = `Non esiste nessuna università di <b>${currentFaculty}</b> in <b>${region}</b>.`;
+                    let prep = 'in';
+                    if (region.toLowerCase() === 'marche') {
+                        prep = 'nelle';
+                    } else if (region.toLowerCase() === 'lazio') {
+                        prep = 'nel';
+                    }
+                    msg = `Non esiste nessuna università di <b>${currentFaculty}</b> ${prep} <b>${region}</b>.`;
                 }
                 container.innerHTML = `<p style="color:var(--text-muted); text-align:center; padding:20px;">${msg}</p>`;
                 return;
