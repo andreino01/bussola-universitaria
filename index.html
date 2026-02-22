@@ -2829,66 +2829,61 @@
                 const sub2 = (list, pts) => list.forEach(f => sec2[f] -= pts);
 
                 const tv = LOGIC_TECH[getRadio("q_tech")];
-                if (tv === "HARDWARE") { add2(["Ingegneria"], 60); add2(["Design & Architettura"], 30); }
+                if (tv === "HARDWARE") { add2(["Ingegneria"], 50); add2(["Design & Architettura"], 30); }
                 else if (tv === "SOFTWARE") { add2(["Matematica, Fisica & Informatica"], 60); add2(["Ingegneria"], 40); }
-                else if (tv === "BUSINESS") { add2(["Economia & Finanza"], 60); add2(["Ingegneria"], 20); }
-                else if (tv === "NATURE_TECH") { add2(["Agraria & Veterinaria"], 60); add2(["Chimica, Biologia & Farmacia"], 40); }
+                else if (tv === "BUSINESS") { add2(["Economia & Finanza"], 40); add2(["Ingegneria"], 10); }
+                else if (tv === "NATURE_TECH") { add2(["Agraria & Veterinaria"], 50); add2(["Chimica, Biologia & Farmacia"], 40); }
                 else { sub2(["Ingegneria", "Matematica, Fisica & Informatica"], 30); sub2(["Agraria & Veterinaria"], 15); }
 
                 const bv = LOGIC_BIZ[getRadio("q_biz")];
-                if (bv === "FINANZA") add2(["Economia & Finanza"], 60);
-                else if (bv === "MARKETING") { add2(["Lingue & Comunicazione"], 60); add2(["Economia & Finanza"], 40); add2(["Psicologia & Sociale"], 30); add2(["Moda"], 20); }
-                else if (bv === "AVVOCATURA") add2(["Giurisprudenza"], 60);
+                if (bv === "FINANZA") add2(["Economia & Finanza"], 40);
+                else if (bv === "MARKETING") { add2(["Lingue & Comunicazione"], 50); add2(["Economia & Finanza"], 30); add2(["Psicologia & Sociale"], 30); add2(["Moda"], 20); }
+                else if (bv === "AVVOCATURA") add2(["Giurisprudenza"], 50);
                 else if (bv === "POLITICA") { add2(["Scienze Politiche & Sociali"], 60); add2(["Giurisprudenza"], 30); add2(["Lingue & Comunicazione"], 20); }
                 else sub2(["Economia & Finanza", "Giurisprudenza"], 30);
 
                 const sv = LOGIC_SCI[getRadio("q_sci")];
                 if (sv === "MEDICINA") add2(["Medicina & Sanità"], 60);
-                else if (sv === "VETERINARIA") { add2(["Agraria & Veterinaria"], 60); add2(["Chimica, Biologia & Farmacia"], 20); }
-                else if (sv === "SPORT") { add2(["Scienze Motorie"], 60); add2(["Medicina & Sanità"], 20); }
-                else if (sv === "BIOTECH") { add2(["Chimica, Biologia & Farmacia"], 60); add2(["Medicina & Sanità"], 20); }
-                else if (sv === "PSICOLOGIA") { add2(["Psicologia & Sociale"], 60); add2(["Studi Umanistici"], 20); }
+                else if (sv === "VETERINARIA") { add2(["Agraria & Veterinaria"], 50); add2(["Chimica, Biologia & Farmacia"], 20); }
+                else if (sv === "SPORT") { add2(["Scienze Motorie"], 70); add2(["Medicina & Sanità"], 20); }
+                else if (sv === "BIOTECH") { add2(["Chimica, Biologia & Farmacia"], 55); add2(["Medicina & Sanità"], 20); }
+                else if (sv === "PSICOLOGIA") { add2(["Psicologia & Sociale"], 50); add2(["Studi Umanistici"], 25); }
                 else sub2(["Medicina & Sanità", "Chimica, Biologia & Farmacia"], 30);
 
                 const av = LOGIC_ART[getRadio("q_art")];
-                if (av === "ARCHITETTURA") { add2(["Design & Architettura"], 60); add2(["Ingegneria"], 30); }
-                else if (av === "PRODUCT") { add2(["Design & Architettura"], 50); add2(["Ingegneria"], 20) }
+                if (av === "ARCHITETTURA") { add2(["Design & Architettura"], 55); add2(["Ingegneria"], 20); }
+                else if (av === "PRODUCT") { add2(["Design & Architettura"], 45); add2(["Ingegneria"], 20) }
                 else if (av === "FASHION") { add2(["Moda"], 70); add2(["Design & Architettura"], 30); }
-                else if (av === "LANGUAGES") { add2(["Lingue & Comunicazione"], 60); add2(["Scienze Politiche & Sociali"], 30); }
+                else if (av === "LANGUAGES") { add2(["Lingue & Comunicazione"], 50); add2(["Scienze Politiche & Sociali"], 30); }
                 else if (av === "UMANISTICA") { add2(["Studi Umanistici"], 60); add2(["Scienze Politiche & Sociali"], 20); }
                 else sub2(["Design & Architettura", "Studi Umanistici"], 30);
 
-                // --- NUOVA LOGICA DOMANDE INDIRETTE (CUMULATIVA E BILANCIATA) ---
-
-                // 1. YOUTUBE
                 const yv = getRadio("q_youtube");
                 if (yv === "ROCKET") { add2(["Ingegneria"], 30); add2(["Matematica, Fisica & Informatica"], 15); }
                 else if (yv === "MONEY") { add2(["Economia & Finanza"], 30); }
-                else if (yv === "BODY") { add2(["Medicina & Sanità"], 30); add2(["Chimica, Biologia & Farmacia"], 25); add2(["Scienze Motorie"], 25); add2(["Agraria & Veterinaria"], 10); }
+                else if (yv === "BODY") { add2(["Medicina & Sanità"], 40); add2(["Chimica, Biologia & Farmacia"], 25); add2(["Scienze Motorie"], 25); add2(["Agraria & Veterinaria"], 10); }
                 else if (yv === "LAW") { add2(["Giurisprudenza"], 30); add2(["Scienze Politiche & Sociali"], 15); }
-                else if (yv === "ARCHI") { add2(["Design & Architettura"], 30); add2(["Ingegneria"], 10); add2(["Moda"], 10); }
+                else if (yv === "ARCHI") { add2(["Design & Architettura"], 30); add2(["Ingegneria"], 20); add2(["Moda"], 10); }
                 else if (yv === "None") {
                     sub2(["Ingegneria", "Economia & Finanza", "Medicina & Sanità", "Chimica, Biologia & Farmacia", "Scienze Motorie", "Giurisprudenza", "Design & Architettura"], 10);
                 }
 
-                // 2. NETFLIX
                 const nv = getRadio("q_netflix");
-                if (nv === "HACKER") { add2(["Matematica, Fisica & Informatica"], 30); add2(["Ingegneria"], 15); }
+                if (nv === "HACKER") { add2(["Matematica, Fisica & Informatica"], 40); add2(["Ingegneria"], 15); }
                 else if (nv === "PROFILER") { add2(["Psicologia & Sociale"], 30); add2(["Studi Umanistici"], 20); }
-                else if (nv === "SURGEON") { add2(["Medicina & Sanità"], 25); add2(["Scienze Motorie"], 15); add2(["Chimica, Biologia & Farmacia"], 20); }
+                else if (nv === "SURGEON") { add2(["Medicina & Sanità"], 40); add2(["Scienze Motorie"], 20); add2(["Chimica, Biologia & Farmacia"], 20); }
                 else if (nv === "LAWYER") { add2(["Giurisprudenza"], 30); add2(["Scienze Politiche & Sociali"], 15); }
                 else if (nv === "EXPLORER") { add2(["Lingue & Comunicazione"], 30); add2(["Studi Umanistici"], 20); add2(["Scienze Politiche & Sociali"], 10); add2(["Agraria & Veterinaria"], 30); }
                 else if (nv === "None") {
                     sub2(["Matematica, Fisica & Informatica", "Psicologia & Sociale", "Medicina & Sanità", "Giurisprudenza", "Lingue & Comunicazione", "Agraria & Veterinaria"], 10);
                 }
 
-                // 3. STARTUP
                 const sv2 = getRadio("q_startup");
                 if (sv2 === "CEO") { add2(["Economia & Finanza"], 30); add2(["Scienze Politiche & Sociali"], 10); }
                 else if (sv2 === "CTO") { add2(["Ingegneria"], 25); add2(["Matematica, Fisica & Informatica"], 25); }
                 else if (sv2 === "CREATIVE") { add2(["Design & Architettura"], 25); add2(["Moda"], 30); add2(["Lingue & Comunicazione"], 10); }
-                else if (sv2 === "HR") { add2(["Psicologia & Sociale"], 30); add2(["Scienze Politiche & Sociali"], 15); }
-                else if (sv2 === "VISION") { add2(["Giurisprudenza"], 30); add2(["Studi Umanistici"], 20); }
+                else if (sv2 === "HR") { add2(["Psicologia & Sociale"], 30); add2(["Scienze Politiche & Sociali"], 20); }
+                else if (sv2 === "VISION") { add2(["Giurisprudenza"], 30); add2(["Studi Umanistici"], 25); }
                 else if (sv2 === "None") {
                     sub2(["Economia & Finanza", "Ingegneria", "Matematica, Fisica & Informatica", "Design & Architettura", "Moda", "Psicologia & Sociale", "Giurisprudenza", "Studi Umanistici"], 10);
                 }
