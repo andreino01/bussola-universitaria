@@ -3633,11 +3633,8 @@
                 return;
             }
 
-            // Sort and take Top 5, use abbreviations
-            const sorted = Object.entries(window.scores)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 5)
-                .map(s => [FAC_ABBREV[s[0]] || s[0], Math.round(s[1])]);
+            // Use only recommended faculties (winner + valid alternatives)
+            const sorted = (window.recommended || []).map(s => [FAC_ABBREV[s[0]] || s[0], Math.round(s[1])]);
 
             // Encode as compact dot-separated string, then URL-safe Base64
             const compact = sorted.map(s => s[0] + s[1]).join('.');
