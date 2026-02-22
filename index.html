@@ -2744,7 +2744,7 @@
         }
 
         // =============================================================================
-        // MOTORE DI CALCOLO (VERSIONE PYTHON FEDELE)
+        // MOTORE DI CALCOLO
         // =============================================================================
         function calculateAndShow() {
             try {
@@ -2760,13 +2760,15 @@
                 if (school === "Liceo Scientifico") {
                     add0(["Ingegneria", "Matematica, Fisica & Informatica", "Medicina & Sanità", "Chimica, Biologia & Farmacia"], 15);
                     add0(["Economia & Finanza", "Design & Architettura"], 10);
-                    sub0(["Scienze Motorie"], 15);
+                    sub0(["Scienze Motorie"], 10);
                 } else if (school === "Liceo Classico") {
                     add0(["Studi Umanistici", "Giurisprudenza", "Scienze Politiche & Sociali", "Psicologia & Sociale"], 20);
                     add0(["Medicina & Sanità"], 10);
-                    sub0(["Ingegneria", "Matematica, Fisica & Informatica", "Scienze Motorie"], 10);
+                    sub0(["Ingegneria", "Matematica, Fisica & Informatica"], 5);
+                    sub0(["Scienze Motorie"], 10);
                 } else if (school === "Liceo Linguistico") {
                     add0(["Lingue & Comunicazione", "Scienze Politiche & Sociali"], 20);
+                    add0(["Economia & Finanza"], 10);
                     sub0(["Ingegneria", "Matematica, Fisica & Informatica", "Medicina & Sanità"], 10);
                 } else if (school === "Liceo Scientifico Sportivo") {
                     add0(["Scienze Motorie"], 30);
@@ -2778,6 +2780,7 @@
                     sub0(["Ingegneria", "Matematica, Fisica & Informatica", "Economia & Finanza"], 5);
                 } else if (school === "Liceo Artistico") {
                     add0(["Design & Architettura"], 30);
+                    add0(["Moda"], 25)
                     add0(["Studi Umanistici"], 10);
                     sub0(["Ingegneria", "Economia & Finanza", "Giurisprudenza"], 15);
                 } else if (school.includes("Informatica")) {
@@ -2787,10 +2790,16 @@
                     add0(["Economia & Finanza"], 25);
                     add0(["Lingue & Comunicazione", "Giurisprudenza"], 10);
                     sub0(["Medicina & Sanità", "Ingegneria", "Chimica, Biologia & Farmacia"], 15);
-                } else if (school.includes("Agrario") || school.includes("CAT")) {
-                    // La logica Python raggruppava "Agrario/Geometra", qui applichiamo a entrambi
-                    add0(["Agraria & Veterinaria", "Design & Architettura"], 25);
-                    sub0(["Studi Umanistici", "Lingue & Comunicazione", "Psicologia & Sociale"], 15);
+                } else if (school.includes("Agrario")) {
+                    add0(["Agraria & Veterinaria"], 30);
+                    add0(["Chimica, Biologia & Farmacia"], 20);
+                    add0(["Ingegneria"], 10);
+                    sub0(["Studi Umanistici", "Lingue & Comunicazione", "Psicologia & Sociale", "Design & Architettura"], 15);
+                } else if (school.includes("CAT")) {
+                    add0(["Design & Architettura"], 25);
+                    add0(["Ingegneria"], 20);
+                    add0(["Economia & Finanza", "Giurisprudenza"], 10);
+                    sub0(["Studi Umanistici", "Medicina & Sanità", "Chimica, Biologia & Farmacia", "Lingue & Comunicazione", "Psicologia & Sociale"], 15);
                 }
 
                 // --- SEZIONE 1: VOTI (AGGREGATORE DINAMICO) ---
@@ -2945,7 +2954,7 @@
                 Object.keys(UNI_MAPPING).forEach(fac => {
                     let raw = (sec0[fac] * 0.5) + (sec1[fac] * 0.25) + (sec2[fac] * 0.30) + (sec3[fac] * 0.25) + (sec4[fac] * 0.10) + (sec5[fac] * 0.10);
                     if (raw > 75) raw += 10;
-                    finalScores[fac] = Math.min(100, raw);
+                    finalScores[fac] = Math.max(0, Math.min(100, Math.round(raw)));
                 });
 
                 // EXPOSE SCORES FOR CHATBOT
