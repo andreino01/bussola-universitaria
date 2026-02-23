@@ -402,7 +402,7 @@
         /* Slider wrapper con valore sopra thumb */
         .slider-wrapper {
             position: relative;
-            padding-top: 25px;
+            padding-top: 22px;
             margin: 10px 0;
         }
 
@@ -414,7 +414,7 @@
 
         .slider-value {
             position: absolute;
-            top: 0;
+            top: 4px;
             color: var(--primary);
             font-size: 0.85em;
             font-weight: 700;
@@ -968,7 +968,7 @@
 
             /* Sliders touch-friendly */
             .slider-wrapper {
-                padding-top: 28px;
+                padding-top: 22px;
             }
 
             input[type="range"] {
@@ -979,6 +979,7 @@
             .slider-value {
                 font-size: 0.9em;
                 font-weight: 800;
+                top: 4px;
             }
 
             /* Radio/checkbox più grandi per touch */
@@ -1691,7 +1692,9 @@
             <button class="privacy-fab" id="privacy-fab-btn" onclick="openPrivacy()" aria-label="Privacy Policy"
                 title="Privacy Policy">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12.01" y2="8" />
+                    <line x1="12" y1="12" x2="12" y2="17" />
                 </svg>
             </button>
         </div>
@@ -2140,10 +2143,10 @@
             "Liceo Linguistico": [
                 { label: "Seconda Lingua", id: "lingua2", cat: "E" }, { label: "Terza Lingua", id: "lingua3", cat: "E" },
                 { label: "Fisica", id: "fisica", cat: "M" }, { label: "Scienze Naturali", id: "scienze", cat: "S" },
-                { label: "Filosofia", id: "filosofia", cat: "L" }, { label: "Storia dell'Arte", id: "arte", cat: "A" }
+                { label: "Filosofia", id: "filosofia", cat: "L" }, { label: "Storia dell'Arte", id: "arte", cat: "L" }
             ],
             "Liceo delle Scienze Umane": [
-                { label: "Scienze Umane", id: "scienze_umane", cat: "S" }, { label: "Filosofia", id: "filosofia", cat: "L" },
+                { label: "Scienze Umane", id: "scienze_umane", cat: "L" }, { label: "Filosofia", id: "filosofia", cat: "L" },
                 { label: "Latino", id: "latino", cat: "I" }, { label: "Fisica", id: "fisica", cat: "M" }, { label: "Storia dell'Arte", id: "arte", cat: "A" }
             ],
             "Liceo Scientifico Sportivo": [
@@ -2152,11 +2155,11 @@
             ],
             "Liceo Artistico": [
                 { label: "Pittoriche/Plastiche", id: "lab_artistico", cat: "A" }, { label: "Progettazione/Architettura", id: "progettazione", cat: "M" },
-                { label: "Storia dell'Arte", id: "storia_arte", cat: "L" }, { label: "Filosofia", id: "filosofia", cat: "L" }, { label: "Fisica", id: "fisica", cat: "S" }
+                { label: "Storia dell'Arte", id: "storia_arte", cat: "L" }, { label: "Filosofia", id: "filosofia", cat: "L" }, { label: "Fisica", id: "fisica", cat: "M" }
             ],
             "Istituto Tecnico (Informatica/Elettronica)": [
-                { label: "Informatica", id: "informatica", cat: "S" }, { label: "Sistemi e Reti", id: "sistemi", cat: "S" },
-                { label: "Telecom/Elettronica", id: "telecom", cat: "A" }, { label: "Gestione Progetto (GPOI)", id: "gpoi", cat: "M" }
+                { label: "Informatica", id: "informatica", cat: "M" }, { label: "Sistemi e Reti", id: "sistemi", cat: "S" },
+                { label: "Telecom/Elettronica", id: "telecom", cat: "S" }, { label: "Gestione Progetto (GPOI)", id: "gpoi", cat: "M" }
             ],
             "Istituto Tecnico (Economico/Turistico)": [
                 { label: "Economia Aziendale", id: "economia_az", cat: "M" }, { label: "Diritto", id: "diritto", cat: "L" },
@@ -2557,6 +2560,7 @@
                 cont.innerHTML += `
         <div class="card">
             <label style="font-weight: bold; font-size: 1.15em;">${sub.label}</label>
+            <hr style="border:0; border-top:1px solid #eee; margin-top:8px; margin-bottom:4px;">
             <div class="slider-wrapper">
                 <span class="slider-value" id="sv_${sub.id}">6</span>
                 <input type="range" min="1" max="10" value="6" oninput="updateSliderValue(this, 'sv_${sub.id}')" data-id="${sub.id}" data-type="vote" data-cat="${sub.cat}">
@@ -3045,6 +3049,7 @@
                 // Mostra popup feedback dopo 5 secondi
                 setTimeout(() => {
                     document.getElementById('feedback-overlay').classList.add('show');
+                    document.body.style.overflow = 'hidden';
                 }, 5000);
 
                 nextStep(6);
@@ -3285,11 +3290,13 @@
 
             const overlay = document.getElementById('modal-overlay');
             overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
 
         function closeModal(e, force = false) {
             if (force || e.target.classList.contains('modal-overlay')) {
                 document.getElementById('modal-overlay').classList.remove('active');
+                document.body.style.overflow = '';
             }
         }
 
@@ -3346,7 +3353,12 @@
                     const url = d.url || '#';
                     h += `
                     <div class="uni-card ${cls}">
-                        <a href="${url}" target="_blank" class="uni-link-icon" title="Vai al sito">↗</a>
+                        <a href="${url}" target="_blank" class="uni-link-icon" title="Vai al sito">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="7" y1="17" x2="17" y2="7"></line>
+                                <polyline points="7 7 17 7 17 17"></polyline>
+                            </svg>
+                        </a>
                         <div style="margin-right: 30px; margin-bottom: 15px;">
                             <strong>${u}</strong>
                         </div>
@@ -3955,6 +3967,7 @@
             // Chiudi modale dopo 0.5 secondi
             setTimeout(() => {
                 document.getElementById('feedback-overlay').classList.remove('show');
+                document.body.style.overflow = '';
                 // Reset bottone per eventuale riapertura
                 btn.disabled = false;
                 btn.innerText = "Invia Feedback ✨";
@@ -3967,6 +3980,7 @@
             sendToGoogleSheets(data).catch(err => console.error(err));
             // Chiudi subito
             document.getElementById('feedback-overlay').classList.remove('show');
+            document.body.style.overflow = '';
         }
 
         function getRadioSafe(name) {
@@ -3977,10 +3991,12 @@
         // --- PRIVACY MODAL FUNCTIONS ---
         function openPrivacy() {
             document.getElementById('privacy-overlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
         function closePrivacy(e, force = false) {
             if (force || e.target.classList.contains('privacy-overlay')) {
                 document.getElementById('privacy-overlay').classList.remove('active');
+                document.body.style.overflow = '';
             }
         }
 
