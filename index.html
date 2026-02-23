@@ -1889,7 +1889,8 @@
             <h3>📍 Dove studiare?</h3>
 
             <!-- 1. Province dropdown -->
-            <p style="margin-bottom:8px; font-size:0.95rem; color:var(--text-muted);">Scegli dove vorresti studiare:</p>
+            <p style="margin-bottom:8px; font-size:0.95rem; color:var(--text-muted);">Scegli la provincia dove vorresti
+                studiare:</p>
             <div class="custom-dropdown" id="map-dropdown">
                 <div class="dropdown-selected" onclick="toggleMapDropdown()">
                     <span id="selected-area">Seleziona una provincia</span>
@@ -2069,7 +2070,7 @@
     <div class="privacy-overlay" id="privacy-overlay" onclick="closePrivacy(event)">
         <div class="privacy-modal-content">
             <button class="modal-close" onclick="closePrivacy(event, true)">×</button>
-            <h3>🔒 Info e Privacy</h3>
+            <h3>🔒 Info & Privacy</h3>
 
             <h4>1. Chi sono</h4>
             <p>Sono uno studente di Ingegneria. Ho costruito questa "Bussola" per aiutare gli studenti indecisi,
@@ -2176,7 +2177,7 @@
         const LOGIC_BIZ = { "Finanza": "FINANZA", "Pubblicità": "MARKETING", "Tribunale": "AVVOCATURA", "Politica": "POLITICA", "None": "NONE" };
         const LOGIC_SCI = { "Persone": "MEDICINA", "Animali": "VETERINARIA", "Atleti": "SPORT", "Ricerca": "BIOTECH", "Mente": "PSICOLOGIA", "None": "NONE" };
         const LOGIC_ART = { "Edifici": "ARCHITETTURA", "Oggetti": "PRODUCT", "Moda": "FASHION", "Lingue": "LANGUAGES", "Scrivere": "UMANISTICA", "None": "NONE" };
-        const LOGIC_BROKEN = { "Apro": "TECNICA", "Vendo": "MERCATO", "Pulisco": "ESTETICA", "Butto": "PRAGMATISMO", "Storia": "NARRAZIONE" };
+        const LOGIC_BROKEN = { "Apro": "TECNICA", "Vendo": "MERCATO", "Pulisco": "ESTETICA", "Storia": "NARRAZIONE", "Butto": "PRAGMATISMO" };
 
         const SUBJECT_WEIGHTS = {
             "Ingegneria": { "MATH": 0.70, "SCI": 0.20, "ENG": 0.10 },
@@ -2243,8 +2244,8 @@
             // === CENTRO ===
             "Urbino Carlo Bo": { "lat": 43.726, "lon": 12.636, "type": "Pubblica", "url": "https://www.uniurb.it/", "provincia": "Pesaro e Urbino", "regione": "Marche" },
             "Politecnica delle Marche (Ancona)": { "lat": 43.616, "lon": 13.516, "type": "Pubblica", "url": "https://www.univpm.it/", "provincia": "Ancona", "regione": "Marche" },
-            "Macerata": { "lat": 43.300, "lon": 13.453, "type": "Pubblica", "url": "https://www.unimc.it/", "provincia": "Macerata", "regione": "Marche" },
-            "Camerino": { "lat": 43.136, "lon": 13.068, "type": "Pubblica", "url": "https://www.unicam.it/", "provincia": "Macerata", "regione": "Marche" },
+            "Macerata": { "lat": 43.301, "lon": 13.446, "type": "Pubblica", "url": "https://www.unimc.it/", "provincia": "Macerata", "regione": "Marche" },
+            "Camerino": { "lat": 43.140, "lon": 13.067, "type": "Pubblica", "url": "https://www.unicam.it/", "provincia": "Macerata", "regione": "Marche" },
             "Firenze": { "lat": 43.777, "lon": 11.259, "type": "Pubblica", "url": "https://www.unifi.it/", "provincia": "Firenze", "regione": "Toscana" },
             "Pisa": { "lat": 43.716, "lon": 10.400, "type": "Pubblica", "url": "https://www.unipi.it/", "provincia": "Pisa", "regione": "Toscana" },
             "Siena": { "lat": 43.318, "lon": 11.331, "type": "Pubblica", "url": "https://www.unisi.it/", "provincia": "Siena", "regione": "Toscana" },
@@ -2391,16 +2392,16 @@
             "Medicina & Sanità": {
                 color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)",
                 border: "#3b82f6",
-                duration: "6 Anni (Ciclo Unico)",
+                duration: "6 Anni <br><span style='font-size:0.8em'>(Ciclo Unico)</span> <br>o 3 Anni",
                 employment: "95,0%",
-                salary: "1.910 € (Spec.)",
+                salary: "1.910 €",
                 courses: ["Medicina e Chirurgia", "Odontoiatria", "Infermieristica", "Fisioterapia", "Ostetricia",
                     "Logopedia", "Dietistica", "Tecniche di Radiologia", "Igiene Dentale", "Ortottica", "Podologia"]
             },
             "Chimica, Biologia & Farmacia": {
                 color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)",
                 border: "#3b82f6",
-                duration: "3 + 2 o 5 Anni",
+                duration: "3 + 2 <br>o 5 Anni",
                 employment: "89,5%",
                 salary: "1.650 €",
                 courses: ["Biologia", "Biotecnologie", "Chimica", "Farmacia", "CTF", "Scienze Naturali"]
@@ -2408,7 +2409,7 @@
             "Giurisprudenza": {
                 color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)",
                 border: "#3b82f6",
-                duration: "5 Anni (Ciclo Unico)",
+                duration: "5 Anni <br><span style='font-size:0.8em'>(Ciclo Unico)</span>",
                 employment: "82,5%",
                 salary: "1.580 €",
                 courses: ["Giurisprudenza", "Diritto d'Impresa", "Scienze dei servizi giuridici", "Consulente del Lavoro"]
@@ -2416,7 +2417,7 @@
             "Design & Architettura": {
                 color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)",
                 border: "#3b82f6",
-                duration: "3 + 2 o 5 Anni",
+                duration: "3 + 2 <br>o 5 Anni",
                 employment: "88,0%",
                 salary: "1.620 €",
                 courses: ["Architettura", "Design del Prodotto", "Interior Design", "Visual Design",
@@ -2459,7 +2460,7 @@
             "Agraria & Veterinaria": {
                 color: "linear-gradient(135deg, #e0f2fe 0%, #eff6ff 100%)",
                 border: "#3b82f6",
-                duration: "5 Anni / 3+2",
+                duration: "3 + 2 <br>o 5 Anni",
                 employment: "89,0%",
                 salary: "1.600 €",
                 courses: ["Medicina Veterinaria", "Scienze Agrarie", "Produzioni Animali", "Viticoltura ed Enologia"]
@@ -2615,11 +2616,11 @@
             ], "q_art_c");
 
             mkRadio("q_youtube", [
-                { v: "ROCKET", t: "Come funziona davvero un reattore nucleare e perché non esplode?" },
-                { v: "MONEY", t: "Come fanno le app gratis a guadagnare miliardi?" },
-                { v: "BODY", t: "Cosa succede esattamente quando smetti di dormire?" },
-                { v: "LAW", t: "L'errore nel contratto che ha fregato l'azienda." },
-                { v: "ARCHI", t: "Perché i grattacieli di Dubai non crollano?" },
+                { v: "ROCKET", t: "Come funziona davvero un reattore nucleare e perché non esplode?" }, //video geo pop
+                { v: "MONEY", t: "Come fanno le app gratis a guadagnare milioni?" },
+                { v: "BODY", t: "Cosa succede quando non dormi per più di 48 ore?" },
+                { v: "LAW", t: "L'errore nel contratto che ha fregato l'azienda." }, // caso tribunale
+                { v: "ARCHI", t: "Perché i grattacieli di Dubai non crollano?" }, //le dieci strutture più particolari al mondo
                 { v: "None", t: "Nessuno di questi: Chiudo YouTube e vado a dormire." }
             ], "q_youtube_c");
 
@@ -2628,16 +2629,16 @@
                 { v: "PROFILER", t: "Il Profiler che capisce chi è il colpevole solo guardandolo negli occhi." },
                 { v: "SURGEON", t: "Il Chirurgo che mantiene il sangue freddo quando tutto va male." },
                 { v: "LAWYER", t: "L'Avvocato in giacca e cravatta che convince la giuria con un discorso epico." },
-                { v: "EXPLORER", t: "L'Esploratore che viaggia in posti sperduti e parla con la gente locale." },
+                { v: "EXPLORER", t: "L'Esploratore che viaggia in posti sperduti e parla con la gente locale." }, //forse scambio con youtube
                 { v: "None", t: "Nessuno di questi: Al massimo la comparsa." }
             ], "q_netflix_c");
 
             mkRadio("q_startup", [
                 { v: "CEO", t: "Decido la strategia, parlo con gli investitori e gestisco i soldi." },
-                { v: "CTO", t: "Costruisco il prodotto, scrivo il codice e risolvo i bug." },
+                { v: "CTO", t: "Realizzo il prodotto o scrivo il codice e risolvo i bug." },
                 { v: "CREATIVE", t: "Creo il logo, il design e la campagna virale su TikTok." },
                 { v: "HR", t: "Gestisco le persone e mi assicuro che tutti siano felici." },
-                { v: "VISION", t: "Scrivo i Contratti per proteggere l'azienda." },
+                { v: "VISION", t: "Gestisco la burocrazia e redigo gli accordi." },
                 { v: "None", t: "Nessuno di questi: Vendo le mie quote e vado in vacanza." }
             ], "q_startup_c");
 
@@ -2645,8 +2646,8 @@
                 { v: "Apro", t: "Lo apro per vedere com'è fatto" },
                 { v: "Vendo", t: "Cerco quanto vale per venderlo" },
                 { v: "Pulisco", t: "Lo pulisco e lo uso per arredamento" },
-                { v: "Butto", t: "Lo butto, è spazzatura" },
-                { v: "Storia", t: "Immagino la sua storia" }
+                { v: "Storia", t: "Immagino la sua storia" },
+                { v: "Butto", t: "Lo butto, è spazzatura" }
             ], "q_broken_c");
 
             mkRadio("q_future", [
@@ -2661,7 +2662,7 @@
 
         function renderChecks() {
             const opts = [
-                { id: "chk_teach", t: "I compagni ti chiedono spesso aiuto per capire le lezioni" },
+                { id: "chk_teach", t: "I compagni ti chiedono spesso aiuto per capire alcune materie" },
                 { id: "chk_nature", t: "Ti rilassa stare nella natura e ti preoccupi per l'ambiente" },
                 { id: "chk_money", t: "Ti incuriosisce capire come girano i soldi nel mondo" },
                 { id: "chk_care", t: "Ti senti realizzato quando aiuti o ascolti chi sta male" },
@@ -2869,7 +2870,7 @@
 
                 const yv = getRadio("q_youtube");
                 if (yv === "ROCKET") { add2(["Ingegneria"], 30); add2(["Matematica, Fisica & Informatica"], 15); }
-                else if (yv === "MONEY") { add2(["Economia & Finanza"], 30); }
+                else if (yv === "MONEY") { add2(["Economia & Finanza"], 30); add2(["Matematica, Fisica & Informatica"], 10); }
                 else if (yv === "BODY") { add2(["Medicina & Sanità"], 40); add2(["Chimica, Biologia & Farmacia"], 25); add2(["Scienze Motorie"], 25); add2(["Agraria & Veterinaria"], 10); }
                 else if (yv === "LAW") { add2(["Giurisprudenza"], 30); add2(["Scienze Politiche & Sociali"], 15); }
                 else if (yv === "ARCHI") { add2(["Design & Architettura"], 30); add2(["Ingegneria"], 20); add2(["Moda"], 10); }
@@ -2879,7 +2880,7 @@
 
                 const nv = getRadio("q_netflix");
                 if (nv === "HACKER") { add2(["Matematica, Fisica & Informatica"], 40); add2(["Ingegneria"], 15); }
-                else if (nv === "PROFILER") { add2(["Psicologia & Sociale"], 30); add2(["Studi Umanistici"], 20); }
+                else if (nv === "PROFILER") { add2(["Psicologia & Sociale"], 30); add2(["Studi Umanistici"], 10); }
                 else if (nv === "SURGEON") { add2(["Medicina & Sanità"], 40); add2(["Scienze Motorie"], 20); add2(["Chimica, Biologia & Farmacia"], 20); }
                 else if (nv === "LAWYER") { add2(["Giurisprudenza"], 30); add2(["Scienze Politiche & Sociali"], 15); }
                 else if (nv === "EXPLORER") { add2(["Lingue & Comunicazione"], 30); add2(["Studi Umanistici"], 20); add2(["Scienze Politiche & Sociali"], 10); add2(["Agraria & Veterinaria"], 30); }
@@ -3039,7 +3040,7 @@
                 // Popola provincia dropdown e faculty buttons
                 populateProvinceDropdown();
                 populateFacultyButtons(recommended);
-                updateMap();
+                selectProvince('Milano');
 
                 // Mostra popup feedback dopo 5 secondi
                 setTimeout(() => {
@@ -3197,11 +3198,13 @@
 
             // Auto-seleziona zoom "Provincia" e la prima facoltà consigliata
             setZoomLevel('provincia');
-            if (!currentFaculty && window.mapRecommended && window.mapRecommended.length > 0) {
-                selectFaculty(window.mapRecommended[0][0]);
-            } else {
-                updateMap();
-            }
+            setTimeout(() => {
+                if (!currentFaculty && window.mapRecommended && window.mapRecommended.length > 0) {
+                    selectFaculty(window.mapRecommended[0][0]);
+                } else {
+                    updateMap();
+                }
+            }, 300);
         }
 
         // Faculty filter buttons
@@ -3217,7 +3220,7 @@
             recommended.forEach((fac, i) => {
                 const btn = document.createElement('button');
                 btn.className = 'btn-prev';
-                btn.style.cssText = 'margin:0; padding:8px 16px; font-size:0.85rem; border-radius:20px; white-space:nowrap;' + (i === 0 ? ' box-shadow: 0 0 0 2px var(--primary);' : ' opacity:0.6;');
+                btn.style.cssText = 'margin:0; padding:8px 16px; font-size:0.85rem; border-radius:20px; white-space:nowrap;' + (i === 0 ? ' box-shadow: 0 0 0 2px var(--primary); opacity:1;' : ' opacity:0.6;');
                 btn.innerText = fac[0];
                 btn.setAttribute('data-faculty', fac[0]);
                 btn.onclick = () => selectFaculty(fac[0]);
@@ -3361,7 +3364,7 @@
         let map, markers = [];
         function updateMap(skipReposition) {
             if (!map) {
-                map = L.map('map').setView([42.5, 12.5], 4.5);
+                map = L.map('map', { zoomControl: false }).setView([42.5, 12.5], 4.5);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '© OpenStreetMap contributors',
                     maxZoom: 18
@@ -3438,38 +3441,34 @@
             if (!skipReposition) {
                 if (currentZoomLevel === 'italia') {
                     map.flyTo([42.5, 12.5], 5);
-                } else if (bounds.length > 1) {
-                    map.flyToBounds(bounds, { padding: [40, 40], maxZoom: 13 });
-                } else if (bounds.length === 1) {
-                    if (currentZoomLevel === 'regione') {
-                        map.flyTo(bounds[0], 9); // Zoom regione
-                    } else {
-                        map.flyTo(bounds[0], 13); // Zoom provincia
-                    }
                 } else {
-                    // Nessuna università trovata per i filtri correnti
-                    let lat = 42.5, lon = 12.5, zoom = 5;
-
+                    let areaUnis = [];
                     if (currentZoomLevel === 'regione') {
-                        // Zoom sulla regione (prendiamo una qualsiasi uni della regione)
-                        const anyUniInRegion = Object.values(ITALIA_DB).find(u => u.regione === selectedRegion);
-                        if (anyUniInRegion) {
-                            lat = anyUniInRegion.lat; lon = anyUniInRegion.lon; zoom = 8;
-                        }
+                        areaUnis = Object.values(ITALIA_DB).filter(u => u.regione === selectedRegion);
                     } else {
-                        // Zoom sulla provincia (prendiamo una qualsiasi uni della provincia)
-                        const anyUniInProv = Object.values(ITALIA_DB).find(u => u.provincia === selectedProv);
-                        if (anyUniInProv) {
-                            lat = anyUniInProv.lat; lon = anyUniInProv.lon; zoom = 11;
-                        } else {
-                            // Se fallisce (es. provincia strana), tenta regione
-                            const anyUniInRegion = Object.values(ITALIA_DB).find(u => u.regione === selectedRegion);
-                            if (anyUniInRegion) {
-                                lat = anyUniInRegion.lat; lon = anyUniInRegion.lon; zoom = 8;
-                            }
+                        // provincia
+                        areaUnis = Object.values(ITALIA_DB).filter(u => u.provincia === selectedProv);
+                        if (areaUnis.length === 0 && selectedRegion) {
+                            areaUnis = Object.values(ITALIA_DB).filter(u => u.regione === selectedRegion);
                         }
                     }
-                    map.flyTo([lat, lon], zoom);
+
+                    if (areaUnis.length > 0) {
+                        const areaBounds = [];
+                        areaUnis.forEach(u => {
+                            areaBounds.push([u.lat, u.lon]);
+                        });
+
+                        // We use the areaBounds to fit the map exactly
+                        if (areaBounds.length === 1) {
+                            const zoom = currentZoomLevel === 'regione' ? 8 : 11;
+                            map.flyTo(areaBounds[0], zoom);
+                        } else {
+                            map.flyToBounds(areaBounds, { padding: [20, 20], maxZoom: 12 });
+                        }
+                    } else {
+                        map.flyTo([42.5, 12.5], 5);
+                    }
                 }
             }
         }
