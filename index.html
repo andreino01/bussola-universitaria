@@ -2153,9 +2153,19 @@
                 { label: "Discipline Sportive", id: "sport", cat: "A" }, { label: "Diritto ed Economia dello Sport", id: "diritto_sport", cat: "L" },
                 { label: "Fisica", id: "fisica", cat: "M" }, { label: "Scienze Naturali", id: "scienze", cat: "S" }
             ],
-            "Liceo Artistico": [
-                { label: "Pittoriche/Plastiche", id: "lab_artistico", cat: "A" }, { label: "Progettazione/Architettura", id: "progettazione", cat: "M" },
-                { label: "Storia dell'Arte", id: "storia_arte", cat: "L" }, { label: "Filosofia", id: "filosofia", cat: "L" }, { label: "Fisica", id: "fisica", cat: "M" }
+            "Liceo Artistico - Figurativo e Grafica": [
+                { label: "Pittoriche / Plastiche / Grafiche", id: "pittoriche", cat: "A" },
+                { label: "Laboratorio della Figurazione / Grafica", id: "lab_figurativo", cat: "A" },
+                { label: "Storia dell'Arte", id: "storia_arte", cat: "L" },
+                { label: "Filosofia", id: "filosofia", cat: "L" },
+                { label: "Fisica", id: "fisica", cat: "M" }
+            ],
+            "Liceo Artistico - Architettura e Design": [
+                { label: "Architettura / Design", id: "progettazione", cat: "M" },
+                { label: "Laboratorio di Architettura / Design", id: "lab_architettura", cat: "A" },
+                { label: "Storia dell'Arte", id: "storia_arte", cat: "L" },
+                { label: "Filosofia", id: "filosofia", cat: "L" },
+                { label: "Fisica", id: "fisica", cat: "M" }
             ],
             "Istituto Tecnico (Informatica/Elettronica)": [
                 { label: "Informatica", id: "informatica", cat: "M" }, { label: "Sistemi e Reti", id: "sistemi", cat: "S" },
@@ -2783,11 +2793,15 @@
                     add0(["Psicologia & Sociale", "Studi Umanistici"], 25);
                     add0(["Scienze Motorie"], 10);
                     sub0(["Ingegneria", "Matematica, Fisica & Informatica", "Economia & Finanza"], 5);
-                } else if (school === "Liceo Artistico") {
-                    add0(["Design & Architettura"], 30);
-                    add0(["Moda"], 25)
+                } else if (school === "Liceo Artistico - Figurativo e Grafica") {
+                    add0(["Design & Architettura", "Moda"], 30);
+                    add0(["Lingue & Comunicazione", "Studi Umanistici"], 15);
+                    sub0(["Ingegneria", "Economia & Finanza", "Giurisprudenza", "Matematica, Fisica & Informatica"], 15);
+                } else if (school === "Liceo Artistico - Architettura e Design") {
+                    add0(["Design & Architettura"], 35);
+                    add0(["Ingegneria", "Moda"], 20);
                     add0(["Studi Umanistici"], 10);
-                    sub0(["Ingegneria", "Economia & Finanza", "Giurisprudenza"], 15);
+                    sub0(["Economia & Finanza", "Giurisprudenza", "Medicina & Sanità"], 15);
                 } else if (school.includes("Informatica")) {
                     add0(["Ingegneria", "Matematica, Fisica & Informatica"], 25);
                     sub0(["Studi Umanistici", "Giurisprudenza", "Psicologia & Sociale"], 15);
