@@ -2124,8 +2124,8 @@
         };
 
         const COMMON_SUBJECTS = [
-            { label: "Italiano", id: "italiano", cat: "I" }, { label: "Storia", id: "storia", cat: "L" },
-            { label: "Inglese", id: "inglese", cat: "E" }, { label: "Matematica", id: "matematica", cat: "M" },
+            { label: "Italiano", id: "italiano", cat: "I" }, { label: "Matematica", id: "matematica", cat: "M" },
+            { label: "Inglese", id: "inglese", cat: "E" }, { label: "Storia", id: "storia", cat: "L" },
             { label: "Scienze Motorie", id: "motorie", cat: "A" }
         ];
 
@@ -2151,38 +2151,46 @@
             ],
             "Liceo Scientifico Sportivo": [
                 { label: "Discipline Sportive", id: "sport", cat: "A" }, { label: "Diritto ed Economia dello Sport", id: "diritto_sport", cat: "L" },
-                { label: "Fisica", id: "fisica", cat: "M" }, { label: "Scienze Naturali", id: "scienze", cat: "S" }
+                { label: "Fisica", id: "fisica", cat: "M" }, { label: "Scienze Naturali", id: "scienze", cat: "S" }, { label: "Filosofia", id: "filosofia", cat: "L" }
             ],
-            "Liceo Artistico - Figurativo e Grafica": [
+            "Liceo Artistico - Figurativo / Grafica": [
                 { label: "Pittoriche / Plastiche / Grafiche", id: "pittoriche", cat: "A" },
                 { label: "Laboratorio della Figurazione / Grafica", id: "lab_figurativo", cat: "A" },
                 { label: "Storia dell'Arte", id: "storia_arte", cat: "L" },
                 { label: "Filosofia", id: "filosofia", cat: "L" },
                 { label: "Fisica", id: "fisica", cat: "M" }
             ],
-            "Liceo Artistico - Architettura e Design": [
+            "Liceo Artistico - Architettura / Design": [
                 { label: "Architettura / Design", id: "progettazione", cat: "M" },
                 { label: "Laboratorio di Architettura / Design", id: "lab_architettura", cat: "A" },
                 { label: "Storia dell'Arte", id: "storia_arte", cat: "L" },
                 { label: "Filosofia", id: "filosofia", cat: "L" },
                 { label: "Fisica", id: "fisica", cat: "M" }
             ],
-            "Istituto Tecnico - Informatica ed Elettronica": [
+            "Istituto Tecnico - CAT": [
+                { label: "Costruzioni (PCI)", id: "progettazione", cat: "A" }, { label: "Topografia", id: "topografia", cat: "M" },
+                { label: "Economia / Estimo", id: "estimo_geo", cat: "M" }, { label: "Gestione Cantiere", id: "cantiere", cat: "A" }
+            ],
+            "Istituto Tecnico - Informatica / Elettronica": [
                 { label: "Informatica", id: "informatica", cat: "M" }, { label: "Sistemi e Reti", id: "sistemi", cat: "S" },
                 { label: "Telecom/Elettronica", id: "telecom", cat: "S" }, { label: "Gestione Progetto (GPOI)", id: "gpoi", cat: "M" }
             ],
-            "Istituto Tecnico - Economico e Turistico": [
+            "Istituto Tecnico - Economico": [
                 { label: "Economia Aziendale", id: "economia_az", cat: "M" }, { label: "Diritto", id: "diritto", cat: "L" },
                 { label: "Economia Politica", id: "eco_pol", cat: "L" }, { label: "Seconda Lingua", id: "lingua2", cat: "E" }
             ],
+            "Istituto Tecnico - Turistico": [
+                { label: "Discipline Turistiche / Aziendali", id: "disc_turistiche", cat: "M" },
+                { label: "Diritto e Legislazione Turistica", id: "diritto_tur", cat: "L" },
+                { label: "Arte e Territorio", id: "arte_tur", cat: "L" },
+                { label: "Geografia Turistica", id: "geo_tur", cat: "L" },
+                { label: "Seconda Lingua", id: "lingua2", cat: "E" },
+                { label: "Terza Lingua", id: "lingua3", cat: "E" }
+            ],
             "Istituto Tecnico - Agrario": [
-                { label: "Produzioni Veg./Animali", id: "produzioni", cat: "S" }, { label: "Biotecnologie Agrarie", id: "biotech", cat: "S" },
+                { label: "Produzioni Veg./Animali", id: "produzioni", cat: "S" }, { label: "Gestione ambiente e territorio", id: "ambiente", cat: "S" },
                 { label: "Trasformazione dei prodotti", id: "trasformazione", cat: "S" }, { label: "Genio Rurale", id: "genio_rurale", cat: "A" },
                 { label: "Economia / Estimo", id: "estimo_agr", cat: "M" }
-            ],
-            "Istituto Tecnico - CAT": [
-                { label: "Costruzioni (PCI)", id: "progettazione", cat: "A" }, { label: "Topografia", id: "topografia", cat: "M" },
-                { label: "Estimo", id: "estimo_geo", cat: "M" }, { label: "Gestione Cantiere", id: "cantiere", cat: "A" }
             ]
         };
 
@@ -2806,9 +2814,14 @@
                     add0(["Ingegneria", "Matematica, Fisica & Informatica"], 25);
                     sub0(["Studi Umanistici", "Giurisprudenza", "Psicologia & Sociale"], 15);
                 } else if (school.includes("Economico")) {
-                    add0(["Economia & Finanza"], 25);
-                    add0(["Lingue & Comunicazione", "Giurisprudenza"], 10);
-                    sub0(["Medicina & Sanità", "Ingegneria", "Chimica, Biologia & Farmacia"], 15);
+                    add0(["Economia & Finanza"], 30);
+                    add0(["Giurisprudenza", "Scienze Politiche & Sociali"], 15);
+                    add0(["Matematica, Fisica & Informatica"], 10);
+                    sub0(["Medicina & Sanità", "Chimica, Biologia & Farmacia", "Studi Umanistici"], 15);
+                } else if (school.includes("Turistico")) {
+                    add0(["Lingue & Comunicazione"], 30);
+                    add0(["Economia & Finanza", "Studi Umanistici", "Scienze Politiche & Sociali"], 15);
+                    sub0(["Ingegneria", "Matematica, Fisica & Informatica", "Medicina & Sanità", "Chimica, Biologia & Farmacia"], 15);
                 } else if (school.includes("Agrario")) {
                     add0(["Agraria & Veterinaria"], 30);
                     add0(["Chimica, Biologia & Farmacia"], 20);
