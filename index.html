@@ -1728,21 +1728,20 @@
             </div>
 
             <div class="card">
-                <h5>🏙️ Il Grattacielo</h5>
-                <span class="caption">Sei all'ultimo piano di una multinazionale a New York. Di cosa si occupa il tuo
-                    ufficio?</span>
+                <h5>💼 L'ufficio</h5>
+                <span class="caption">Immagina la tua carriera ideale. Dove ti vedi protagonista?</span>
                 <div id="q_biz_c"></div>
             </div>
 
             <div class="card">
-                <h5>🔬 Il Laboratorio di ricerca</h5>
-                <span class="caption">Hai la possibilità di migliorare la vita sulla Terra. A quale grande progetto ti
-                    dedichi?</span>
+                <h5>🔬 L'Istituto d'Eccellenza</h5>
+                <span class="caption">Ti viene affidato un dipartimento in un istituto d'eccellenza. Quale grande
+                    obiettivo vuoi inseguire?</span>
                 <div id="q_sci_c"></div>
             </div>
 
             <div class="card">
-                <h5>🎨 L'Atelier Creativo</h5>
+                <h5>🎨 Lo Studio Creativo</h5>
                 <span class="caption">Il mondo è troppo grigio. Come decidi di usare il tuo talento per
                     cambiarlo?</span>
                 <div id="q_art_c"></div>
@@ -2612,17 +2611,17 @@
             ], "q_tech_c");
 
             mkRadio("q_biz", [
-                { v: "Finanza", t: "Analizzo i mercati e faccio soldi con i soldi." },
-                { v: "Pubblicità", t: "Creo la pubblicità che ti convince a comprare qualsiasi cosa." },
-                { v: "Tribunale", t: "Difendo i miei clienti in tribunale fino all'ultimo." },
-                { v: "Politica", t: "Cerco di trovare accordi tra nazioni in conflitto." },
-                { v: "None", t: "Nessuno di questi: Prendo l'ascensore e scappo dall'ufficio." }
+                { v: "Finanza", t: "In una società finanziaria: Analizzo i mercati azionari per fare soldi." },
+                { v: "Pubblicità", t: "In un'agenzia creativa: Creo la pubblicità che convince tutti a comprare qualsiasi cosa." },
+                { v: "Tribunale", t: "In un grande studio legale: Preparo la difesa per i processi in tribunale." },
+                { v: "Politica", t: "Al Palazzo dell'ONU: Faccio diplomazia per trovare accordi tra nazioni in conflitto." },
+                { v: "None", t: "Nessuno di questi: Scappo dall'ufficio." }
             ], "q_biz_c");
 
             mkRadio("q_sci", [
                 { v: "Persone", t: "Voglio curare le persone e salvare vite." },
-                { v: "Animali", t: "Preferisco curare animali o studiare le piante." },
-                { v: "Atleti", t: "Voglio migliorare le performance degli atleti e farli vincere." },
+                { v: "Animali", t: "Voglio curare animali o studiare le piante." },
+                { v: "Atleti", t: "Voglio studiare per far superare agli atleti i propri limiti fisici." },
                 { v: "Ricerca", t: "Voglio stare in laboratorio a scoprire cure o studiare virus." },
                 { v: "Mente", t: "Voglio entrare nella testa delle persone e capire come ragionano." },
                 { v: "None", t: "Nessuno di questi: La scienza non fa per me." }
@@ -2630,28 +2629,28 @@
 
             mkRadio("q_art", [
                 { v: "Edifici", t: "Voglio progettare grattacieli e case da sogno." },
-                { v: "Oggetti", t: "Voglio disegnare oggetti, app o vestiti che tutti useranno." },
-                { v: "Moda", t: "Vivo per la moda, i trend e lo stile." },
-                { v: "Lingue", t: "Voglio viaggiare e parlare fluentemente 3 o 4 lingue." },
+                { v: "Oggetti", t: "Voglio disegnare oggetti che tutti useranno." },
+                { v: "Moda", t: "Voglio lanciare nuovi trend e lavorare nel mondo della moda." },
+                { v: "Lingue", t: "Voglio viaggiare e fare da ponte tra culture diverse parlando più lingue." },
                 { v: "Scrivere", t: "Voglio raccontare storie e scrivere articoli." },
                 { v: "None", t: "Nessuno di questi: La creatività non è il mio forte." }
             ], "q_art_c");
 
             mkRadio("q_youtube", [
-                { v: "ROCKET", t: "Come funziona davvero un reattore nucleare e perché non esplode?" }, //video geo pop
+                { v: "ROCKET", t: "Come funziona davvero una centrale nucleare?" },
                 { v: "MONEY", t: "Come fanno le app gratis a guadagnare milioni?" },
                 { v: "BODY", t: "Cosa succede quando non dormi per più di 48 ore?" },
-                { v: "LAW", t: "L'errore nel contratto che ha fregato l'azienda." }, // caso tribunale
-                { v: "ARCHI", t: "Perché i grattacieli di Dubai non crollano?" }, //le dieci strutture più particolari al mondo
+                { v: "LAW", t: "Le 5 clausole nascoste che accetti ogni giorno senza saperlo." },
+                { v: "ARCHI", t: "Le 10 strutture architettoniche più assurde del mondo" },
                 { v: "None", t: "Nessuno di questi: Chiudo YouTube e vado a dormire." }
             ], "q_youtube_c");
 
             mkRadio("q_netflix", [
-                { v: "HACKER", t: "L'Hacker che entra nel sistema della banca in 10 secondi." },
-                { v: "PROFILER", t: "Il Profiler che capisce chi è il colpevole solo guardandolo negli occhi." },
-                { v: "SURGEON", t: "Il Chirurgo che mantiene il sangue freddo quando tutto va male." },
+                { v: "HACKER", t: "L'hacker che che crea un attacco informatico per rivelare al mondo i segreti di una multinazionale corrotta." },
+                { v: "PROFILER", t: "Lo psicologo che capisce chi è il colpevole solo guardandolo negli occhi." },
+                { v: "SURGEON", t: "Il chirurgo che mantiene il sangue freddo quando tutto va male." },
                 { v: "LAWYER", t: "L'Avvocato in giacca e cravatta che convince la giuria con un discorso epico." },
-                { v: "EXPLORER", t: "L'Esploratore che viaggia in posti sperduti e parla con la gente locale." }, //forse scambio con youtube
+                { v: "EXPLORER", t: "L'avventuriero che esplora ecosistemi estremi e comunica con popolazioni isolate." },
                 { v: "None", t: "Nessuno di questi: Al massimo la comparsa." }
             ], "q_netflix_c");
 
@@ -2893,11 +2892,11 @@
 
                 const av = LOGIC_ART[getRadio("q_art")];
                 if (av === "ARCHITETTURA") { add2(["Design & Architettura"], 55); add2(["Ingegneria"], 20); }
-                else if (av === "PRODUCT") { add2(["Design & Architettura"], 45); add2(["Ingegneria"], 20) }
+                else if (av === "PRODUCT") { add2(["Design & Architettura"], 50); add2(["Ingegneria"], 15) }
                 else if (av === "FASHION") { add2(["Moda"], 70); add2(["Design & Architettura"], 30); }
                 else if (av === "LANGUAGES") { add2(["Lingue & Comunicazione"], 50); add2(["Scienze Politiche & Sociali"], 30); }
                 else if (av === "UMANISTICA") { add2(["Studi Umanistici"], 60); add2(["Scienze Politiche & Sociali"], 20); }
-                else sub2(["Design & Architettura", "Studi Umanistici"], 30);
+                else sub2(["Design & Architettura", "Studi Umanistici", "Moda"], 30);
 
                 const yv = getRadio("q_youtube");
                 if (yv === "ROCKET") { add2(["Ingegneria"], 30); add2(["Matematica, Fisica & Informatica"], 15); }
