@@ -2151,23 +2151,6 @@
 
     <script>
         // --- DATI DI CONFIGURAZIONE ---
-        const UNI_MAPPING = {
-            "Ingegneria": ["Politecnico (Leonardo)", "Politecnico (Bovisa)", "UniBg", "UniPv", "LIUC", "Insubria"],
-            "Matematica, Fisica & Informatica": ["Statale (Città Studi)", "Bicocca", "Insubria", "UniPv", "Statale (Informatica)"],
-            "Chimica, Biologia & Farmacia": ["Statale (Città Studi)", "Bicocca", "Insubria", "UniPv", "Statale (Lodi)"],
-            "Economia & Finanza": ["Bocconi", "Cattolica", "Bicocca", "Statale", "LIUC", "UniBg", "UniPv"],
-            "Medicina & Sanità": ["Statale", "San Raffaele", "Humanitas", "Bicocca", "Insubria", "UniPv"],
-            "Psicologia & Sociale": ["Bicocca", "Cattolica", "UniPv", "UniBg", "San Raffaele"],
-            "Giurisprudenza": ["Statale", "Cattolica", "Bocconi", "Bicocca", "Insubria", "UniPv"],
-            "Design & Architettura": ["Politecnico (Leonardo)", "Politecnico (Bovisa)", "NABA", "IED", "Accademia di Brera", "Marangoni"],
-            "Studi Umanistici": ["Statale", "Cattolica", "IULM", "UniPv", "UniBg"],
-            "Scienze Politiche & Sociali": ["Statale", "Cattolica", "Bocconi", "Bicocca", "UniPv"],
-            "Lingue & Comunicazione": ["IULM", "Cattolica", "Statale", "UniBg", "Civica Altiero Spinelli", "Bicocca"],
-            "Agraria & Veterinaria": ["Statale (Città Studi)", "Statale (Lodi)"],
-            "Scienze Motorie": ["Statale", "Cattolica", "Insubria", "UniPv"],
-            "Moda": ["Politecnico (Bovisa)", "Marangoni", "IED", "NABA", "Domus Academy", "Secoli", "Cattolica (Fashion Mng)"],
-        };
-
         const COMMON_SUBJECTS = [
             { label: "Italiano", id: "italiano", cat: "I" }, { label: "Matematica", id: "matematica", cat: "M" },
             { label: "Inglese", id: "inglese", cat: "E" }, { label: "Storia", id: "storia", cat: "L" },
@@ -2284,10 +2267,12 @@
             "LIUC (Castellanza)": { "lat": 45.611, "lon": 8.892, "type": "Privata", "url": "https://www.liuc.it/", "provincia": "Varese", "regione": "Lombardia" },
             "Insubria": { "lat": 45.816, "lon": 8.834, "type": "Pubblica", "url": "https://www.uninsubria.it/", "provincia": "Varese", "regione": "Lombardia" },
             "Statale di Milano": { "lat": 45.460, "lon": 9.194, "type": "Pubblica", "url": "https://www.unimi.it/", "provincia": "Milano", "regione": "Lombardia" },
+            "Statale di Milano (Città Studi)": { "lat": 45.476, "lon": 9.227, "type": "Pubblica", "url": "https://www.unimi.it/", "provincia": "Milano", "regione": "Lombardia" },
             "Politecnico (Leonardo)": { "lat": 45.478, "lon": 9.227, "type": "Pubblica", "url": "https://www.polimi.it/", "provincia": "Milano", "regione": "Lombardia" },
             "Politecnico (Bovisa)": { "lat": 45.502, "lon": 9.156, "type": "Pubblica", "url": "https://www.polimi.it/", "provincia": "Milano", "regione": "Lombardia" },
             "Bocconi": { "lat": 45.448, "lon": 9.190, "type": "Privata", "url": "https://www.unibocconi.it/", "provincia": "Milano", "regione": "Lombardia" },
             "Cattolica": { "lat": 45.463, "lon": 9.175, "type": "Privata", "url": "https://www.unicatt.it/", "provincia": "Milano", "regione": "Lombardia" },
+            "Cattolica (Fashion Mng)": { "lat": 45.463, "lon": 9.175, "type": "Privata", "url": "https://www.unicatt.it/", "provincia": "Milano", "regione": "Lombardia" },
             "IULM": { "lat": 45.444, "lon": 9.162, "type": "Privata", "url": "https://www.iulm.it/", "provincia": "Milano", "regione": "Lombardia" },
             "San Raffaele": { "lat": 45.505, "lon": 9.263, "type": "Privata", "url": "https://www.unisr.it/", "provincia": "Milano", "regione": "Lombardia" },
             "Bicocca": { "lat": 45.513, "lon": 9.211, "type": "Pubblica", "url": "https://www.unimib.it/", "provincia": "Milano", "regione": "Lombardia" },
@@ -2314,6 +2299,7 @@
             "Parma": { "lat": 44.802, "lon": 10.327, "type": "Pubblica", "url": "https://www.unipr.it/", "provincia": "Parma", "regione": "Emilia-Romagna" },
             "Modena e Reggio Emilia": { "lat": 44.646, "lon": 10.925, "type": "Pubblica", "url": "https://www.unimore.it/", "provincia": "Modena", "regione": "Emilia-Romagna" },
             "Bologna": { "lat": 44.496, "lon": 11.353, "type": "Pubblica", "url": "https://www.unibo.it/", "provincia": "Bologna", "regione": "Emilia-Romagna" },
+            "Bologna (Campus Rimini)": { "lat": 44.062, "lon": 12.566, "type": "Pubblica", "url": "https://www.unibo.it/it/campus-rimini", "provincia": "Rimini", "regione": "Emilia-Romagna" },
             "Ferrara": { "lat": 44.836, "lon": 11.618, "type": "Pubblica", "url": "https://www.unife.it/", "provincia": "Ferrara", "regione": "Emilia-Romagna" },
             // === CENTRO ===
             "Urbino Carlo Bo": { "lat": 43.726, "lon": 12.636, "type": "Pubblica", "url": "https://www.uniurb.it/", "provincia": "Pesaro e Urbino", "regione": "Marche" },
@@ -2322,6 +2308,9 @@
             "Camerino": { "lat": 43.140, "lon": 13.067, "type": "Pubblica", "url": "https://www.unicam.it/", "provincia": "Macerata", "regione": "Marche" },
             "Firenze": { "lat": 43.777, "lon": 11.259, "type": "Pubblica", "url": "https://www.unifi.it/", "provincia": "Firenze", "regione": "Toscana" },
             "Pisa": { "lat": 43.716, "lon": 10.400, "type": "Pubblica", "url": "https://www.unipi.it/", "provincia": "Pisa", "regione": "Toscana" },
+            "Sant'Anna": { "lat": 43.721, "lon": 10.402, "type": "Pubblica", "url": "https://www.santannapisa.it/", "provincia": "Pisa", "regione": "Toscana" },
+            "Normale": { "lat": 43.719, "lon": 10.401, "type": "Pubblica", "url": "https://www.sns.it/", "provincia": "Pisa", "regione": "Toscana" },
+            "NABA (Roma)": { "lat": 41.862, "lon": 12.481, "type": "Privata", "url": "https://www.naba.it/", "provincia": "Roma", "regione": "Lazio" },
             "Siena": { "lat": 43.318, "lon": 11.331, "type": "Pubblica", "url": "https://www.unisi.it/", "provincia": "Siena", "regione": "Toscana" },
             "Stranieri di Siena": { "lat": 43.323, "lon": 11.325, "type": "Pubblica", "url": "https://www.unistrasi.it/", "provincia": "Siena", "regione": "Toscana" },
             "Perugia": { "lat": 43.114, "lon": 12.388, "type": "Pubblica", "url": "https://www.unipg.it/", "provincia": "Perugia", "regione": "Umbria" },
@@ -2332,6 +2321,7 @@
             "LUMSA": { "lat": 41.903, "lon": 12.461, "type": "Privata", "url": "https://www.lumsa.it/", "provincia": "Roma", "regione": "Lazio" },
             "Luiss": { "lat": 41.921, "lon": 12.499, "type": "Privata", "url": "https://www.luiss.it/", "provincia": "Roma", "regione": "Lazio" },
             "Foro Italico": { "lat": 41.933, "lon": 12.456, "type": "Pubblica", "url": "https://www.uniroma4.it/", "provincia": "Roma", "regione": "Lazio" },
+            "Cattolica (Gemelli)": { "lat": 41.930, "lon": 12.429, "type": "Privata", "url": "https://roma.unicatt.it/", "provincia": "Roma", "regione": "Lazio" },
             "Roma Tre": { "lat": 41.862, "lon": 12.479, "type": "Pubblica", "url": "https://www.uniroma3.it/", "provincia": "Roma", "regione": "Lazio" },
             "Campus Bio-Medico": { "lat": 41.767, "lon": 12.459, "type": "Privata", "url": "https://www.unicampus.it/", "provincia": "Roma", "regione": "Lazio" },
             "UNINT": { "lat": 41.858, "lon": 12.497, "type": "Privata", "url": "https://www.unint.eu/", "provincia": "Roma", "regione": "Lazio" },
@@ -2407,25 +2397,25 @@
 
         // Mapping facoltà → università che la offrono
         const FACOLTA_UNIS = {
-            "Ingegneria": ["Politecnico di Torino", "Genova", "Politecnico (Leonardo)", "Politecnico (Bovisa)", "Bergamo", "Brescia", "Pavia", "Insubria", "LIUC (Castellanza)", "Trento", "Padova", "Verona", "Udine", "Trieste", "Parma", "Bologna", "Modena e Reggio Emilia", "Ferrara", "Firenze", "Pisa", "Siena", "Perugia", "Politecnica delle Marche (Ancona)", "Camerino", "La Sapienza", "Tor Vergata", "Roma Tre", "Campus Bio-Medico", "Cassino e Lazio Meridionale", "Federico II Napoli", "Salerno", "Vanvitelli (Caserta)", "Parthenope", "Sannio", "L'Aquila", "Chieti e Pescara", "Molise", "Bari", "Politecnico di Bari", "Salento (Lecce)", "Foggia", "Basilicata", "Calabria", "Catanzaro - Magna Grecia", "Mediterranea di Reggio Calabria", "Palermo", "Catania", "Messina", "KORE Enna", "Cagliari", "Sassari", "Libera Università di Bolzano"],
-            "Matematica, Fisica & Informatica": ["Torino", "Genova", "Statale di Milano", "Bicocca", "Pavia", "Insubria", "Bergamo", "Brescia", "Trento", "Padova", "Verona", "Ca' Foscari Venezia", "Udine", "Trieste", "Parma", "Bologna", "Modena e Reggio Emilia", "Ferrara", "Firenze", "Pisa", "Siena", "Perugia", "Camerino", "La Sapienza", "Tor Vergata", "Roma Tre", "Federico II Napoli", "Salerno", "L'Aquila", "Chieti e Pescara", "Bari", "Salento (Lecce)", "Calabria", "Catania", "Palermo", "Messina", "Cagliari", "Sassari"],
-            "Chimica, Biologia & Farmacia": ["Torino", "Piemonte Orientale", "Genova", "Statale di Milano", "Bicocca", "Pavia", "Insubria", "Brescia", "Trento", "Padova", "Verona", "Ca' Foscari Venezia", "Udine", "Trieste", "Parma", "Bologna", "Modena e Reggio Emilia", "Ferrara", "Firenze", "Pisa", "Siena", "Perugia", "Camerino", "Urbino Carlo Bo", "La Sapienza", "Tor Vergata", "Roma Tre", "Federico II Napoli", "Salerno", "L'Aquila", "Chieti e Pescara", "Bari", "Salento (Lecce)", "Foggia", "Basilicata", "Calabria", "Catanzaro - Magna Grecia", "Catania", "Palermo", "Messina", "Cagliari", "Sassari"],
-            "Economia & Finanza": ["Torino", "Piemonte Orientale", "Genova", "Bocconi", "Cattolica", "Statale di Milano", "Bicocca", "Bergamo", "Brescia", "Pavia", "LIUC (Castellanza)", "Insubria", "Trento", "Padova", "Verona", "Ca' Foscari Venezia", "Udine", "Trieste", "Parma", "Bologna", "Modena e Reggio Emilia", "Ferrara", "Firenze", "Pisa", "Siena", "Perugia", "Macerata", "Urbino Carlo Bo", "Politecnica delle Marche (Ancona)", "La Sapienza", "Tor Vergata", "Roma Tre", "Luiss", "LUMSA", "UNINT", "Europea di Roma", "Cassino e Lazio Meridionale", "Tuscia (Viterbo)", "Federico II Napoli", "Salerno", "Vanvitelli (Caserta)", "Parthenope", "Sannio", "L'Aquila", "Teramo", "Chieti e Pescara", "Molise", "Bari", "LUM G. Degennaro (Casamassima)", "Salento (Lecce)", "Foggia", "Basilicata", "Calabria", "Catanzaro - Magna Grecia", "Mediterranea di Reggio Calabria", "Palermo", "Catania", "Messina", "KORE Enna", "Cagliari", "Sassari", "Libera Università di Bolzano", "Valle d'Aosta"],
-            "Medicina & Sanità": ["Torino", "Piemonte Orientale", "Genova", "Statale di Milano", "Bicocca", "San Raffaele", "Humanitas University", "Cattolica", "Pavia", "Brescia", "Insubria", "Padova", "Verona", "Udine", "Trieste", "Parma", "Bologna", "Modena e Reggio Emilia", "Ferrara", "Firenze", "Pisa", "Siena", "Perugia", "Politecnica delle Marche (Ancona)", "La Sapienza", "Tor Vergata", "Campus Bio-Medico", "Saint Camillus", "Cassino e Lazio Meridionale", "Federico II Napoli", "Salerno", "Vanvitelli (Caserta)", "L'Aquila", "Chieti e Pescara", "Molise", "Bari", "Foggia", "Basilicata", "Calabria", "Catanzaro - Magna Grecia", "Palermo", "Catania", "Messina", "Cagliari", "Sassari"],
+            "Ingegneria": ["Politecnico di Torino", "Genova", "Politecnico (Leonardo)", "Politecnico (Bovisa)", "Bergamo", "Brescia", "Pavia", "Insubria", "LIUC (Castellanza)", "Trento", "Padova", "Verona", "Udine", "Trieste", "Parma", "Bologna", "Modena e Reggio Emilia", "Ferrara", "Firenze", "Pisa", "Sant'Anna", "Siena", "Perugia", "Politecnica delle Marche (Ancona)", "Camerino", "La Sapienza", "Tor Vergata", "Roma Tre", "Campus Bio-Medico", "Cassino e Lazio Meridionale", "Federico II Napoli", "Salerno", "Vanvitelli (Caserta)", "Parthenope", "Sannio", "L'Aquila", "Chieti e Pescara", "Molise", "Bari", "Politecnico di Bari", "Salento (Lecce)", "Foggia", "Basilicata", "Calabria", "Catanzaro - Magna Grecia", "Mediterranea di Reggio Calabria", "Palermo", "Catania", "Messina", "KORE Enna", "Cagliari", "Sassari", "Libera Università di Bolzano"],
+            "Matematica, Fisica & Informatica": ["Torino", "Genova", "Statale di Milano (Città Studi)", "Bicocca", "Pavia", "Insubria", "Bergamo", "Brescia", "Trento", "Padova", "Verona", "Ca' Foscari Venezia", "Udine", "Trieste", "Parma", "Bologna", "Modena e Reggio Emilia", "Ferrara", "Firenze", "Pisa", "Scuola Normale Superiore", "Siena", "Perugia", "Camerino", "La Sapienza", "Tor Vergata", "Roma Tre", "Federico II Napoli", "Salerno", "L'Aquila", "Chieti e Pescara", "Bari", "Salento (Lecce)", "Calabria", "Catania", "Palermo", "Messina", "Cagliari", "Sassari"],
+            "Chimica, Biologia & Farmacia": ["Torino", "Piemonte Orientale", "Genova", "Statale di Milano (Città Studi)", "Bicocca", "Pavia", "Insubria", "Brescia", "Trento", "Padova", "Verona", "Ca' Foscari Venezia", "Udine", "Trieste", "Parma", "Bologna", "Modena e Reggio Emilia", "Ferrara", "Firenze", "Pisa", "Scuola Normale Superiore", "Siena", "Perugia", "Camerino", "Urbino Carlo Bo", "La Sapienza", "Tor Vergata", "Roma Tre", "Federico II Napoli", "Salerno", "L'Aquila", "Chieti e Pescara", "Bari", "Salento (Lecce)", "Foggia", "Basilicata", "Calabria", "Catanzaro - Magna Grecia", "Catania", "Palermo", "Messina", "Cagliari", "Sassari"],
+            "Economia & Finanza": ["Torino", "Piemonte Orientale", "Genova", "Bocconi", "Cattolica", "Statale di Milano", "Bicocca", "Bergamo", "Brescia", "Pavia", "LIUC (Castellanza)", "Insubria", "Trento", "Padova", "Verona", "Ca' Foscari Venezia", "Udine", "Trieste", "Parma", "Bologna", "Modena e Reggio Emilia", "Ferrara", "Firenze", "Pisa", "Sant'Anna", "Siena", "Perugia", "Macerata", "Urbino Carlo Bo", "Politecnica delle Marche (Ancona)", "La Sapienza", "Tor Vergata", "Roma Tre", "Luiss", "LUMSA", "UNINT", "Europea di Roma", "Cassino e Lazio Meridionale", "Tuscia (Viterbo)", "Federico II Napoli", "Salerno", "Vanvitelli (Caserta)", "Parthenope", "Sannio", "L'Aquila", "Teramo", "Chieti e Pescara", "Molise", "Bari", "LUM G. Degennaro (Casamassima)", "Salento (Lecce)", "Foggia", "Basilicata", "Calabria", "Catanzaro - Magna Grecia", "Mediterranea di Reggio Calabria", "Palermo", "Catania", "Messina", "KORE Enna", "Cagliari", "Sassari", "Libera Università di Bolzano", "Valle d'Aosta"],
+            "Medicina & Sanità": ["Torino", "Piemonte Orientale", "Genova", "Statale di Milano", "Bicocca", "San Raffaele", "Humanitas University", "Cattolica", "Pavia", "Brescia", "Insubria", "Padova", "Verona", "Udine", "Trieste", "Parma", "Bologna", "Modena e Reggio Emilia", "Ferrara", "Firenze", "Pisa", "Sant'Anna", "Siena", "Perugia", "Politecnica delle Marche (Ancona)", "La Sapienza", "Cattolica (Gemelli)", "Tor Vergata", "Campus Bio-Medico", "Saint Camillus", "Cassino e Lazio Meridionale", "Federico II Napoli", "Salerno", "Vanvitelli (Caserta)", "L'Aquila", "Chieti e Pescara", "Molise", "Bari", "Foggia", "Basilicata", "Calabria", "Catanzaro - Magna Grecia", "Palermo", "Catania", "Messina", "Cagliari", "Sassari"],
             "Psicologia & Sociale": ["Torino", "Genova", "Cattolica", "Bicocca", "Statale di Milano", "San Raffaele", "Bergamo", "Pavia", "Padova", "Trento", "Bologna", "Parma", "Firenze", "Siena", "Perugia", "La Sapienza", "LUMSA", "Europea di Roma", "Federico II Napoli", "Vanvitelli (Caserta)", "L'Aquila", "Chieti e Pescara", "Bari", "Salento (Lecce)", "Calabria", "Catania", "Palermo", "Messina", "KORE Enna", "Cagliari", "Valle d'Aosta"],
             "Giurisprudenza": ["Torino", "Piemonte Orientale", "Genova", "Statale di Milano", "Cattolica", "Bicocca", "Bocconi", "Bergamo", "Brescia", "Pavia", "Insubria", "Trento", "Padova", "Verona", "Ca' Foscari Venezia", "Udine", "Trieste", "Parma", "Bologna", "Modena e Reggio Emilia", "Ferrara", "Firenze", "Pisa", "Siena", "Perugia", "Macerata", "Urbino Carlo Bo", "Camerino", "La Sapienza", "Tor Vergata", "Roma Tre", "Luiss", "LUMSA", "Link Campus University", "Europea di Roma", "Cassino e Lazio Meridionale", "Tuscia (Viterbo)", "Federico II Napoli", "Salerno", "Vanvitelli (Caserta)", "Suor Orsola Benincasa", "Sannio", "L'Aquila", "Teramo", "Chieti e Pescara", "Molise", "Bari", "LUM G. Degennaro (Casamassima)", "Salento (Lecce)", "Foggia", "Basilicata", "Calabria", "Catanzaro - Magna Grecia", "Mediterranea di Reggio Calabria", "Palermo", "Catania", "Messina", "KORE Enna", "Cagliari", "Sassari"],
-            "Design & Architettura": ["Politecnico di Torino", "Politecnico (Leonardo)", "Politecnico (Bovisa)", "Iuav Venezia", "Politecnico di Bari", "Politecnica delle Marche (Ancona)", "La Sapienza", "Roma Tre", "Federico II Napoli", "Vanvitelli (Caserta)", "Firenze", "Genova", "Padova", "Trieste", "Ferrara", "Catania", "Palermo", "Mediterranea di Reggio Calabria", "Cagliari", "Sassari", "Camerino"],
+            "Design & Architettura": ["Politecnico di Torino", "Politecnico (Leonardo)", "Politecnico (Bovisa)", "Iuav Venezia", "Politecnico di Bari", "Politecnica delle Marche (Ancona)", "La Sapienza", "NABA (Roma)", "Roma Tre", "Federico II Napoli", "Vanvitelli (Caserta)", "Firenze", "Genova", "Padova", "Trieste", "Ferrara", "Catania", "Palermo", "Mediterranea di Reggio Calabria", "Cagliari", "Sassari", "Camerino", "NABA", "IED", "Accademia di Brera", "Marangoni"],
             "Studi Umanistici": ["Torino", "Genova", "Statale di Milano", "Cattolica", "IULM", "Bicocca", "Bergamo", "Pavia", "Brescia", "Trento", "Padova", "Verona", "Ca' Foscari Venezia", "Udine", "Trieste", "Parma", "Bologna", "Modena e Reggio Emilia", "Ferrara", "Firenze", "Pisa", "Siena", "Stranieri di Siena", "Perugia", "Stranieri di Perugia", "Macerata", "Urbino Carlo Bo", "La Sapienza", "Tor Vergata", "Roma Tre", "LUMSA", "Cassino e Lazio Meridionale", "Tuscia (Viterbo)", "Federico II Napoli", "Salerno", "Suor Orsola Benincasa", "L'Orientale", "L'Aquila", "Chieti e Pescara", "Teramo", "Molise", "Bari", "Salento (Lecce)", "Foggia", "Basilicata", "Calabria", "Catanzaro - Magna Grecia", "Palermo", "Catania", "Messina", "Cagliari", "Sassari", "Libera Università di Bolzano"],
-            "Scienze Politiche & Sociali": ["Torino", "Genova", "Statale di Milano", "Cattolica", "Bicocca", "Bocconi", "Pavia", "Bergamo", "Padova", "Bologna", "Firenze", "Pisa", "Perugia", "Macerata", "Urbino Carlo Bo", "La Sapienza", "Tor Vergata", "Roma Tre", "Luiss", "Link Campus University", "Federico II Napoli", "Salerno", "L'Orientale", "L'Aquila", "Teramo", "Molise", "Bari", "Salento (Lecce)", "Calabria", "Catania", "Palermo", "Messina", "Cagliari", "Sassari", "Trieste"],
-            "Lingue & Comunicazione": ["Torino", "Genova", "Statale di Milano", "Cattolica", "IULM", "Bicocca", "Bergamo", "Brescia", "Pavia", "Trento", "Padova", "Verona", "Ca' Foscari Venezia", "Udine", "Trieste", "Parma", "Bologna", "Modena e Reggio Emilia", "Firenze", "Pisa", "Siena", "Stranieri di Siena", "Perugia", "Stranieri di Perugia", "Macerata", "Urbino Carlo Bo", "La Sapienza", "Tor Vergata", "Roma Tre", "LUMSA", "UNINT", "Federico II Napoli", "Salerno", "L'Orientale", "Suor Orsola Benincasa", "L'Aquila", "Chieti e Pescara", "Teramo", "Bari", "Salento (Lecce)", "Calabria", "Catania", "Palermo", "Messina", "Cagliari", "Sassari", "Libera Università di Bolzano", "Valle d'Aosta", "Dante Alighieri (Reggio Calabria)"],
+            "Scienze Politiche & Sociali": ["Torino", "Genova", "Statale di Milano", "Cattolica", "Bicocca", "Bocconi", "Pavia", "Bergamo", "Padova", "Bologna", "Firenze", "Pisa", "Sant'Anna", "Scuola Normale Superiore", "Perugia", "Macerata", "Urbino Carlo Bo", "La Sapienza", "Tor Vergata", "Roma Tre", "Luiss", "Link Campus University", "Federico II Napoli", "Salerno", "L'Orientale", "L'Aquila", "Teramo", "Molise", "Bari", "Salento (Lecce)", "Calabria", "Catania", "Palermo", "Messina", "Cagliari", "Sassari", "Trieste"],
+            "Lingue & Comunicazione": ["Torino", "Genova", "Statale di Milano", "Cattolica", "IULM", "Bicocca", "Bergamo", "Brescia", "Pavia", "Trento", "Padova", "Verona", "Ca' Foscari Venezia", "Udine", "Trieste", "Parma", "Bologna", "Modena e Reggio Emilia", "Firenze", "Pisa", "Siena", "Stranieri di Siena", "Perugia", "Stranieri di Perugia", "Macerata", "Urbino Carlo Bo", "La Sapienza", "Tor Vergata", "Roma Tre", "LUMSA", "UNINT", "Federico II Napoli", "Salerno", "L'Orientale", "Suor Orsola Benincasa", "L'Aquila", "Chieti e Pescara", "Teramo", "Bari", "Salento (Lecce)", "Calabria", "Catania", "Palermo", "Messina", "Cagliari", "Sassari", "Libera Università di Bolzano", "Valle d'Aosta", "Dante Alighieri (Reggio Calabria)", "Civica Altiero Spinelli"],
             "Agraria & Veterinaria": ["Torino", "Statale di Milano", "Pavia", "Scienze Gastronomiche (Bra)", "Padova", "Bologna", "Parma", "Modena e Reggio Emilia", "Firenze", "Pisa", "Perugia", "Tuscia (Viterbo)", "La Sapienza", "Federico II Napoli", "Salerno", "Teramo", "Molise", "Bari", "Foggia", "Basilicata", "Calabria", "Mediterranea di Reggio Calabria", "Catania", "Palermo", "Sassari", "Cagliari"],
             "Scienze Motorie": ["Torino", "Genova", "Statale di Milano", "Cattolica", "Bicocca", "Pavia", "Brescia", "Insubria", "Padova", "Verona", "Bologna", "Parma", "Firenze", "Perugia", "Foro Italico", "La Sapienza", "Federico II Napoli", "Salerno", "Parthenope", "L'Aquila", "Chieti e Pescara", "Bari", "Foggia", "Calabria", "Catania", "Palermo", "Messina", "KORE Enna", "Cagliari", "Sassari"],
-            "Moda": ["Politecnico (Bovisa)", "Cattolica", "IULM", "Bologna", "Firenze", "La Sapienza", "Federico II Napoli"]
+            "Moda": ["Politecnico (Bovisa)", "Marangoni", "IED", "NABA", "NABA (Roma)", "Domus Academy", "Firenze", "La Sapienza", "Secoli", "Cattolica (Fashion Mng)", "Bologna (Campus Rimini)", "Vanvitelli (Caserta)", "IULM"],
         };
 
         // Stato mappa
-        let currentZoomLevel = 'italia';  // 'provincia', 'regione', 'italia'
-        let currentFaculty = null;  // facoltà selezionata per il filtro
+        let currentZoomLevel = 'italia';
+        let currentFaculty = null;
 
         // --- DATI ALMALAUREA 2024 (STIME) ---
         const FACULTY_DETAILS = {
@@ -2555,8 +2545,6 @@
                 courses: ["Fashion Design", "Fashion Business", "Fashion Styling", "Modellistica", "Design del Gioiello e Accessori"]
             }
         };
-
-        // (FUORI_MILANO_KEYS rimosso - ora usiamo ITALIA_DB con province e regioni)
 
         // --- FUNZIONI DI INTERFACCIA ---
         function init() {
@@ -2693,7 +2681,7 @@
                 { v: "ROCKET", t: "Come funziona davvero una centrale nucleare?" },
                 { v: "MONEY", t: "Come fanno le app gratis a guadagnare milioni?" },
                 { v: "BODY", t: "Cosa succede quando non dormi per più di 48 ore?" },
-                { v: "LAW", t: "I 3 errori fatali che fai (senza accorgertene) quando firmi un contratto di lavoro." },
+                { v: "LAW", t: "I 3 errori che fai (senza saperlo) quando firmi un contratto di lavoro." },
                 { v: "ARCHI", t: "Le 10 strutture architettoniche più assurde del mondo" },
                 { v: "None", t: "Nessuno di questi: Chiudo YouTube e vado a dormire." }
             ], "q_youtube_c");
@@ -2862,7 +2850,7 @@
                 const gradesInput = document.querySelectorAll('#subjects-container input[type="range"]');
 
                 // --- SEZIONE 0: BONUS SCUOLA (FEDELE AL PYTHON) ---
-                let sec0 = {}; Object.keys(UNI_MAPPING).forEach(k => sec0[k] = 0);
+                let sec0 = {}; Object.keys(FACOLTA_UNIS).forEach(k => sec0[k] = 0);
                 const add0 = (list, pts) => list.forEach(f => sec0[f] += pts);
                 const sub0 = (list, pts) => list.forEach(f => sec0[f] -= pts);
 
@@ -2951,7 +2939,7 @@
                 });
 
                 // --- SEZIONE 2: INTERESSI ---
-                let sec2 = {}; Object.keys(UNI_MAPPING).forEach(k => sec2[k] = 0);
+                let sec2 = {}; Object.keys(FACOLTA_UNIS).forEach(k => sec2[k] = 0);
                 const add2 = (list, pts) => list.forEach(f => sec2[f] = Math.min(100, sec2[f] + pts));
                 const sub2 = (list, pts) => list.forEach(f => sec2[f] -= pts);
 
@@ -3031,7 +3019,7 @@
                 });
 
                 // --- SEZIONE 4: SCENARI ---
-                let sec4 = {}; Object.keys(UNI_MAPPING).forEach(k => sec4[k] = 0);
+                let sec4 = {}; Object.keys(FACOLTA_UNIS).forEach(k => sec4[k] = 0);
                 const add4 = (list, pts) => list.forEach(f => sec4[f] += pts);
                 const brV = LOGIC_BROKEN[getRadio("q_broken")];
 
@@ -3050,7 +3038,7 @@
                 else if (futV === "Movimento") { add4(["Agraria & Veterinaria", "Scienze Motorie"], 50); add4(["Design & Architettura"], 20); add4(["Chimica, Biologia & Farmacia", "Ingegneria"], 10); }
 
                 // --- SEZIONE 5: CONFERME ---
-                let sec5 = {}; Object.keys(UNI_MAPPING).forEach(k => sec5[k] = 0);
+                let sec5 = {}; Object.keys(FACOLTA_UNIS).forEach(k => sec5[k] = 0);
                 const add5 = (f, pts) => sec5[f] += pts;
 
                 if (getChk("chk_teach")) { add5("Studi Umanistici", 100); add5("Matematica, Fisica & Informatica", 50); add5("Lingue & Comunicazione", 30); add5("Ingegneria", 30); }
@@ -3069,7 +3057,7 @@
 
                 // --- CALCOLO FINALE ---
                 let finalScores = {};
-                Object.keys(UNI_MAPPING).forEach(fac => {
+                Object.keys(FACOLTA_UNIS).forEach(fac => {
                     let raw = (sec0[fac] * 0.5) + (sec1[fac] * 0.25) + (sec2[fac] * 0.30) + (sec3[fac] * 0.25) + (sec4[fac] * 0.10) + (sec5[fac] * 0.10);
                     if (raw > 75) raw += 10;
                     finalScores[fac] = Math.max(0, Math.min(100, Math.round(raw)));
